@@ -1,30 +1,16 @@
-# React + TypeScript + Vite
+# Mrpack Installer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> 👤 **ALANDLN**
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<a href="https://www.electronjs.org/" target="_blank"><img src="https://img.shields.io/badge/-Electron-9feaf9?style=for-the-badge&logo=electron&logoColor=black"/></a>    <a href="https://es.react.dev/" target="_blank"><img src="https://img.shields.io/badge/-React-087ea4?style=for-the-badge&logo=react&logoColor=black"/></a>    <a href="https://modrinth.com/" target="_blank"><img src="https://img.shields.io/badge/-Modrinth-00af5c?style=for-the-badge&logo=modrinth&logoColor=black"/></a>    <a href="https://nodejs.org/en" target="_blank"><img src="https://img.shields.io/badge/-Node js-5FA04E?style=for-the-badge&logo=node.js&logoColor=black"/></a>    <a href="https://nodejs.org/en" target="_blank"><img src="https://img.shields.io/badge/-npm-CB3837?style=for-the-badge&logo=npm&logoColor=black"/></a>
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Descripción
 
-- Configure the top-level `parserOptions` property like this:
+Herramienta para instalar paquetes de mods de **Minecraft** de manera sencilla, utilizando archivos mrpack de Modrinth.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+Con una interfaz gráfica intuitiva y fácil de usar. Instala todas las dependencias y versión de Minecraft necesario para que funcione. Creando automaticamente un perfil en el lanzador oficial de Minecraft.
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
