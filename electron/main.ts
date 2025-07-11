@@ -168,7 +168,7 @@ function setupIpcEvents() {
     try {
       console.log('Checking for updates...')
       const updateCheckResult = await autoUpdater.checkForUpdates()
-      return updateCheckResult
+      return updateCheckResult?.isUpdateAvailable || false
     } catch (error) {
       console.error('Error checking for updates:', error)
       throw error;
@@ -189,4 +189,5 @@ app.whenReady().then(() => {
 
   console.log('Checking for updates...')
   autoUpdater.checkForUpdates()
+  console.log('Last version:', autoUpdater.currentVersion)
 })
