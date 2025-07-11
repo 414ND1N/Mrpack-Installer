@@ -21,18 +21,19 @@
     "appId": "com.alandln.minecraftmrpackinstaller",
     "productName": "Minecraft Mrpack Installer",
     "files": [
-      "dist/**/*"
+      "dist/**/*",
+      "dist-electron/**/*",
+      "node_modules/**/*",
+      "package.json"
     ],
     "directories": {
       "output": "release"
     },
     "win": {
-      "icon": "src/icons/app-icon.ico",
-      "target": "nsis"
+      "icon": "src/icons/app-icon.ico"
     },
     "linux": {
-      "icon": "src/icons/app-icon.png",
-      "target": ["AppImage", "deb", "tar.gz"]
+      "icon": "src/icons/app-icon.png"
     }
   },
   "dependencies": {
