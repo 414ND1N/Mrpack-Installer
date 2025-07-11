@@ -46,8 +46,7 @@
 }
 .install-container .sections-minecraft .section-from-file .content .installation-configuration {
   display: none;
-  grid-template-areas: "summary summary summary" "config config config" "type icon install";
-  grid-template-columns: 17% 20% 1fr;
+  grid-template-areas: "summary" "config" "selectors";
   gap: 1rem;
 }
 .install-container .sections-minecraft .section-from-file .content .installation-configuration.active {
@@ -155,4 +154,18 @@
 }
 .install-container .sections-minecraft .section-from-file .content .installation-configuration .status p {
   font-family: inherit;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .inputs {
+  grid-area: selectors;
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .inputs .type-selector,
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .inputs .icon-selector {
+  width: 20%;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .inputs .install {
+  min-width: 60%;
+  margin-top: 1.3rem;
 }

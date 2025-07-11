@@ -19032,22 +19032,20 @@ function dE() {
     wr.set("theme", t);
   }), cr.handle("get-theme", () => wr.get("theme", "classic")), cr.handle("get-version", () => Sn.getVersion()), cr.handle("update-app", async () => {
     try {
-      return console.log("Updating app..."), await Rt.autoUpdater.downloadUpdate(), "Update downloaded";
+      console.log("Updating app..."), await Rt.autoUpdater.downloadUpdate();
     } catch (e) {
       throw console.error("Error downloading update:", e), e;
     }
   }), cr.handle("check-update", async () => {
     try {
-      return console.log("Checking for updates..."), await Rt.autoUpdater.checkForUpdates();
+      return console.log("Checking for updates..."), (await Rt.autoUpdater.checkForUpdates())?.isUpdateAvailable || !1;
     } catch (e) {
       throw console.error("Error checking for updates:", e), e;
     }
   });
 }
 Sn.whenReady().then(() => {
-  dy(), process.platform !== "darwin" && !qa && og.setApplicationMenu(null), dE(), console.log("Checking for updates...");
-  const e = Rt.autoUpdater.checkForUpdates();
-  console.log("Last version:", Rt.autoUpdater.currentVersion), console.log("Update check result:", e);
+  dy(), process.platform !== "darwin" && !qa && og.setApplicationMenu(null), dE(), console.log("Checking for updates..."), Rt.autoUpdater.checkForUpdates(), console.log("Last version:", Rt.autoUpdater.currentVersion);
 });
 export {
   o1 as MAIN_DIST,

@@ -21,8 +21,8 @@ const HandleUpdate = async () => {
     try {
         const result = await ipcRenderer.invoke("update-app")
         console.log(result)
+        alert("Actualización descargada. Debes de reiniciar la aplicación para aplicar los cambios.")
     } catch (error) {
-        console.error("Error durante la actualización:", error)
         console.error("Error durante la actualización:", error)
     }
 }
@@ -31,7 +31,7 @@ function Config() {
     const [theme, setThemeState] = useState<string>("classic")
     const [fullscreen, setFullscreen] = useState<boolean>(false)
     const [updateStatus, setUpdateStatus] = useState<boolean>(false)
-    
+
     const updateTheme = (newTheme: string) => {
         handleThemeChange(newTheme)
         setThemeState(newTheme)

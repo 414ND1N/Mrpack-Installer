@@ -16,6 +16,7 @@ import Modal from "@/components/Modal/Modal"
 import { GetMrpackInfo } from "@/hooks/modrinth/mrpack"
 import { InstallModpack, InstallationModpackProps } from "@/hooks/minecraft/minecraft"
 import { ProfileIcons } from '@/hooks/minecraft/launcher_profile'
+import { useGlobalMessage } from "@/context/GlobalMessageContext"
 
 interface InstallationProgress {
     fileExists: boolean
@@ -25,6 +26,8 @@ interface InstallationProgress {
 }
 
 function Install() {
+
+    const { showMessage } = useGlobalMessage();
 
     const [installationConfig, setInstallationConfig] = useState<InstallationModpackProps>({
         type: "singleplayer", // Por defecto, tipo cliente
@@ -109,11 +112,12 @@ function Install() {
     }
 
     const callBack = useCallback((message: string, status?: string) => {
-        setInstallationProgress((prevInfo) => ({
-            ...prevInfo,
-            message: message,
-            status: status || 'pending',
-        }));
+        // setInstallationProgress((prevInfo) => ({
+        //     ...prevInfo,
+        //     message: message,
+        //     status: status || 'pending',
+        // }));
+        showMessage(message)
     }, [setInstallationProgress]);
 
     // secciones
@@ -240,62 +244,71 @@ function Install() {
                         </div>
                     </section>
 
-                    <section className="type-selector">
-                        <p>Tipo de instalación</p>
-                        <select
-                            className="minecraft"
-                            value={installationConfig.type}
-                            onChange={(event) =>
-                                setInstallationConfig((prevInfo) => ({
-                                    ...prevInfo,
-                                    type: event.target.value
-                                }))
-                            }
+                    <section className="inputs">
+                        <div className="type-selector">
+                            <p>Tipo de instalación</p>
+                            <select
+                                className="minecraft"
+                                value={installationConfig.type}
+                                onChange={(event) =>
+                                    setInstallationConfig((prevInfo) => ({
+                                        ...prevInfo,
+                                        type: event.target.value
+                                    }))
+                                }
+                            >
+                                <option value="singleplayer">Singleplayer</option>
+                                <option value="client">Cliente servidor</option>
+                                <option value="server">Servidor</option>
+                            </select>
+                        </div>
+
+                        <div 
+                            className="icon-selector"
+                            style={{ display: installationConfig.type === "server" ? "none" : "block" }}
+                            >
+                            <p>Icono del perfil</p>
+                            <select
+                                className="minecraft"
+                                value={installationConfig.profile_icon}
+                                onChange={(event) =>
+                                    setInstallationConfig((prevInfo) => ({
+                                        ...prevInfo,
+                                        profile_icon: event.target.value as ProfileIcons
+                                    }))
+                                }
+                            >
+                                {Object.entries(ProfileIcons).map(([key, value]) => (
+                                    <option key={key} value={key}>
+                                        {value}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <button className="install minecraft"
+                            disabled={!installationProgress.fileExists}
+                            onClick={() => {
+                                if (!installationConfig.mrpack_info) {
+                                    alert("No se ha seleccionado un modpack válido.")
+                                    return
+                                }
+                                alert("Debes de tener cerrado el lanzador de Minecraft para que la instalación se realice correctamente.")
+                                callBack("Iniciando instalacion", "progress")
+                                
+                                InstallModpack (
+                                    installationConfig, // Configuración de instalación del modpack
+                                    callBack //callback
+                                )
+                                // .then(() => {
+                                //     hideMessage()
+                                // })
+                            }}
                         >
-                            <option value="singleplayer">Singleplayer</option>
-                            <option value="client">Cliente servidor</option>
-                            <option value="server">Servidor</option>
-                        </select>
-                    </section>
-                    <section className="icon-selector">
-                        <p>Icono del perfil</p>
-                        <select
-                            className="minecraft"
-                            value={installationConfig.profile_icon}
-                            onChange={(event) =>
-                                setInstallationConfig((prevInfo) => ({
-                                    ...prevInfo,
-                                    profile_icon: event.target.value as ProfileIcons
-                                }))
-                            }
-                        >
-                            {Object.entries(ProfileIcons).map(([key, value]) => (
-                                <option key={key} value={key}>
-                                    {value}
-                                </option>
-                            ))}
-                        </select>
+                            Instalar
+                        </button>
                     </section>
 
-                    <button className="install minecraft"
-                        disabled={!installationProgress.fileExists}
-                        onClick={() => {
-                            if (!installationConfig.mrpack_info) {
-                                alert("No se ha seleccionado un modpack válido.")
-                                return
-                            }
-                            alert("Debes de tener cerrado el lanzador de Minecraft para que la instalación se realice correctamente.")
-                            callBack("Iniciando instalacion", "progress")
-                            
-                            InstallModpack (
-                                installationConfig, // Configuración de instalación del modpack
-                                callBack //callback
-                            )
-
-                        }}
-                    >
-                        Instalar
-                    </button>
                 </section>
             </section>
         </>
@@ -328,13 +341,15 @@ function Install() {
             <section className="install-container">
                 <Modal IsOpen={openModal} onClick={() => setOpenModal(false)} size="medium">
                     <>
-                        <h2>Mods del modpack</h2>
+                        <h2>Archivos del modpack</h2>
                         <ul>
-                            {
-                                installationConfig.mrpack_info?.metadata.files?.map((file) => (
-                                    <li key={file.path}>{file.path.split("/")}</li>
-                                ))
-                            }
+                            {installationConfig.mrpack_info?.metadata.files
+                                ?.sort((a, b) => a.path.localeCompare(b.path)) // Order
+                                .map((file) => {
+                                    if (file.path) {
+                                        return <li key={file.path}>{file.path.split(".")[0].replace("/", " > ") || "unknown"}</li>
+                                    }
+                                })}
                         </ul>
                     </>
                 </Modal>
