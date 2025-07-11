@@ -93,28 +93,32 @@ app.on('activate', () => {
 
 
 // --------- Auto Updater ---------
-// Configuración del autoUpdater
+
 autoUpdater.autoDownload = false
 autoUpdater.autoRunAppAfterInstall = true
-autoUpdater.autoInstallOnAppQuit = true
+autoUpdater.setFeedURL({
+  provider: 'github',
+  repo: 'Mrpack-Installer',
+  owner: '414ND1N',
+  channel: 'latest',
+  private: false
+})
+// autoUpdater.autoInstallOnAppQuit = true
 
-autoUpdater.on('update-available', () => {
+autoUpdater.on('update-available', (_) => {
   console.log('Update available')
-  win?.webContents.send('updateMessage', 'Actualización disponible.')
 })
 
-autoUpdater.on('update-not-available', () => {
+autoUpdater.on('update-not-available', (_) => {
   console.log('No update available')
-  // win?.webContents.send('updateMessage', 'Ultima versión instalada.')
 })
 
-autoUpdater.on('error', (error) => {
-  console.error('Error checking for updates:', error)
+autoUpdater.on('error', (info) => {
+  console.error('Error checking for updates:', info)
 })
 
 autoUpdater.on('update-downloaded', (info) => {
   console.log('Update downloaded:', info)
-  win?.webContents.send('updateMessage', 'Actualización descargada. Reinicia la aplicación para aplicar los cambios.')
 })
 
 // --------- App Events ---------
@@ -142,7 +146,7 @@ function setupIpcEvents() {
 
   ipcMain.handle('get-theme', () => {
     const theme = store.get('theme', 'classic'); // 'classic' es el valor predeterminado si no hay tema guardado
-    return theme; // Responder de manera síncrona
+    return theme // Responder de manera síncrona
   })
 
   ipcMain.handle('get-version', () => {
@@ -153,8 +157,21 @@ function setupIpcEvents() {
     try {
       console.log('Updating app...')
       await autoUpdater.downloadUpdate()
+      return 'Update downloaded'
     } catch (error) {
       console.error('Error downloading update:', error)
+      throw error;
+    }
+  })
+
+  ipcMain.handle('check-update', async () => {
+    try {
+      console.log('Checking for updates...')
+      const updateCheckResult = await autoUpdater.checkForUpdates()
+      return updateCheckResult
+    } catch (error) {
+      console.error('Error checking for updates:', error)
+      throw error;
     }
   })
 }
@@ -163,12 +180,13 @@ function setupIpcEvents() {
 app.whenReady().then(() => {
   createWindow()
 
-  // Disable menu on Windows and Linux
-  if (!(process.platform === 'darwin')) {
+  // Disable menu on Windows and Linux only if not in development
+  if (!(process.platform === 'darwin') && !VITE_DEV_SERVER_URL) {
     Menu.setApplicationMenu(null)
   }
  
   setupIpcEvents()
 
+  console.log('Checking for updates...')
   autoUpdater.checkForUpdates()
 })

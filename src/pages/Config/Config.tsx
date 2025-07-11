@@ -17,10 +17,20 @@ const handleThemeChange = (theme: string) => {
     document.body.setAttribute("data-theme", theme);
 }
 
+const HandleUpdate = async () => {
+    try {
+        const result = await ipcRenderer.invoke("update-app")
+        console.log(result)
+    } catch (error) {
+        console.error("Error durante la actualización:", error)
+        console.error("Error durante la actualización:", error)
+    }
+}
+
 function Config() {
     const [theme, setThemeState] = useState<string>("classic")
     const [fullscreen, setFullscreen] = useState<boolean>(false)
-    const [updateStatus, setUpdateStatus] = useState<string>("")
+    const [updateStatus, setUpdateStatus] = useState<boolean>(false)
     
     const updateTheme = (newTheme: string) => {
         handleThemeChange(newTheme)
@@ -33,8 +43,6 @@ function Config() {
     }
 
     useEffect(() => {
-
-
         const getInitialConfig = async () => {
 
             // Aplicar el tema al estado
@@ -48,9 +56,14 @@ function Config() {
                 setFullscreen(isFullscreen)
             }
             // Obtener el estado de actualización
-            ipcRenderer.on('updateMessage', (_, message) => {
-                setUpdateStatus(message)
-            })
+            // ipcRenderer.on('updateMessage', (_, message) => {
+                //     console.log("Mensaje de actualización recibido:", message)
+                //     setUpdateStatus(message)
+                // })
+            const updateAvaliable = await ipcRenderer.invoke('check-update');
+            if (updateAvaliable !== undefined) {
+                setUpdateStatus(updateAvaliable)
+            }
         }
         
         getInitialConfig();
@@ -181,9 +194,9 @@ function Config() {
                     </p>
                 </div>
 
-                <div className={`update-status ${updateStatus == "" ? "disabled" : ""}`}>
-                    <h3>{updateStatus}</h3>
-                    <button className='minecraft updater'>
+                <div className={`update-status ${ !updateStatus ? "disabled" : ""}`}>
+                    <h3>Actualización disponible </h3>
+                    <button className='minecraft updater' onClick={HandleUpdate}>
                         Descargar actualización
                     </button>
                 </div>

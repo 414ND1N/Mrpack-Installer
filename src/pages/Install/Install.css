@@ -1,26 +1,3 @@
-.install-container .modal-component .modal-content {
-  background-color: var(--mc-green-2);
-  font-family: var(--secondary-font);
-  font-size: var(--step-0);
-}
-
-.install-container .modal-component .modal-content > ul {
-  padding: 1em;
-}
-
-.install-container .modal-component .modal-content > ul li {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.5em;
-}
-
-.install-container .modal-component .modal-content h2 {
-  font-family: inherit;
-  font-size: var(--step-2);
-  text-align: center;
-}
-
 .install-container .sections-minecraft p {
   font-family: var(--secondary-font);
   font-size: calc(var(--step--1) + 0.1rem);
@@ -31,21 +8,21 @@
 .install-container .sections-minecraft .section-from-file .content .status-message {
   display: none;
 }
-.install-container .sections-minecraft .section-from-file .content .progress {
+.install-container .sections-minecraft .section-from-file .content.progress {
   pointer-events: none;
   opacity: 0.5;
 }
-.install-container .sections-minecraft .section-from-file .content .progress .status-message {
+.install-container .sections-minecraft .section-from-file .content.progress .status-message {
   display: block;
   font-family: var(--secondary-font);
   font-size: var(--step-0);
   text-align: center;
 }
-.install-container .sections-minecraft .section-from-file .content .completed .status-message {
+.install-container .sections-minecraft .section-from-file .content.completed .status-message {
   display: block;
   color: green;
 }
-.install-container .sections-minecraft .section-from-file .content .failed .status-message {
+.install-container .sections-minecraft .section-from-file .content.failed .status-message {
   display: block;
   color: red;
 }

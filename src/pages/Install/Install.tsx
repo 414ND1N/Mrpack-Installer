@@ -17,7 +17,6 @@ import { GetMrpackInfo } from "@/hooks/modrinth/mrpack"
 import { InstallModpack, InstallationModpackProps } from "@/hooks/minecraft/minecraft"
 import { ProfileIcons } from '@/hooks/minecraft/launcher_profile'
 
-
 interface InstallationProgress {
     fileExists: boolean
     status: string
@@ -333,7 +332,7 @@ function Install() {
                         <ul>
                             {
                                 installationConfig.mrpack_info?.metadata.files?.map((file) => (
-                                    <li>{file.path.split("/")}</li>
+                                    <li key={file.path}>{file.path.split("/")}</li>
                                 ))
                             }
                         </ul>
