@@ -1,8 +1,9 @@
 import { app, BrowserWindow } from 'electron'
-// import { Menu } from 'electron'
+import { Menu } from 'electron'
 import Store from 'electron-store'
 import { ipcMain } from 'electron'
-import { autoUpdater, AppUpdater } from 'electron-updater'
+// import { autoUpdater, AppUpdater } from 'electron-updater'
+import { autoUpdater } from 'electron-updater'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
@@ -163,9 +164,9 @@ app.whenReady().then(() => {
   createWindow()
 
   // Disable menu on Windows and Linux
-  // if (!(process.platform === 'darwin')) {
-  //   Menu.setApplicationMenu(null)
-  // }
+  if (!(process.platform === 'darwin')) {
+    Menu.setApplicationMenu(null)
+  }
  
   setupIpcEvents()
 
