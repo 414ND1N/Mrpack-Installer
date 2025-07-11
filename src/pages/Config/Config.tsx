@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react"
 import { ipcRenderer } from 'electron'
 
+
+import { useGlobalMessage } from "@/context/GlobalMessageContext"
+
 // Componentes
 import Sidebar from "@/pages/Sidebar"
 import SectionsMinecraftComponent from "@/components/SectionsMinecraft/SectionsMinecraft"
@@ -17,20 +20,12 @@ const handleThemeChange = (theme: string) => {
     document.body.setAttribute("data-theme", theme);
 }
 
-const HandleUpdate = async () => {
-    try {
-        const result = await ipcRenderer.invoke("update-app")
-        console.log(result)
-        alert("Actualización descargada. Debes de reiniciar la aplicación para aplicar los cambios.")
-    } catch (error) {
-        console.error("Error durante la actualización:", error)
-    }
-}
 
 function Config() {
     const [theme, setThemeState] = useState<string>("classic")
     const [fullscreen, setFullscreen] = useState<boolean>(false)
     const [updateStatus, setUpdateStatus] = useState<boolean>(false)
+    const { showMessage } = useGlobalMessage()
 
     const updateTheme = (newTheme: string) => {
         handleThemeChange(newTheme)
@@ -40,6 +35,16 @@ function Config() {
     const updateFullscreen = (isFullscreen: boolean) => {
         handleFullscreenToggle(isFullscreen)
         setFullscreen(isFullscreen)
+    }
+
+    const HandleUpdate = async () => {
+        try {
+            showMessage("Descargando actualización...")
+            await ipcRenderer.invoke("update-app")
+            showMessage("Actualización descargada. Debes de reiniciar la aplicación para aplicar los cambios.")
+        } catch (error) {
+            console.error("Error durante la actualización:", error)
+        }
     }
 
     useEffect(() => {
@@ -56,10 +61,6 @@ function Config() {
                 setFullscreen(isFullscreen)
             }
             // Obtener el estado de actualización
-            // ipcRenderer.on('updateMessage', (_, message) => {
-                //     console.log("Mensaje de actualización recibido:", message)
-                //     setUpdateStatus(message)
-                // })
             const updateAvaliable = await ipcRenderer.invoke('check-update');
             if (updateAvaliable !== undefined) {
                 setUpdateStatus(updateAvaliable)

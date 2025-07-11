@@ -27,7 +27,7 @@ interface InstallationProgress {
 
 function Install() {
 
-    const { showMessage } = useGlobalMessage();
+    const { showMessage } = useGlobalMessage()
 
     const [installationConfig, setInstallationConfig] = useState<InstallationModpackProps>({
         type: "singleplayer", // Por defecto, tipo cliente
