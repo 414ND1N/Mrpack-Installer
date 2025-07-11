@@ -1,0 +1,6 @@
+.home-container .back-button {
+    position: fixed;
+    bottom: 20px;
+    right: 2rem;
+    z-index: 1000;
+}

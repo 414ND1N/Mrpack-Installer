@@ -1,0 +1,117 @@
+.modal-component {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    flex-direction: column;
+}
+
+.modal-component.blur::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    z-index: -1;
+}
+
+.modal-component .modal-container {
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    max-width: 90%;
+    width: 25%;
+    animation: fadeIn 0.3s ease-in-out;
+    background-color: inherit;
+    overflow-y: scroll;
+    max-height: 90%;
+    /* background-color: var(--primary-card-color, white); */
+}
+
+.modal-component .tittle-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 95%;
+    margin: 0 auto;
+    /* background-color: var(--primary-card-color, white); */
+    /* border-bottom: 1px solid var(--primary-border-color, #ccc); */
+}
+
+.modal-component .tittle-bar h1 {
+    font-size: var(--step-1, 1.5em);
+    font-weight: 600;
+    margin: 0;
+    padding: 0.5em 0;
+    /* color: var(--primary-text-color, black); */
+}
+
+.modal-component .modal-container .modal-content{
+    padding: 1em;
+}
+
+.modal-component.wide .modal-container {
+    width: 80%;
+}
+
+.modal-component.tiny .modal-container {
+    width: 15%;
+}
+
+.modal-component.small .modal-container {
+    width: 30%;
+}
+
+.modal-component.medium .modal-container {
+    width: 50%;
+}
+
+.modal-component.medium-large .modal-container {
+    width: 60%;
+}
+
+.modal-component.large .modal-container {
+    width: 70%;
+}
+
+.modal-component.extra-large .modal-container {
+    width: 90%;
+}
+
+.modal-component.wide .modal-container p {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-bottom: 1em;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media screen and (max-width: 950px) {
+    .modal-component .modal-container {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .modal-component .modal-container {
+        width: 80%;
+    }
+}

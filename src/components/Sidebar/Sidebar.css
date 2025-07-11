@@ -1,0 +1,346 @@
+main {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+.sidebar-component nav {
+    box-sizing: border-box;
+    height: 100vh;
+    height: 100svh;
+    width: 250px;
+    padding: 5px 1em;
+    background-color: var(--navbar-background-color, black);
+    border-right: 1px solid var(--dark-overlay-fade, black);
+    position: sticky;
+    top: 0;
+    align-self: start;
+    transition: 300ms ease-in-out;
+    overflow: hidden;
+    text-wrap: nowrap;
+    font-size: var(--step--1, 1rem);
+    z-index: 100;
+    font-family: var(--secondary-font, sans-serif);
+
+}
+
+.sidebar-component nav > ul {
+    list-style: none;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.sidebar-component nav.actions-enabled {
+    display: grid;
+    grid-template-rows: 1fr min-content;
+    grid-template-areas: 
+        "list"
+        "actions"
+    ;
+}
+.sidebar-component nav .actions {
+    grid-area: actions;
+    height: 100%;
+    width: 100%;
+}
+
+.sidebar-component nav.actions-enabled .actions,
+.sidebar-component nav.actions-enabled .sidebar-list {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.sidebar-component nav .sidebar-list {
+    grid-area: list;
+    height: 100%;
+    width: 100%;
+}
+
+.sidebar-component nav img {
+    width: 2.5em;
+    flex-shrink: 0;
+}
+
+.sidebar-component nav.collapsed {
+    padding: 3px;
+    width: 60px;
+}
+
+.sidebar-component nav.collapsed span {
+    display: none;
+}
+
+.sidebar-component nav.collapsed .actions {
+    flex-direction: column;
+    justify-content: left;
+    padding: unset;
+    gap: unset;
+    transition: 300ms ease-in-out;
+}
+
+
+.sidebar-component nav ul .logo-img{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.sidebar-component nav>ul>li:first-child {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+.sidebar-component nav>ul>li:first-child .logo {
+    font-weight: 600;
+}
+
+.sidebar-component nav ul li.header {
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.sidebar-component nav ul li.active > a,
+.sidebar-component nav ul li.active > button {
+    font-weight: bolder;
+}
+
+.sidebar-component nav ul li.active a svg {
+    fill: var(--font-color-secondary, rgb(192, 190, 190));
+}
+
+.sidebar-component nav a,
+.sidebar-component nav .dropdown-btn,
+.sidebar-component nav .logo {
+    border-radius: 0.5em;
+    padding: .85em;
+    text-decoration: none;
+    color: var(--font-color, white);
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+
+.sidebar-component nav .actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    padding: 0 1em;
+    gap: 1em;
+    margin-top: auto;
+    border-top: 2px solid var(--dark-overlay-fade, black);
+    padding-top: 1em;
+}
+
+.sidebar-component nav .actions button {
+    background: none;
+}
+
+.sidebar-component nav .actions svg {
+    width: 2em;
+    flex-shrink: 0;
+    fill: var(--font-color, white);
+}
+
+.sidebar-component nav.collapsed .logo {
+    padding: unset;
+}
+
+.sidebar-component nav .dropdown-btn {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    font: inherit;
+    cursor: pointer;
+}
+
+.sidebar-component nav img {
+    flex-shrink: 0;
+    fill: var(--font-color, black)
+}
+
+.sidebar-component nav a span,
+.sidebar-component nav .dropdown-btn span {
+    flex-grow: 1;
+}
+
+.sidebar-component nav a:hover,
+.sidebar-component nav .dropdown-btn:hover {
+    background-color: var(--navbar-background-hover-color, rgb(32, 32, 32));
+}
+
+.sidebar-component nav .submenu {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: 300ms ease-in-out;
+    font-size: var(--step--1, 1rem);
+}
+
+.sidebar-component nav .submenu>div {
+    overflow: hidden;
+}
+
+.sidebar-component nav .submenu.show {
+    grid-template-rows: 1fr;
+}
+
+.sidebar-component nav .submenu>div a:hover {
+    background-color: var(--navbar-background-hover-color, rgba(32, 32, 32, 0.25));
+}
+
+.sidebar-component nav .submenu a {
+    padding-left: 2em;
+}
+
+.sidebar-component nav .dropdown-btn img {
+    transition: 200ms ease;
+}
+
+.sidebar-component nav .toggle-btn.rotate img:last-child,
+.sidebar-component nav .dropdown-btn.rotate img:last-child {
+    rotate: -180deg;
+}
+
+.sidebar-component nav .toggle-btn {
+    margin-left: auto;
+    /* padding: 1em; */
+    border: none;
+    border-radius: .5em;
+    background: none;
+    cursor: pointer;
+}
+.sidebar-component nav .toggle-btn img {
+    transition: rotate 200ms ease;
+    min-width: max(100%, 30px);
+}
+
+.sidebar-component nav .toggle-btn:hover {
+    background-color: var(--navbar-background-hover-color, rgb(32, 32, 32));
+}
+
+
+@media (max-width: 768px) {
+    main {
+        grid-template-columns: 1fr;
+    }
+
+    .main-container {
+        border: none;
+        padding: 0;
+    }
+
+    .sidebar-component nav.actions-enabled {
+        grid-template-columns: 1fr min-content;
+        grid-template-areas: "list actions";
+    }
+
+    .sidebar-component nav {
+        grid-template-columns: 1fr;
+        grid-template-areas: "list";
+    }
+
+    .sidebar-component nav {
+        height: 60px;
+        width: 100% !important;
+        border-right: none;
+        border-top: 1px solid var(--dark-overlay-fade, black);
+        padding: 0;
+        position: fixed;
+        top: unset;
+        bottom: 0px;
+    }
+
+    .sidebar-component nav ul li {
+        height: 100%;
+    }
+
+    .sidebar-component nav ul li span,
+    .sidebar-component nav > ul > li:first-child,
+    .sidebar-component nav .dropdown-btn img:last-child{
+        display: none;
+    }
+
+    .sidebar-component nav ul a,
+    .sidebar-component nav ul .dropdown-btn {
+        width: 60px;
+        height: 60px;
+        border: none;
+        border-radius: 0;
+        justify-content: center;
+    }
+
+    .sidebar-component nav .sidebar-list {
+        padding: 0;
+        display: grid;
+        grid-auto-columns: 60px;
+        grid-auto-flow: column;
+    }
+
+    .sidebar-component nav.actions-enabled .sidebar-list,
+    .sidebar-component nav.actions-enabled .actions {
+        overflow-y: hidden;
+        overflow-x: scroll;
+    }
+
+    .sidebar-component nav .actions {
+        padding: 0;
+        display: grid;
+        grid-auto-columns: 60px;
+        grid-auto-flow: column;
+        overflow-y: hidden;
+        border-left: 2px solid var(--dark-overlay-fade, black);
+        border-top: unset;
+        padding-top: unset;
+        padding: unset 1em;
+        gap: 0;
+    }
+    .sidebar-component nav .actions div {
+        width: 60px;
+        height: 60px;
+    }
+
+    .sidebar-component nav .actions div > *{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .sidebar-component nav ul li .submenu.show {
+        position: fixed;
+        bottom: 60px;
+        left: 0;
+        box-sizing: border-box;
+        height: 60px;
+        width: 100%;
+        background-color: var(--navbar-background-hover-color, black);
+        display: flex;
+        justify-content: center;
+        font-size: var(--step-0, 1rem);
+    }
+    .sidebar-component nav ul li .submenu.show > div {
+        overflow-x: auto;
+    }
+    .sidebar-component nav ul li .submenu.show li {
+        display: inline-flex;
+    }
+    .sidebar-component nav ul li .submenu.show a {
+        box-sizing: border-box;
+        padding: 1em;
+        width: auto;
+        justify-content: center;
+    }
+
+
+    .sidebar-component nav ul .logo-img{
+        display: none;
+    }
+}

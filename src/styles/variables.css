@@ -1,0 +1,135 @@
+:root {
+
+    --display-light: block;
+    --display-dark: none;
+
+
+    /* Colores tema clasico */
+    --primary-bgc-classic: rgb(23, 22, 21);
+    --secondary-bgc-classic: rgb(34, 31, 30);
+    --navbar-navbgc-classic: rgb(49, 45, 44);
+    --navbar-navbgc-hover-classic: rgb(38, 36, 35);
+    
+    --primary-fc-classic: rgb(255, 255, 255);
+    --secondary-fc-classic: rgb(147, 148, 153);
+    --reverse-fc-classic: rgb(22, 22, 22);
+
+    --prymary-borderc-classic: rgb(81, 77, 76);
+    --secondary-borderc-classic: black;
+    --shadow-borderc-classic: rgba(0, 0, 0, 0.2);
+
+
+    /* Colores tema claro */
+    --primary-bgc-light: rgb(251, 247, 247);
+    --secondary-bgc-light: rgb(148, 146, 145);
+    --navbar-navbgc-light: rgb(238, 238, 238);
+    --navbar-navbgc-hover-light: rgb(221, 221, 221);
+    
+    --primary-fc-light: rgb(0, 0, 0);
+    --secondary-fc-light: rgb(55, 55, 56);
+    --reverse-fc-light: rgb(255, 255, 255);
+
+    --prymary-borderc-light: rgb(212, 206, 206);
+    --secondary-borderc-light: rgb(143, 139, 139);
+    --shadow-borderc-light: rgba(0, 0, 0, 0.1);
+
+    /* Colores tema OLED */
+    --primary-bgc-dark: rgb(0, 0, 0);
+    --secondary-bgc-dark: rgb(12, 12, 12);
+    --navbar-navbgc-dark: rgb(31, 30, 29);
+    --navbar-navbgc-hover-dark: rgb(43, 40, 40);
+    
+    --primary-fc-dark: rgb(255, 255, 255);
+    --secondary-fc-dark: rgb(153, 153, 153);
+    --reverse-fc-dark: rgb(0, 0, 0);
+    
+    --prymary-borderc-oled: rgb(14, 14, 14);
+    --secondary-borderc-oled: black;
+    --shadow-borderc-oled: rgba(255, 255, 255, 0.1);
+
+    /* Fuentes */
+    --primary-font: "Noto Sans KR", arial;
+    --secondary-font: 'Pixelify Sans', sans-serif;
+    --paragraph-font: arial, sans-serif;
+    --title-font: "Noto Sans KR", sans-serif;
+
+    /* Clamps */
+    --step--4: clamp(0.2469rem, 0.3171rem + -0.0906cqi, 0.3013rem);
+    --step--3: clamp(0.3619rem, 0.3593rem + 0.0146cqi, 0.3706rem);
+    --step--2: clamp(0.4338rem, 0.3982rem + 0.2031cqi, 0.5556rem);
+    --step--1: clamp(0.5206rem, 0.4295rem + 0.5208cqi, 0.8331rem);
+    --step-0: clamp(0.625rem, 0.4427rem + 1.0417cqi, 1.25rem);
+    --step-1: clamp(0.75rem, 0.4219rem + 1.875cqi, 1.875rem);
+    --step-2: clamp(0.9rem, 0.3422rem + 3.1875cqi, 2.8125rem);
+    --step-3: clamp(1.08rem, 0.1645rem + 5.2313cqi, 4.2188rem);
+    --step-4: clamp(1.2963rem, -0.1714rem + 8.3865cqi, 6.3281rem);
+    --step-5: clamp(1.555rem, -0.7601rem + 13.2292cqi, 9.4925rem);
+}
+
+[data-theme='classic'] {
+
+    --display-classic: block;
+    --display-light: none;
+    --display-dark: none;
+
+    /* Colores de la paleta */
+    --primary-background-color: var(--primary-bgc-classic);
+    --secondary-background-color: var(--secondary-bgc-classic);
+
+    --navbar-background-color: var(--navbar-navbgc-classic);
+    --navbar-background-hover-color: var(--navbar-navbgc-hover-classic);
+
+    --prymary-border-color: var(--prymary-borderc-classic);
+    --secondary-border-color: var(--secondary-borderc-classic);
+    --shadow-border-color: var(--shadow-borderc-classic);
+
+    /* Fuentes */
+    --font-color: var(--primary-fc-classic);
+    --font-color-secondary: var(--secondary-fc-classic);
+    --font-color-reverse: var(--reverse-fc-classic);
+}
+
+[data-theme='light'] {
+
+    --display-classic: none;
+    --display-light: block;
+    --display-dark: none;
+
+    /* Colores de la paleta */
+    --primary-background-color: var(--primary-bgc-light);
+    --secondary-background-color: var(--secondary-bgc-light);
+
+    --navbar-background-color: var(--navbar-navbgc-light);
+    --navbar-background-hover-color: var(--navbar-navbgc-hover-light);
+
+    --prymary-border-color: var(--prymary-borderc-light);
+    --secondary-border-color: var(--secondary-borderc-light);
+    --shadow-border-color: var(--shadow-borderc-light);
+
+    /* Fuentes */
+    --font-color: var(--primary-fc-light);
+    --font-color-secondary: var(--secondary-fc-light);
+    --font-color-reverse: var(--reverse-fc-light);
+}
+
+[data-theme='dark'] {
+
+    --display-classic: none;
+    --display-light: none;
+    --display-dark: block;
+
+    /* Colores de la paleta */
+    --primary-background-color: var(--primary-bgc-dark);
+    --secondary-background-color: var(--secondary-bgc-dark);
+    --navbar-background-color: var(--navbar-navbgc-dark);
+    --navbar-background-hover-color: var(--navbar-navbgc-hover-dark);
+
+    --prymary-border-color: var(--prymary-borderc-oled);
+    --secondary-border-color: var(--secondary-borderc-oled);
+    --shadow-border-color: var(--shadow-borderc-oled);
+
+    /* Fuentes */
+    --font-color: var(--primary-fc-dark);
+    --font-color-secondary: var(--secondary-fc-dark);
+    --font-color-reverse: var(--reverse-fc-dark);
+}

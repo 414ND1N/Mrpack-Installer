@@ -1,0 +1,93 @@
+html {
+  scroll-behavior: smooth;
+}
+
+#root{
+  width: 100%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-background-color);
+}
+
+body {
+  font-size: var(--step-0);
+  font-family: var(--primary-font);
+  color: var(--font-color);
+  min-height: 100dvh;
+  background-color: var(--primary-background-color);
+  width: 100%;
+}
+
+main {
+  width: 100%;
+  min-height: 100svh;
+}
+
+main .main-container {
+  width: 100%;
+  height: auto;
+  flex: 1;
+}
+
+p {
+  font-family: var(--paragraph-font);
+}
+
+a {
+  text-decoration: none;
+  font-family: var(--secondary-font);
+  color: var(--font-color);
+  transition: all 0.3s ease;
+}
+
+p.uppercase {
+  text-transform: uppercase;
+}
+
+p.lowercase {
+  text-transform: lowercase;
+}
+
+button,
+a,
+select {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--title-font);
+}
+
+p > a {
+  margin: 0 0.2em;
+}
+
+.container {
+  width: 95%;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+img {
+  vertical-align: top;
+  max-width: 100%;
+}

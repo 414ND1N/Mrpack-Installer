@@ -1,0 +1,173 @@
+main {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+.sidebar-component nav {
+    box-sizing: border-box;
+    height: 100vh;
+    height: 100svh;
+    width: 185px;
+    padding: 5px 0;
+    background-color: var(--navbar-background-color, black);
+    position: sticky;
+    top: 0;
+    align-self: start;
+    overflow: hidden;
+    text-wrap: nowrap;
+    font-size: 14px;
+    z-index: 100;
+    font-family: var(--secondary-font, sans-serif);
+    display: grid;
+    grid-template-areas: 
+        "header"
+        "list"
+        "version"
+    ;
+    grid-template-rows: 10% 1fr min-content ;
+}
+
+.sidebar-component span.tittle {
+    font-size: 1.5em;
+}
+
+.sidebar-component span.subtitle {
+    font-size: 1.2em;
+}
+
+.sidebar-component nav ul {
+    list-style: none;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.sidebar-component nav ul li {
+    width: 100%;
+}
+
+.sidebar-component nav ul li a img {
+    width: 2.25em;
+    height: 2.25em;
+    margin-right: 0.25em;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
+.sidebar-component nav .sidebar-bottom img {
+    width: 3em;
+    height: 3em;
+}
+
+.sidebar-component nav .sidebar-header {
+    grid-area: header;
+}
+.sidebar-component nav .sidebar-list {
+    grid-area: list;
+}
+
+.sidebar-component nav .sidebar-bottom {
+    grid-area: footer;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 700;
+}
+.sidebar-component nav .version {
+    grid-area: version;
+    width: 100%;
+    text-align: start;
+    padding: 0 1em;
+    color: rgb(156, 155, 154);
+    font-weight: 700;
+}
+
+.sidebar-component nav ul li.header {
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+.sidebar-component nav ul li.header a {
+    height: 100%;
+    border: none;
+    border-bottom: 2px solid var(--secondary-border-color, rgb(81, 77, 76));
+    border-right: 2px solid var(--secondary-border-color, rgb(81, 77, 76));
+}
+
+.sidebar-component nav ul li.header a img {
+    border-radius: 50%;
+    background-color: aliceblue;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    margin-right: .5em;
+}
+.sidebar-component nav ul li.header a p :nth-child(3){
+    color: gray;
+}
+
+.sidebar-component nav a {
+    padding: .55em;
+    text-decoration: none;
+    color: var(--font-color, white);
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border: 2px solid var(--secondary-border-color, black);
+    border-top: 2px solid var(--prymary-border-color, rgb(81, 77, 76));
+    border-left: 2px solid var(--prymary-border-color, rgb(81, 77, 76));
+}
+
+.sidebar-component nav li.active a {
+    border: 2px solid transparent;
+    border-bottom: 2px solid var(--prymary-border-color, rgb(81, 77, 76));
+    border-right: 2px solid var(--prymary-border-color, rgb(81, 77, 76));
+    background-color: var(--navbar-background-hover-color);
+    position: relative;
+}
+
+.sidebar-component nav li.active a::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    top: 12px;
+    width: 2px;
+    height: 20px;
+    border: 1px solid transparent;
+    background-color: white;
+}
+
+.sidebar-component nav li.active a.multiline::before {
+    top: 15px;
+}
+
+.sidebar-component nav li a {
+    line-height: 120%;
+}
+
+.sidebar-component nav a:hover {
+    background-color: var(--navbar-background-hover-color, rgb(32, 32, 32));
+}
+
+.sidebar-component nav img {
+    flex-shrink: 0;
+}
+
+
+.sidebar-component nav a p span.title,
+.sidebar-component nav a p span.subtitle{
+    font-weight: 500;
+}
+
+.sidebar-component nav li.active a p span.title,
+.sidebar-component nav li.active a p span.subtitle{
+    font-weight: 750;
+}
+
+@media (max-width: 768px) {
+
+    .main-container {
+        border: none;
+        padding: 0;
+    }
+}

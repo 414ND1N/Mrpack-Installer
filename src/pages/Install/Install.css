@@ -1,0 +1,163 @@
+.install-container .modal-component .modal-content {
+  background-color: var(--mc-green-2);
+  font-family: var(--secondary-font);
+  font-size: var(--step-0);
+}
+
+.install-container .modal-component .modal-content > ul {
+  padding: 1em;
+}
+
+.install-container .modal-component .modal-content > ul li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.install-container .modal-component .modal-content h2 {
+  font-family: inherit;
+  font-size: var(--step-2);
+  text-align: center;
+}
+
+.install-container .sections-minecraft p {
+  font-family: var(--secondary-font);
+  font-size: calc(var(--step--1) + 0.1rem);
+}
+.install-container .sections-minecraft .section-from-file {
+  gap: 2rem;
+}
+.install-container .sections-minecraft .section-from-file .content .status-message {
+  display: none;
+}
+.install-container .sections-minecraft .section-from-file .content .progress {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.install-container .sections-minecraft .section-from-file .content .progress .status-message {
+  display: block;
+  font-family: var(--secondary-font);
+  font-size: var(--step-0);
+  text-align: center;
+}
+.install-container .sections-minecraft .section-from-file .content .completed .status-message {
+  display: block;
+  color: green;
+}
+.install-container .sections-minecraft .section-from-file .content .failed .status-message {
+  display: block;
+  color: red;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration {
+  display: none;
+  grid-template-areas: "summary summary summary" "config config config" "type icon install";
+  grid-template-columns: 17% 20% 1fr;
+  gap: 1rem;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration.active {
+  display: grid;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .mrpack-summary {
+  grid-area: summary;
+  font-family: var(--secondary-font);
+  font-size: var(--step-0);
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .mrpack-summary p {
+  font-family: inherit;
+  font-size: inherit;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .type-selector {
+  grid-area: type;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .icon-selector {
+  grid-area: icon;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .install {
+  grid-area: install;
+  margin-top: 1.4em;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration {
+  grid-area: config;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  width: 100%;
+  gap: 1rem;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .toggle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .toggle .information {
+  cursor: pointer;
+  font-family: var(--secondary-font);
+  font-size: var(--step--2);
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .toggle .information > h1 {
+  font-family: inherit;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .toggle .information > h1:hover {
+  scale: 1.5;
+  rotate: 5deg;
+  transition: all 0.2s ease-in-out;
+  color: var(--mc-green-2, green);
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .toggle > p {
+  font-family: var(--secondary-font);
+  font-size: var(--step-0);
+  margin-top: 0.3em;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration {
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  width: 100%;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration.active {
+  display: flex;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration .memory,
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration .path {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration .memory .memory-inputs {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration .path {
+  width: 100%;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .checkbox {
+  grid-area: checkbox;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .type-selector select,
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .icon-selector select {
+  width: 100%;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration input {
+  width: 100%;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .status {
+  grid-area: status;
+  display: none;
+  font-size: var(--step-0);
+  font-family: var(--secondary-font);
+  text-align: center;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .status.active {
+  display: block;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .status p {
+  font-family: inherit;
+}
