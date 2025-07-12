@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react"
-import path from "path"
+// import path from "path"
 
 // Componentes
 import Sidebar from "@/pages/Sidebar"
@@ -13,8 +13,9 @@ import FileSelector from "@/components/FileSelector/FileSelector"
 import Modal from "@/components/Modal/Modal"
 
 // Hooks
-import { GetMrpackInfo } from "@/hooks/modrinth/mrpack"
-import { InstallModpack, InstallationModpackProps } from "@/hooks/minecraft/minecraft"
+// import { GetMrpackInfo } from "@/hooks/modrinth/mrpack"
+// import { InstallModpack } from "@/hooks/minecraft/minecraft"
+import { InstallationModpackProps } from "@/hooks/minecraft/minecraft"
 import { ProfileIcons } from '@/hooks/minecraft/launcher_profile'
 import { useGlobalMessage } from "@/context/GlobalMessageContext"
 
@@ -75,7 +76,7 @@ function Install() {
 
         try {
             
-            const _data = await GetMrpackInfo(file.path)
+            const _data = await window.nodeModules.minecraft.getMrpackInfo(file.path)
             
             const _modpack_dir_name = `${_data.metadata?.name.trim().replace(/\s+/g, "-").toLowerCase() || "modpack"}-${_data.metadata?.formatVersion.toString().trim().toLowerCase() || "latest"}`
             
@@ -84,7 +85,7 @@ function Install() {
                 minecraft_version: _data.minecraftVersion || "latest", // Versión de Minecraft del modpack
                 mrpack_info: _data, // Metadatos del modpack, inicialmente vacío
                 mrpack_path: file.path,
-                modpack_directory: path.join("instances", _modpack_dir_name)
+                modpack_directory: window.nodeModules.path.join("instances", _modpack_dir_name)
             }))
             setInstallationProgress((prevProgress) => ({
                 ...prevProgress,
@@ -111,7 +112,7 @@ function Install() {
         }
     }
 
-    const callBack = useCallback((message: string, status?: string) => {
+    const callBack = useCallback((message: string) => {
         // setInstallationProgress((prevInfo) => ({
         //     ...prevInfo,
         //     message: message,
@@ -294,9 +295,9 @@ function Install() {
                                     return
                                 }
                                 alert("Debes de tener cerrado el lanzador de Minecraft para que la instalación se realice correctamente.")
-                                callBack("Iniciando instalacion", "progress")
+                                callBack("Iniciando instalacion")
                                 
-                                InstallModpack (
+                                window.nodeModules.minecraft.installModpack (
                                     installationConfig, // Configuración de instalación del modpack
                                     callBack //callback
                                 )

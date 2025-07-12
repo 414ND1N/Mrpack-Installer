@@ -1,14 +1,14 @@
-import axios from 'axios'
+// import axios from 'axios'
 
 // Types
-import { Project } from '@/hooks/modrinth/ProjectType';
-import { SearchHit } from '@/types/Hit';
+import { Project } from '@/hooks/modrinth/ProjectType'
+import { SearchHit } from '@/types/Hit'
 
 export const fetchRandomProjects = async (count: number = 10): Promise<Project[]> => {
     try {
         const url = new URL('https://api.modrinth.com/v2/projects_random')
         url.searchParams.set('count', count.toString())
-        const response = await axios.get(url.toString())
+        const response = await window.nodeModules.axios.get(url.toString())
 
         return  response.data as Project[]
     } catch (error) {
@@ -27,7 +27,7 @@ export const searchProjects = async ( count: number = 10, type?: string , querry
 
         console.log(url.toString())
 
-        const response = await axios.get(url.toString())
+        const response = await window.nodeModules.axios.get(url.toString())
 
         return response.data as SearchHit
     } catch (error) {

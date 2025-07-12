@@ -1,7 +1,7 @@
 
 // Componentes
 import Sidebar from "@/pages/Sidebar"
-import { useRef } from "react";
+import { useRef } from "react"
 
 // Css
 import "./Home.css"

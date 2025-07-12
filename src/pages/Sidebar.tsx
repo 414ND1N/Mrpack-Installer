@@ -1,5 +1,5 @@
 import { memo, useEffect, useState } from 'react'
-import { ipcRenderer } from 'electron'
+// import { ipcRenderer } from 'electron'
 // Componentes
 import SidebarMinecraftComponent from '@/components/SidebarMinecraft/SidebarMinecraft'
 
@@ -10,7 +10,7 @@ import AnvilIcon from '@/icons/anvil_icon.png'
 import TuneIcon from '@/icons/tune.svg'
 
 // Types
-import { SidebarLink  } from "@/types/Sidebar";
+import { SidebarLink } from "@/types/Sidebar";
 
 function Sidebar({ current_path = "/" }: { current_path?: string }) {
 
@@ -19,8 +19,8 @@ function Sidebar({ current_path = "/" }: { current_path?: string }) {
     useEffect(() => {
         // Obtener la versión de la aplicación al cargar el componente
         const getVersion = async () => {
-            const appVersion = await ipcRenderer.invoke('get-version');
-            setVersion(appVersion);
+            const appVersion = await window.winConfig.getVersion()
+            setVersion(appVersion)
         }
         getVersion()
     }, []);

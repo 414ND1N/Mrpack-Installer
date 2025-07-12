@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { ipcRenderer } from 'electron'
+// import { ipcRenderer } from 'electron'
 
 
 import { useGlobalMessage } from "@/context/GlobalMessageContext"
@@ -11,13 +11,13 @@ import SectionsMinecraftComponent from "@/components/SectionsMinecraft/SectionsM
 // Css
 import "./Config.css"
 
-const handleFullscreenToggle = (isFullscreen: boolean) => {
-    ipcRenderer.invoke('set-fullscreen', isFullscreen);
+const handleFullscreenToggle = async (isFullscreen: boolean) => {
+    await window.winConfig.setFullscreen(isFullscreen)
 }
 
-const handleThemeChange = (theme: string) => {
-    ipcRenderer.invoke('set-theme', theme);
-    document.body.setAttribute("data-theme", theme);
+const handleThemeChange = async (theme: string) => {
+    await window.winConfig.setTheme( theme)
+    document.body.setAttribute("data-theme", theme)
 }
 
 
@@ -40,7 +40,7 @@ function Config() {
     const HandleUpdate = async () => {
         try {
             showMessage("Descargando actualización...")
-            await ipcRenderer.invoke("update-app")
+            await await window.winConfig.updateApp()
             showMessage("Actualización descargada. Debes de reiniciar la aplicación para aplicar los cambios.")
         } catch (error) {
             console.error("Error durante la actualización:", error)
@@ -51,17 +51,17 @@ function Config() {
         const getInitialConfig = async () => {
 
             // Aplicar el tema al estado
-            const savedTheme = await ipcRenderer.invoke('get-theme');
+            const savedTheme = await window.winConfig.getTheme()
             if (savedTheme) {
                 setThemeState(savedTheme)
             }
             // Aplicar el estado de pantalla completa
-            const isFullscreen = await ipcRenderer.invoke('get-fullscreen');
+            const isFullscreen = await window.winConfig.getFullscreen()
             if (isFullscreen !== undefined) {
                 setFullscreen(isFullscreen)
             }
             // Obtener el estado de actualización
-            const updateAvaliable = await ipcRenderer.invoke('check-update');
+            const updateAvaliable = await window.winConfig.ckeckUpdate()
             if (updateAvaliable !== undefined) {
                 setUpdateStatus(updateAvaliable)
             }

@@ -1,4 +1,4 @@
-import { useState, FC, ReactNode, memo} from "react";
+import { useState, FC, ReactNode, memo} from "react"
 import "./SectionsMinecraft.css";
 
 

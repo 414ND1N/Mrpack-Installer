@@ -1,29 +1,28 @@
-import { Component } from "react";
-import "./SidebarMinecraft.css";
+import { Component } from "react"
+import "./SidebarMinecraft.css"
 import { Link } from 'react-router-dom'
 
 // Types
-import { SidebarProps } from "../../types/Sidebar";
+import { SidebarProps } from "../../types/Sidebar"
 
 // Imagenes
 import UserIconPeepo from "./peepo.png"
 
 class SidebarMinecraftComponent extends Component<SidebarProps> {
     constructor(props: SidebarProps) {
-        super(props);
+        super(props)
     }
 
     renderLinks = (): JSX.Element[] => {
-        const { Links } = this.props;
+        const { Links } = this.props
         return Object.keys(Links).map((key, index) => {
-            const link = Links[key];
+            const link = Links[key]
             return (
                 <li 
                     key={index} 
                     className={`${link.active ? "active" : ""} ${link.footer ? "footer" : ""}`}
                     style={link.footer ? { marginTop: "auto" } : undefined}
                 >
-                    {/* <Link to="/Install">Instalar</Link> */}
                     <Link to={link.href || "/"} className={`${link.subtitle?.trim() !== "" ? "multiline" : "singleline"}`}>
                         {link.icon && <img src={link.icon} alt={key} />}
                         <p>
@@ -75,4 +74,4 @@ class SidebarMinecraftComponent extends Component<SidebarProps> {
     }
 }
 
-export default SidebarMinecraftComponent;
+export default SidebarMinecraftComponent

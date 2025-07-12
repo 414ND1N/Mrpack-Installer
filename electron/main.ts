@@ -39,9 +39,9 @@ function createWindow() {
     title: 'Modpack Installer',
     icon: path.join(process.env.VITE_PUBLIC, 'app-icon.png'),
     webPreferences: {
-      // preload: path.join(__dirname, 'preload.mjs'),
+      preload: path.join(__dirname, 'preload.mjs'),
       nodeIntegration: true,
-      contextIsolation: false,
+      contextIsolation: true,
       webviewTag: true,
     },
     fullscreen: isFullscreen,
@@ -183,7 +183,7 @@ app.whenReady().then(() => {
   if (!(process.platform === 'darwin') && !VITE_DEV_SERVER_URL) {
     Menu.setApplicationMenu(null)
   }
- 
+
   setupIpcEvents()
 
   console.log('Checking for updates...')

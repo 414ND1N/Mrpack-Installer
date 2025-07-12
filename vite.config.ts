@@ -9,10 +9,13 @@ export default defineConfig({
     base: './', // Esto fuerza rutas relativas
     build: {
       outDir: 'dist',
+      rollupOptions: {
+        external: [], // Agrega módulos externos si es necesario
+      },
     },
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, 'src'),
+        '@': path.resolve(__dirname, 'src'), // Ajusta 'src' según la estructura de tu proyecto
       },
     },
     plugins: [

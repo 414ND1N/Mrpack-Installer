@@ -135,7 +135,7 @@ const InstallMinecraft = async (props: InstallaMinecraftProps): Promise<any> => 
     try {
         /* INSTALACION MINECRAFT */
         
-        props.callback("Comenzando instalacion dependencias...", "progress")
+        props.callback("Comenzando instalacion dependencias...")
         
         const _launcher_options : LaunchOPTS = {
             path: getMinecraftDirectory(), // Ruta donde se instalará el modpack
@@ -181,13 +181,13 @@ const InstallMinecraft = async (props: InstallaMinecraftProps): Promise<any> => 
             minecraftJava
         })
             
-        props.callback("Finalizando instalacion dependencias...", "progress")
+        props.callback("Finalizando instalacion dependencias...")
 
         return data_download
 
     } catch (error) {
         console.error('Error installing mrpack:', error)
-        props.callback('Error installing mrpack', "failed")
+        props.callback('Error installing mrpack')
         throw error
     }
 }
