@@ -65,7 +65,7 @@ function Install() {
 
             const _data = await GetMrpackInfo(file.path)
 
-            const _modpack_dir_name = `${_data.metadata?.name.trim().replace(/\s+/g, "-").toLowerCase() || "modpack"}-${_data.metadata?.formatVersion.toString().trim().toLowerCase() || "latest"}`
+            const _modpack_dir_name = `${_data.metadata?.name.trim().replace(/\s+/g, "-").toLowerCase() || "modpack"}`
 
             setInstallationConfig((prevInfo) => ({
                 ...prevInfo,
@@ -149,10 +149,9 @@ function Install() {
                                 <input
                                     type="text"
                                     className="minecraft input"
-                                    placeholder="Ruta de instalación del modpack"
+                                    placeholder={t('install.sections.file.configuration.advanced.path.placeholder')}
                                     value={installationConfig.modpack_directory} // Ruta de instalación del modpack
                                     onChange={(event) => {
-
                                         const newPath = event.target.value.trim()
                                         if (!newPath || newPath.length === 0) {
                                             alert(t('install.sections.file.messages.error.invalid_path'))
@@ -166,7 +165,7 @@ function Install() {
                                 />
                             </div>
 
-                            <div className="memory" style={{ display: installationConfig.type === "server" ? "none" : "block" }}>
+                            <div className="memory">
                                 <p>{t('install.sections.file.configuration.advanced.memory.label')}</p>
                                 <div className="memory-inputs">
                                     <input

@@ -124,7 +124,8 @@
                         "invalid_modpack": "Archivo de paquete de mods inválido. Por favor, asegúrate de que el archivo sea un mrpack válido.",
                         "invalid_mrpack_file": "Archivo mrpack inválido. Por favor, asegúrate de que el archivo sea un mrpack válido.",
                         "adding_profile": "Error al agregar el perfil.",
-                        "adding_dependencies": "Error al agregar las dependencias."
+                        "adding_dependencies": "Error al agregar las dependencias.",
+                        "creating_start_script": "Error creando el script de inicio."
                     },
                     "installation": {
                         "need_launcher_closed": "Por favor, cierra el lanzador antes de instalar.",
@@ -133,7 +134,10 @@
                         "downloading_mods": "Descargando mods...",
                         "finish": "Instalación completada con éxito.",
                         "dependencies": "Instalando dependencias...",
-                        "finish_dependencies": "Dependencias instaladas con éxito."
+                        "finish_dependencies": "Dependencias instaladas con éxito.",
+                        "finish_start_script": "Script de inicio creado satisfactoriamente.",
+                        "server_dependencies": "Descargando instalador de servidor...",
+                        "finish_server_dependencies": "Descargado satisfactoriamente."
                     }
                 }
             }

@@ -125,7 +125,8 @@
                         "invalid_modpack": "Invalid modpack file. Please ensure the file is a valid mrpack.",
                         "invalid_mrpack_file": "Invalid mrpack file. Please ensure the file is a valid mrpack.",
                         "adding_profile": "Error adding profile.",
-                        "adding_dependencies": "Error adding dependencies."
+                        "adding_dependencies": "Error adding dependencies.",
+                        "creating_start_script": "Error creating start script."
                     },
                     "installation": {
                         "need_launcher_closed": "Please close the launcher before installing.",
@@ -134,7 +135,10 @@
                         "downloading_mods": "Downloading mods...",
                         "finish": "Installation completed successfully.",
                         "dependencies": "Installing dependencies...",
-                        "finish_dependencies": "Dependencies installed successfully."
+                        "finish_dependencies": "Dependencies installed successfully.",
+                        "finish_start_script": "Start script created successfully.",
+                        "server_dependencies": "Downloading server installer...",
+                        "finish_server_dependencies": "Download successfully."
                     }
                 }
             }

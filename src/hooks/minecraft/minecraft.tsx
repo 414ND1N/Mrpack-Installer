@@ -1,10 +1,14 @@
 import os from 'os'
 import path from 'path'
+import fs from 'fs'
+
+import VanillaServers from "@/hooks/minecraft/vanilla_servers.json"
 
 import { DownloadMarpackFiles } from '@/hooks/modrinth/mrpack'
 import { MrpackInfo} from '@/hooks/modrinth/Types'
 import { LoaderType } from "@/hooks/minecraft-java-core/src/Minecraft-Loader"
 import Launch, { LaunchOPTS } from "@/hooks/minecraft-java-core/src/Launch"
+import Downloader from "@/hooks/minecraft-java-core/src/utils/Downloader"
 import { AddLauncherProfile, ProfileIcons } from '@/hooks/minecraft/launcher_profile'
 import { TFunction } from 'i18next'
 
@@ -38,22 +42,50 @@ export const InstallModpack = async ( props: InstallationModpackProps, callback:
     const _loader_type = _loader_found?.type.split("-")[0] as LoaderType || null // Asignar el tipo de lanzador si se encuentra
     const _loader_build = _loader_found?.version || 'latest' // Asignar la build del lanzador si se encuentra, por defecto 'latest'
 
+    
+    let _memory_min = props.memory.min // Memoria mínima por defecto
+    let _memory_max = props.memory.max // Memoria máxima por defecto
+
+    // Si no tienen G o M, agregar G por defecto
+    if (!_memory_min.endsWith('G') ) {
+        _memory_min += 'G'; // Asignar G por defecto si no tiene G o M
+    }
+    if (!_memory_max.endsWith('G')) {
+        _memory_max += 'G'; // Asignar G por defecto si no tiene G o M
+    }
+    // Verificar que tengan formato correcto
+    if (!/^\d+[MG]$/.test(_memory_min)) {
+        _memory_min = "2G"; // Asignar valor por defecto si no es válido
+    }
+    if (!/^\d+[MG]$/.test(_memory_max)) {
+        _memory_max = "3G"; // Asignar valor por defecto si no es válido
+    }
+
+    // Verificar que la memoria máxima sea mayor o igual a la mínima
+    if (parseInt(_memory_max) < parseInt(_memory_min)) {
+        _memory_max = _memory_min; // Asignar memoria máxima igual a la mínima si es menor
+    }
+
+    const _java_args = `-Xmx${_memory_max} -Xms${_memory_min}`
+
+    const _install_props = {
+        callback: callback , // Función de callback para manejar el estado de la instalación
+        minecraft_version: props.minecraft_version, // Versión de Minecraft del modpack
+        memory: props.memory, // Opciones de memoria para el modpack
+        loader: {
+            path: props.modpack_directory, // Ruta donde se instalará el modpack
+            type: _loader_type, // Tipo de lanzador (forge, fabric, etc.)
+            build: _loader_build, // Build del lanzador
+            enable: _loader_found !== undefined // Si el lanzador está habilitado
+        },
+        translator: props.translator, // Función de traducción,
+        java_args: _java_args
+    }
+
     if (props.type === "client" || props.type === "singleplayer") {
         // Instalar minecraft, loader y archivos mrpack
-
+        
         /* INSTALACION MINECRAFT */
-        const _install_props = {
-            callback: callback , // Función de callback para manejar el estado de la instalación
-            minecraft_version: props.minecraft_version, // Versión de Minecraft del modpack
-            memory: props.memory, // Opciones de memoria para el modpack
-            loader: {
-                path: props.modpack_directory, // Ruta donde se instalará el modpack
-                type: _loader_type, // Tipo de lanzador (forge, fabric, etc.)
-                build: _loader_build, // Build del lanzador
-                enable: _loader_found !== undefined // Si el lanzador está habilitado
-            },
-            translator: props.translator // Función de traducción
-        }
 
         // Instalar Minecraft y lanzador
         console.log('Instalando Minecraft y lanzador con las opciones:', _install_props)
@@ -64,46 +96,24 @@ export const InstallModpack = async ( props: InstallationModpackProps, callback:
         callback(props.translator('install.sections.file.messages.installation.adding_profile'))
 
 
-        let _memory_min = props.memory.min // Memoria mínima por defecto
-        let _memory_max = props.memory.max // Memoria máxima por defecto
-
-        // Si no tienen G o M, agregar G por defecto
-        if (!_memory_min.endsWith('G') ) {
-            _memory_min += 'G'; // Asignar G por defecto si no tiene G o M
-        }
-        if (!_memory_max.endsWith('G')) {
-            _memory_max += 'G'; // Asignar G por defecto si no tiene G o M
-        }
-        // Verificar que tengan formato correcto
-        if (!/^\d+[MG]$/.test(_memory_min)) {
-            _memory_min = "2G"; // Asignar valor por defecto si no es válido
-        }
-        if (!/^\d+[MG]$/.test(_memory_max)) {
-            _memory_max = "3G"; // Asignar valor por defecto si no es válido
-        }
-
-        // Verificar que la memoria máxima sea mayor o igual a la mínima
-        if (parseInt(_memory_max) < parseInt(_memory_min)) {
-            _memory_max = _memory_min; // Asignar memoria máxima igual a la mínima si es menor
-        }
-
         const _icon = props.profile_icon || ProfileIcons.Bedrock
         const _last_version_id = minecraftLoader.id
-        // const _last_version_id = "id aqui"
         const _name = props.mrpack_info?.metadata?.name || "Modpack"
-        const _game_dir = path.join(getMinecraftDirectory(), props.modpack_directory)
-        const _java_args = `-Xmx${_memory_max} -Xms${_memory_min}` // Argumentos de la JVM para asignar memoria
         const _profiles_json = path.join(getMinecraftDirectory(), "launcher_profiles.json")
+        const _game_dir = path.join(getMinecraftDirectory(), props.modpack_directory)
+        
 
         // Crear el perfil del lanzador
         try {
-            await AddLauncherProfile(_profiles_json, _icon, _last_version_id, _name, _game_dir, _java_args)
+            await AddLauncherProfile(_profiles_json, _icon, _last_version_id, _name, _game_dir, `-Xmx${_memory_max} -Xms${_memory_min}`)
 
         } catch (error) {
             console.error('Error al añadir el perfil del lanzador:', error)
             callback(props.translator('install.sections.file.messages.error.adding_profile'))
             throw error
         }
+    } else { // servidor
+        await InstallServer(_install_props)
     }
 
     /* INSTALACION ARCHVOS MRPACK */
@@ -126,7 +136,8 @@ export interface InstallaMinecraftProps {
         build: string; // Build del lanzador (opcional)
         enable: boolean; // Si el lanzador está habilitado (opcional, por defecto true)
     }, // Si el lanzador está habilitado (opcional, por defecto true)
-    translator: TFunction
+    translator: TFunction,
+    java_args: string
 }
 
 /*
@@ -197,6 +208,49 @@ const InstallMinecraft = async (props: InstallaMinecraftProps): Promise<any> => 
         console.error('Error installing mrpack:', error)
         props.callback(props.translator('install.sections.file.messages.error.adding_dependencies'))
         throw error
+    }
+}
+
+/* 
+* Instalar un servidor de Minecraft y sus dependencias
+* @param props Opciones de instalación de Minecraft
+*/
+const InstallServer = async (props: InstallaMinecraftProps): Promise<void> => { 
+
+    try {
+        props.callback(props.translator('install.sections.file.messages.installation.server_dependencies'))
+
+        const _serverUrl = VanillaServers[props.minecraft_version]
+        const _serverFolder = path.join(getMinecraftDirectory(), props.loader.path)
+
+        // Download the server jar file
+        const _downloader = new Downloader()
+        await _downloader.downloadFile(_serverUrl, _serverFolder, 'server.jar') // Ensure async handling
+
+        console.log(`Server jar downloaded to: ${_serverFolder}`)
+        props.callback(props.translator('install.sections.file.messages.installation.finish_server_dependencies'))
+
+
+        // TODO: Download loader dependencies
+
+        // Create server start script
+        const _startScriptPath = path.join(_serverFolder, "start.bat.txt")
+        const _startScriptContent = `java ${props.java_args} -jar server.jar nogui`
+
+        try {
+            await fs.promises.writeFile(_startScriptPath, _startScriptContent, "utf8")
+            console.log(`Start script created at: ${_startScriptPath}`)
+            props.callback(props.translator('install.sections.file.messages.installation.finish_start_script'))
+        } catch (error) {
+            console.error("Error creating start script:", error)
+            props.callback(props.translator('install.sections.file.messages.error.creating_start_script'))
+            throw error;
+        }
+
+    } catch (error) {
+        console.error('Error downloading server jar:', error)
+        props.callback(props.translator('install.sections.file.messages.error.adding_dependencies'))
+        throw error;
     }
 }
 
