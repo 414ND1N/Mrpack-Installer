@@ -190,9 +190,9 @@ app.whenReady().then(() => {
   createWindow()
 
   // Disable menu on Windows and Linux only if not in development
-  if (!(process.platform === 'darwin') && !VITE_DEV_SERVER_URL) {
-    Menu.setApplicationMenu(null)
-  }
+  // if (!(process.platform === 'darwin') && !VITE_DEV_SERVER_URL) {
+  //   Menu.setApplicationMenu(null)
+  // }
  
   setupIpcEvents()
 
