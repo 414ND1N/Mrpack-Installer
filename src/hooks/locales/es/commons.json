@@ -5,6 +5,10 @@
             "invalid_type": "Tipo de archivo inválido. Los tipos de archivo válidos son: "
         }
     },
+    "update": {
+        "avaliable": "Hay una actualización disponible",
+        "instructions": "Ve a configuración > Acerca de > Actualización para descargar la última versión."
+    },
     "minecraft": {
         "launcher": {
             "profile": {

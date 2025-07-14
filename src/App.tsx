@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next'
 function App() {
 
   const { showMessage } = useGlobalMessage();
-  const { i18n } = useTranslation(['menu'])
+  const { t, i18n } = useTranslation(['commons'])
 
   useEffect(() => {
     // Aplicar el tema al cargar la aplicación
@@ -32,6 +32,7 @@ function App() {
         const updateAvaliable = await ipcRenderer.invoke('check-update')
         if (updateAvaliable === true) {
           showMessage("Se ha encontrado una actualización disponible. Actualiza la aplicación para disfrutar de las últimas características y mejoras. Dirigite a la seccion de Configuración > Acerca De.");
+          showMessage(`${t('update.avaliable', { ns: "commons" })} ${t('update.instructions', { ns: "commons" })}`);
         }
 
         const language = await ipcRenderer.invoke('get-language')

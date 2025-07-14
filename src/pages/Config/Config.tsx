@@ -220,9 +220,9 @@ function Config() {
                 </div>
 
                 <div className={`update-status ${ !updateStatus ? "disabled" : ""}`}>
-                    <h3>{t('settings.sections.about.side_info.update.title')}</h3>
+                    <h3>{t('settings.sections.about.update.title')}</h3>
                     <button className='minecraft updater' onClick={HandleUpdate}>
-                        {t('settings.sections.about.side_info.update.button')}
+                        {t('settings.sections.about.update.button')}
                     </button>
                 </div>
             </section>

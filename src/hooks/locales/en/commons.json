@@ -5,6 +5,10 @@
             "invalid_type": "Invalid file type. The valid file types are: "
         }
     },
+    "update": {
+        "avaliable": "An update is available",
+        "instructions": "Go to settings > About > Update to download the latest version."
+    },
     "minecraft": {
         "launcher": {
             "profile": {
