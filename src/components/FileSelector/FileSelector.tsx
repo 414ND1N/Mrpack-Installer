@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from 'react-i18next'
 
 import "./FileSelector.css"
 
@@ -25,6 +26,7 @@ interface FileSelectorProps {
 
 function FileSelector( { AcceptExtensions, FileCallback, className }: FileSelectorProps ) {
     const [fileName, setFileName] = useState < string | null > (null)
+    const { t } = useTranslation(["commons"])
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -32,7 +34,7 @@ function FileSelector( { AcceptExtensions, FileCallback, className }: FileSelect
             // Verificar la extensión del archivo
             const fileExtension = event.target.files[0].name.split('.').pop()?.toLowerCase();
             if (!AcceptExtensions.includes(`.${fileExtension}`)) {
-                alert(`El archivo seleccionado no es válido. Debe ser uno de los siguientes tipos: ${AcceptExtensions.join(", ")}`);
+                alert(`${t('file.alerts.invalid_type')} ${AcceptExtensions.join(", ")}`);
                 return;
             }
 
@@ -48,7 +50,7 @@ function FileSelector( { AcceptExtensions, FileCallback, className }: FileSelect
             // Verificar la extensión del archivo
             const fileExtension = event.dataTransfer.files[0].name.split('.').pop()?.toLowerCase();
             if (!AcceptExtensions.includes(`.${fileExtension}`)) {
-                alert(`El archivo arrastrado no es válido. Debe ser uno de los siguientes tipos: ${AcceptExtensions.join(", ")}`);
+                alert(`${t('file.alerts.invalid_type')} ${AcceptExtensions.join(", ")}`);
                 return;
             }
 
@@ -69,7 +71,7 @@ function FileSelector( { AcceptExtensions, FileCallback, className }: FileSelect
         >
             <label htmlFor="file-input" className="file-label">
                 <FileSelectorSvg/>  
-                <span>{fileName || "Importar archivo"}</span>
+                <span>{fileName || t('file.placeholder') }</span>
             </label>
             <input
                 id="file-input"

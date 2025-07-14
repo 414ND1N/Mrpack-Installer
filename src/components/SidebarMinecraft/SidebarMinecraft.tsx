@@ -1,6 +1,7 @@
-import { Component } from "react";
+import React from "react";
 import "./SidebarMinecraft.css";
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 // Types
 import { SidebarProps } from "../../types/Sidebar";
@@ -8,13 +9,10 @@ import { SidebarProps } from "../../types/Sidebar";
 // Imagenes
 import UserIconPeepo from "./peepo.png"
 
-class SidebarMinecraftComponent extends Component<SidebarProps> {
-    constructor(props: SidebarProps) {
-        super(props);
-    }
+const SidebarMinecraftComponent: React.FC<SidebarProps> = ({ Links, Version }) => {
+    const { t } = useTranslation(['menu']);
 
-    renderLinks = (): JSX.Element[] => {
-        const { Links } = this.props;
+    const renderLinks = (): JSX.Element[] => {
         return Object.keys(Links).map((key, index) => {
             const link = Links[key];
             return (
@@ -23,11 +21,10 @@ class SidebarMinecraftComponent extends Component<SidebarProps> {
                     className={`${link.active ? "active" : ""} ${link.footer ? "footer" : ""}`}
                     style={link.footer ? { marginTop: "auto" } : undefined}
                 >
-                    {/* <Link to="/Install">Instalar</Link> */}
-                    <Link to={link.href || "/"} className={`${link.subtitle?.trim() !== "" ? "multiline" : "singleline"}`}>
-                        {link.icon && <img src={link.icon} alt={key} />}
+                    <Link to={key || "/"} className={`${link.subtitle?.trim() !== "" ? "multiline" : "singleline"}`}>
+                        {link.icon && <img src={link.icon} alt={link.title} />}
                         <p>
-                            <span className="title">{key}</span>
+                            <span className="title">{link.title}</span>
                             {link.subtitle && (
                                 <>
                                     <br />
@@ -41,38 +38,36 @@ class SidebarMinecraftComponent extends Component<SidebarProps> {
         });
     };
 
-    renderHeader = (): JSX.Element => {
-        return(
+    const renderHeader = (): JSX.Element => {
+        return (
             <li className="header">
                 <a className="multiline">
                     <img src={UserIconPeepo} alt="Header" />
                     <p> 
-                        <span>Bienvenido !!</span>
+                        <span>{t('sidebar.header.title')}</span>
                         <br/>
-                        <span>Pana fresco</span>
+                        <span>{t('sidebar.header.subtitle')}</span>
                     </p>
                 </a>
             </li>
-        )
-    }
-
-    render() {
-        return (
-            <section className="sidebar-component">
-                <nav className={`sidebar`}>
-                    <ul className="sidebar-header">
-                        { this.renderHeader() }
-                    </ul>
-                    <ul className="sidebar-list">
-                        {this.renderLinks()}
-                    </ul>
-                    <div className="version">
-                        <p>v.{this.props.Version || "0.0.0"}</p>
-                    </div>
-                </nav>
-            </section>
         );
-    }
-}
+    };
+
+    return (
+        <section className="sidebar-component">
+            <nav className={`sidebar`}>
+                <ul className="sidebar-header">
+                    {renderHeader()}
+                </ul>
+                <ul className="sidebar-list">
+                    {renderLinks()}
+                </ul>
+                <div className="version">
+                    <p>v.{Version || "0.0.0"}</p>
+                </div>
+            </nav>
+        </section>
+    );
+};
 
 export default SidebarMinecraftComponent;

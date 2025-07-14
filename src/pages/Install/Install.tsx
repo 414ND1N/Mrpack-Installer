@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react"
 import path from "path"
+import { useTranslation } from 'react-i18next'
 
 // Componentes
 import Sidebar from "@/pages/Sidebar"
@@ -18,16 +19,10 @@ import { InstallModpack, InstallationModpackProps } from "@/hooks/minecraft/mine
 import { ProfileIcons } from '@/hooks/minecraft/launcher_profile'
 import { useGlobalMessage } from "@/context/GlobalMessageContext"
 
-interface InstallationProgress {
-    fileExists: boolean
-    status: string
-    message?: string // Mensaje opcional para mostrar información adicional
-    error?: string
-}
-
 function Install() {
 
     const { showMessage } = useGlobalMessage()
+    const { t } = useTranslation(["views", "commons"])
 
     const [installationConfig, setInstallationConfig] = useState<InstallationModpackProps>({
         type: "singleplayer", // Por defecto, tipo cliente
@@ -40,14 +35,11 @@ function Install() {
         mrpack_info: undefined, // Datos de mrpack, inicialmente vacío
         mrpack_path: "", // Ruta del archivo mrpack, inicialmente vacío
         profile_icon: ProfileIcons.Bedrock, // Icono del perfil, inicialmente vacío
+        translator: t
     })
 
-    const [installationProgress, setInstallationProgress] = useState<InstallationProgress>({
-        fileExists: false, // Indica si el archivo ya existe
-        status: 'pending', // Estado de la instalación
-        message: "Esperando acción del usuario" // Estado inicial
-    })
 
+    const [installationProgress, setInstallationProgress] = useState<boolean>(false)
     const [personalizedConfig, setPersonalizedConfig] = useState<boolean>(false)
     const [openModal, setOpenModal] = useState<boolean>(false)
 
@@ -57,14 +49,10 @@ function Install() {
         console.log("Archivo seleccionado:", file)
 
         // Verificar si el archivo es un modpack válido
-        if (! file?.name.endsWith(".mrpack")) {
-            alert("El archivo seleccionado no es un modpack válido. Debe tener la extensión .mrpack")
-            
-            setInstallationProgress({
-                fileExists: false, // Reiniciar el estado de archivo existente
-                error: "El archivo seleccionado no es un modpack válido. Debe tener la extensión .mrpack",
-                status: 'pending'
-            })
+        if (!file?.name.endsWith(".mrpack")) {
+            alert(t('install.sections.file.messages.error.invalid_mrpack_file'))
+
+            setInstallationProgress(false)
             setInstallationConfig((prevInfo) => ({
                 ...prevInfo,
                 mrpack_info: undefined // Metadatos del modpack, inicialmente vacío
@@ -74,11 +62,11 @@ function Install() {
         }
 
         try {
-            
+
             const _data = await GetMrpackInfo(file.path)
-            
+
             const _modpack_dir_name = `${_data.metadata?.name.trim().replace(/\s+/g, "-").toLowerCase() || "modpack"}-${_data.metadata?.formatVersion.toString().trim().toLowerCase() || "latest"}`
-            
+
             setInstallationConfig((prevInfo) => ({
                 ...prevInfo,
                 minecraft_version: _data.minecraftVersion || "latest", // Versión de Minecraft del modpack
@@ -86,86 +74,58 @@ function Install() {
                 mrpack_path: file.path,
                 modpack_directory: path.join("instances", _modpack_dir_name)
             }))
-            setInstallationProgress((prevProgress) => ({
-                ...prevProgress,
-                fileExists: true, // Reiniciar el estado de archivo existente
-                message: "Archivo seleccionado correctamente", // Actualizar el estado
-                status:'pending'
-            }))
+            setInstallationProgress(true)
 
         } catch (error) {
             console.error("Error al obtener los metadatos del modpack:", error)
-            alert("Error al obtener los metadatos del modpack. Asegúrate de que el archivo sea un modpack válido.")
+            alert(t('install.sections.file.messages.error.invalid_modpack'))
 
             setInstallationConfig((prevInfo) => ({
                 ...prevInfo,
                 mrpack_info: undefined, // Metadatos del modpack, inicialmente vacío
                 modpack_directory: "instances" // Reiniciar la ruta de instalación del modpack
             }))
-            setInstallationProgress((prevProgress) => ({
-                ...prevProgress,
-                fileExists: false, // Reiniciar el estado de archivo existente
-                message: "Error al obtener los datos del modpack", // Actualizar el estado
-                status: 'failed'
-            }))
+            setInstallationProgress(false)
         }
     }
 
-    const callBack = useCallback((message: string, status?: string) => {
-        // setInstallationProgress((prevInfo) => ({
-        //     ...prevInfo,
-        //     message: message,
-        //     status: status || 'pending',
-        // }));
+    const callBack = useCallback((message: string) => {
         showMessage(message)
-    }, [setInstallationProgress]);
+    }, [setInstallationProgress])
 
     // secciones
     const sectionFromFile = (
         <>
             <section className="header">
-                <h2>Desde archivo <strong>mrpack</strong></h2>
-                <p>Instala un modpack utilizando un archivo
-                    <a
-                        href="https://support.modrinth.com/en/articles/8802351-modrinth-modpack-format-mrpack"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="minecraft"
-                    >
-                        mrpack
-                    </a>
-                </p>
+                <h2>{t('install.sections.file.title')}</h2>
+                <p>{t('install.sections.file.subtitle')}</p>
             </section>
-            <section className={`content ${installationProgress.status}`}>
-
-                <div className="status-message">
-                    <h2>{installationProgress.message}</h2>
-                </div>
+            <section className='content'>
 
                 <FileSelector AcceptExtensions={[".mrpack"]} FileCallback={handleFile} className="minecraft" />
 
-                <section className={`installation-configuration ${installationProgress.fileExists ? "active" : ""}`}>
+                <section className={`installation-configuration ${installationProgress ? "active" : ""}`}>
 
                     <section className="mrpack-summary">
-                        {installationConfig.mrpack_info?.metadata ? <p>Nombre: {installationConfig.mrpack_info.metadata?.name || "NA"} </p> : null}
-                        {installationConfig.mrpack_info?.metadata?.summary ? <p>Descripción: {installationConfig.mrpack_info.metadata?.summary || "NA"} </p> : null}
-                        {installationConfig.minecraft_version ? <p>Versión de Minecraft: {installationConfig.minecraft_version||"NA"}</p> : null}
+                        {installationConfig.mrpack_info?.metadata ? <p>{t('install.sections.file.information.summary.name')}: {installationConfig.mrpack_info.metadata?.name || "NA"} </p> : null}
+                        {installationConfig.mrpack_info?.metadata?.summary ? <p>{t('install.sections.file.information.summary.description')}: {installationConfig.mrpack_info.metadata?.summary || "NA"} </p> : null}
+                        {installationConfig.minecraft_version ? <p>{t('install.sections.file.information.summary.version')}: {installationConfig.minecraft_version || "NA"}</p> : null}
                     </section>
 
                     <section className="configuration">
 
                         <div className="toggle">
-                            <div className="checkbox minecraft style-1">
+                            <div className="checkslider minecraft style-1">
                                 <label className="switch">
                                     <input
                                         type="checkbox"
                                         onChange={(e) => {
                                             // Confirma si el usuario quiere personalizar la configuración
-                                            if ( e.target.checked ) {
+                                            if (e.target.checked) {
                                                 // Si se desmarca, reinicia la configuración a los valores por defecto
                                                 if (
                                                     !window.confirm("Hazlo solo si sabes lo que estás haciendo.")
-                                                ){
+                                                ) {
                                                     return
                                                 }
                                             }
@@ -176,7 +136,7 @@ function Install() {
                                     <span className="slider"></span>
                                 </label>
                             </div>
-                            <p>Activar configuración avanzada</p>
+                            <p>{t('install.sections.file.configuration.advanced.activate')}</p>
                             <div className="information" onClick={() => setOpenModal(true)}>
                                 <h1>?</h1>
                             </div>
@@ -185,7 +145,7 @@ function Install() {
                         <div className={`advanced-configuration ${personalizedConfig ? "active" : ""}`}>
 
                             <div className="path">
-                                <p className="title">Ubicación de instalación de modpack (respecto .minecraft)</p>
+                                <p className="title">{t('install.sections.file.configuration.advanced.path.label')}</p>
                                 <input
                                     type="text"
                                     className="minecraft input"
@@ -195,7 +155,7 @@ function Install() {
 
                                         const newPath = event.target.value.trim()
                                         if (!newPath || newPath.length === 0) {
-                                            alert("Por favor, introduce una ruta válida.")
+                                            alert(t('install.sections.file.messages.error.invalid_path'))
                                             return
                                         }
                                         setInstallationConfig((prevInfo) => ({
@@ -206,13 +166,13 @@ function Install() {
                                 />
                             </div>
 
-                            <div className="memory">
-                                <p>Memoria asignada al juego</p>
+                            <div className="memory" style={{ display: installationConfig.type === "server" ? "none" : "block" }}>
+                                <p>{t('install.sections.file.configuration.advanced.memory.label')}</p>
                                 <div className="memory-inputs">
                                     <input
                                         type="text"
                                         className="minecraft input"
-                                        placeholder="Mínima en GB "
+                                        placeholder={t('install.sections.file.configuration.advanced.memory.min_placeholder')}
                                         value={installationConfig.memory.min}
                                         onChange={(event) =>
                                             setInstallationConfig((prevInfo) => ({
@@ -227,7 +187,7 @@ function Install() {
                                     <input
                                         type="text"
                                         className="minecraft input"
-                                        placeholder="Máxima en GB"
+                                        placeholder={t('install.sections.file.configuration.advanced.memory.max_placeholder')}
                                         value={installationConfig.memory.max}
                                         onChange={(event) =>
                                             setInstallationConfig((prevInfo) => ({
@@ -245,29 +205,11 @@ function Install() {
                     </section>
 
                     <section className="inputs">
-                        <div className="type-selector">
-                            <p>Tipo de instalación</p>
-                            <select
-                                className="minecraft"
-                                value={installationConfig.type}
-                                onChange={(event) =>
-                                    setInstallationConfig((prevInfo) => ({
-                                        ...prevInfo,
-                                        type: event.target.value
-                                    }))
-                                }
-                            >
-                                <option value="singleplayer">Singleplayer</option>
-                                <option value="client">Cliente servidor</option>
-                                <option value="server">Servidor</option>
-                            </select>
-                        </div>
-
-                        <div 
+                        <div
                             className="icon-selector"
                             style={{ display: installationConfig.type === "server" ? "none" : "block" }}
-                            >
-                            <p>Icono del perfil</p>
+                        >
+                            <p>{t('install.sections.file.configuration.profile.label')}</p>
                             <select
                                 className="minecraft"
                                 value={installationConfig.profile_icon}
@@ -279,33 +221,46 @@ function Install() {
                                 }
                             >
                                 {Object.entries(ProfileIcons).map(([key, value]) => (
-                                    <option key={key} value={key}>
-                                        {value}
+                                    <option key={key} value={value}>
+                                        {t(`minecraft.launcher.profile.icons.${key}`, { ns: "commons" })}
                                     </option>
                                 ))}
                             </select>
                         </div>
-
+                        <div className="type-selector">
+                            <p>{t('install.sections.file.configuration.type.label')}</p>
+                            <select
+                                className="minecraft"
+                                value={installationConfig.type}
+                                onChange={(event) =>
+                                    setInstallationConfig((prevInfo) => ({
+                                        ...prevInfo,
+                                        type: event.target.value
+                                    }))
+                                }
+                            >
+                                <option value="singleplayer">{t('install.sections.file.configuration.type.list.singleplayer')}</option>
+                                <option value="client">{t('install.sections.file.configuration.type.list.client')}</option>
+                                <option value="server">{t('install.sections.file.configuration.type.list.server')}</option>
+                            </select>
+                        </div>
                         <button className="install minecraft"
-                            disabled={!installationProgress.fileExists}
+                            disabled={!installationProgress}
                             onClick={() => {
                                 if (!installationConfig.mrpack_info) {
-                                    alert("No se ha seleccionado un modpack válido.")
+                                    alert(t('install.sections.file.messages.error.no_file_selected'))
                                     return
                                 }
-                                alert("Debes de tener cerrado el lanzador de Minecraft para que la instalación se realice correctamente.")
-                                callBack("Iniciando instalacion", "progress")
-                                
-                                InstallModpack (
+                                alert(t('install.sections.file.messages.installation.need_launcher_closed'))
+                                callBack(t('install.sections.file.messages.installation.starting'))
+
+                                InstallModpack(
                                     installationConfig, // Configuración de instalación del modpack
                                     callBack //callback
                                 )
-                                // .then(() => {
-                                //     hideMessage()
-                                // })
                             }}
                         >
-                            Instalar
+                            {t('install.sections.file.configuration.install.button')}
                         </button>
                     </section>
 
@@ -314,59 +269,39 @@ function Install() {
         </>
     )
 
-    // const sectionFromUrl = (
-    //     <>
-    //         <section className="header">
-    //             <h2>Desde url</h2>
-    //             <p>Instala un modpack utiliando un enlace de
-    //                 <a
-    //                     href="https://modrinth.com/modpacks"
-    //                     target="_blank"
-    //                     rel="noopener noreferrer"
-    //                     className="minecraft"
-    //                 >
-    //                     Modrinth
-    //                 </a>
-    //             </p>
-    //         </section>
-    //         <section className="content">
-
-    //         </section>
-    //     </>
-    // )
-
     return (
         <main className="main-container">
-            <Sidebar current_path="/Install"/>
+            <Sidebar current_path="/Install" />
             <section className="install-container">
                 <Modal IsOpen={openModal} onClick={() => setOpenModal(false)} size="medium">
                     <>
-                        <h2>Archivos del modpack</h2>
-                        <ul>
-                            {installationConfig.mrpack_info?.metadata.files
-                                ?.sort((a, b) => a.path.localeCompare(b.path)) // Order
-                                .map((file) => {
-                                    if (file.path) {
-                                        return <li key={file.path}>{file.path.split(".")[0].replace("/", " > ") || "unknown"}</li>
-                                    }
-                                })}
-                        </ul>
+                        {installationConfig.mrpack_info?.metadata.files && installationConfig.mrpack_info.metadata.files.length > 0 ? (
+                            <>
+                                <h2>{t('install.sections.file.information.list.label')}</h2>
+                                <ul>
+                                    {installationConfig.mrpack_info.metadata.files
+                                        ?.sort((a, b) => a.path.localeCompare(b.path)) // Order
+                                        .map((file) => {
+                                            if (file.path) {
+                                                return <li key={file.path}>{file.path.split(".")[0].replace("/", " > ") || "unknown"}</li>
+                                            }
+                                        })}
+                                </ul>
+                            </>
+                        ) : (
+                            <h2>{t('install.sections.file.information.list.empty')}</h2>
+                        )}
                     </>
                 </Modal>
                 <SectionsMinecraftComponent
-                    title="INSTALACIÓN DE MODPACKS"
+                    title={t('install.header.title')}
                     sections={
                         [
                             {
                                 id: "from-file",
-                                title: "Archivo",
+                                title: t('install.sections.file.title'),
                                 content: sectionFromFile
                             }
-                            // , {
-                            //     id: "from-url",
-                            //     title: "Enlace",
-                            //     content: sectionFromUrl
-                            // }
                         ]
                     }
                 />

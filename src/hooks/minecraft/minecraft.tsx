@@ -6,6 +6,8 @@ import { MrpackInfo} from '@/hooks/modrinth/Types'
 import { LoaderType } from "@/hooks/minecraft-java-core/src/Minecraft-Loader"
 import Launch, { LaunchOPTS } from "@/hooks/minecraft-java-core/src/Launch"
 import { AddLauncherProfile, ProfileIcons } from '@/hooks/minecraft/launcher_profile'
+import { TFunction } from 'i18next'
+
 
 export interface InstallationModpackProps {
     type: string,                       // Por defecto, tipo cliente
@@ -18,15 +20,16 @@ export interface InstallationModpackProps {
     mrpack_info?: MrpackInfo,   // Metadatos del modpack, inicialmente vacío
     mrpack_path: string                 // Ruta del archivo mrpackData, inicialmente vacío
     profile_icon?: ProfileIcons,          // Icono del perfil del lanzador, inicialmente vacío
+    translator: TFunction // Función de traducción, opcional
 }
 
-export const InstallModpack = async ( props: InstallationModpackProps, callback: Function = (() => {})): Promise<void> => {
-    /*
-        Instalar un modpack desde un archivo mrpack y sus dependencias
 
-        :param props: Objeto InstallationModpackProps con los metadatos del modpack
-        :param callback: Función de callback para manejar el estado de la instalación (opcional)
-    */
+/*
+* Instalar un modpack desde un archivo mrpack y sus dependencias
+* @param props Opciones de instalación del modpack (opcional)
+* @param callback Función de callback para manejar el estado de la instalación (opcional)
+*/
+export const InstallModpack = async ( props: InstallationModpackProps, callback: Function = (() => {})): Promise<void> => {
 
     console.log('Instalando modpack con los props:', props)
 
@@ -48,7 +51,8 @@ export const InstallModpack = async ( props: InstallationModpackProps, callback:
                 type: _loader_type, // Tipo de lanzador (forge, fabric, etc.)
                 build: _loader_build, // Build del lanzador
                 enable: _loader_found !== undefined // Si el lanzador está habilitado
-            }
+            },
+            translator: props.translator // Función de traducción
         }
 
         // Instalar Minecraft y lanzador
@@ -57,7 +61,7 @@ export const InstallModpack = async ( props: InstallationModpackProps, callback:
 
         /* CREACIÓN PERFIL PARA LANZADORES */
         
-        callback("Añadiendo perfil al lanzador...", "progress")
+        callback(props.translator('install.sections.file.messages.installation.adding_profile'))
 
 
         let _memory_min = props.memory.min // Memoria mínima por defecto
@@ -97,16 +101,16 @@ export const InstallModpack = async ( props: InstallationModpackProps, callback:
 
         } catch (error) {
             console.error('Error al añadir el perfil del lanzador:', error)
-            callback('Error al añadir el perfil del lanzador', "failed")
+            callback(props.translator('install.sections.file.messages.error.adding_profile'))
             throw error
         }
     }
 
     /* INSTALACION ARCHVOS MRPACK */
-    callback('Descargando mods ...', "progress")
+    callback(props.translator('install.sections.file.messages.installation.downloading_mods'))
     await DownloadMarpackFiles(props.mrpack_path, path.join(getMinecraftDirectory(), props.modpack_directory), props.type || 'singleplayer')
 
-    callback("Modpack instalado", "completed")
+    callback(props.translator('install.sections.file.messages.installation.finish'))
 }
 
 export interface InstallaMinecraftProps {
@@ -121,10 +125,14 @@ export interface InstallaMinecraftProps {
         type: LoaderType; // Tipo de lanzador (forge, fabric, etc.)
         build: string; // Build del lanzador (opcional)
         enable: boolean; // Si el lanzador está habilitado (opcional, por defecto true)
-    } // Si el lanzador está habilitado (opcional, por defecto true)
+    }, // Si el lanzador está habilitado (opcional, por defecto true)
+    translator: TFunction
 }
 
-
+/*
+* Instalar Minecraft y sus dependencias
+* @param props Opciones de instalación de Minecraft
+*/
 const InstallMinecraft = async (props: InstallaMinecraftProps): Promise<any> => {
 
     /*
@@ -135,7 +143,7 @@ const InstallMinecraft = async (props: InstallaMinecraftProps): Promise<any> => 
     try {
         /* INSTALACION MINECRAFT */
         
-        props.callback("Comenzando instalacion dependencias...", "progress")
+        props.callback(props.translator('install.sections.file.messages.installation.dependencies'))
         
         const _launcher_options : LaunchOPTS = {
             path: getMinecraftDirectory(), // Ruta donde se instalará el modpack
@@ -181,16 +189,17 @@ const InstallMinecraft = async (props: InstallaMinecraftProps): Promise<any> => 
             minecraftJava
         })
             
-        props.callback("Finalizando instalacion dependencias...", "progress")
+        props.callback(props.translator('install.sections.file.messages.installation.finish_dependencies'))
 
         return data_download
 
     } catch (error) {
         console.error('Error installing mrpack:', error)
-        props.callback('Error installing mrpack', "failed")
+        props.callback(props.translator('install.sections.file.messages.error.adding_dependencies'))
         throw error
     }
 }
+
 
 export const getMinecraftDirectory = (): string => {
 

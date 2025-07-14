@@ -259,7 +259,7 @@ export default class Launch extends EventEmitter {
 
 		if (this.options.loader.type) {
 			this.options.loader.type = this.options.loader.type.toLowerCase()
-			this.options.loader.build = this.options.loader.build.toLowerCase()
+			this.options.loader.build = this.options.loader.build?.toLowerCase()
 		}
 
 		

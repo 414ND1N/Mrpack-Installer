@@ -1,0 +1,31 @@
+{
+    "appTitle": "Modpack Installer",
+    "sidebar": {
+        "header": {
+            "title": "Welcome",
+            "subtitle": "Back !!"
+        },
+        "views": {
+            "news": {
+                "title": "NEWS",
+                "subtitle": "Minecraft"
+            },
+            "discover": {
+                "title": "DISCOVER",
+                "subtitle": "Proyects"
+            },
+            "install": {
+                "title": "INSTALL",
+                "subtitle": "Mrpacks"
+            },
+            "settings": {
+                "title": "SETTINGS",
+                "subtitle": ""
+            }
+        }
+    },
+    "settings": {
+        "theme": "Theme",
+        "language": "Language"
+    }
+}

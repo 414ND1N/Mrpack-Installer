@@ -1,6 +1,7 @@
 // Componentes
 import Sidebar from "@/pages/Sidebar"
 import { useState, useEffect } from "react"
+import { useTranslation } from 'react-i18next'
 
 // Css
 import "./Discover.css"
@@ -19,10 +20,12 @@ function Discover() {
     const [totalProjects, setTotalProjects] = useState(0)
     const [searchQuery, setSearchQuery] = useState<string>("")
     const [projectType, setProjectType] = useState<string>("")
+    const { t } = useTranslation(['views'])
+    const searchNumber = 32 // Número de proyectos por página
 
     const loadProjects = async () => {
         try {
-            const projects = await searchProjects(30, projectType ? projectType : undefined, searchQuery ? searchQuery : undefined, page * 30)
+            const projects = await searchProjects(searchNumber, projectType ? projectType : undefined, searchQuery ? searchQuery : undefined, page * searchNumber)
             setProjects(projects.hits)
             setTotalProjects(projects.total_hits)
         } catch (error) {
@@ -41,7 +44,7 @@ function Discover() {
             <Sidebar current_path="/Discover"/>
             <section className="discover-container">
                 <section className="header">
-                    <input type="text" className="minecraft" placeholder="Nombre de proyecto"
+                    <input type="text" className="minecraft" placeholder={t('discover.search_field_placeholder')}
                         onChange={(e) => {
                             setSearchQuery(e.target.value)
                         }}
@@ -52,18 +55,18 @@ function Discover() {
                             loadProjects()
                         }}
                     >
-                        Buscar
+                        {t('discover.search_button')}
                     </button>
                     <select name="" id="" className="minecraft"
                         onChange={(e) => {
                             setProjectType(e.target.value)
                         }}
                     >
-                        <option value="">Todas</option>
-                        <option value="modpack">Modpack</option>
-                        <option value="mod">Mod</option>
-                        <option value="resourcepack">Resource Pack</option>
-                        <option value="shader">Shader</option>
+                        <option value="">{t('discover.filters_list.all')}</option>
+                        <option value="modpack">{t('discover.filters_list.modpack')}</option>
+                        <option value="mod">{t('discover.filters_list.mod')}</option>
+                        <option value="resourcepack">{t('discover.filters_list.resourcepack')}</option>
+                        <option value="shader">{t('discover.filters_list.shader')}</option>
                     </select>
 
                     <div className="pagination">
@@ -83,18 +86,18 @@ function Discover() {
                         <button
                             className="minecraft next-button block"
                             onClick={() => {
-                                if ((page + 1) * 30 < totalProjects) {
+                                if ((page + 1) * searchNumber < totalProjects) {
                                     setPage((prevPage) => prevPage + 1)
                                 }
                             }}
                             disabled={
-                                (page + 1) * 30 >= totalProjects
+                                (page + 1) * searchNumber >= totalProjects
                             }
                         >
                             )
                         </button>
                         <div className="actual-page">
-                            <p>{page + 1} / {Math.ceil(totalProjects / 30)}</p>
+                            <p>{page + 1} / {Math.ceil(totalProjects / searchNumber)}</p>
                         </div>
                     </div>
                 </section>
@@ -166,18 +169,18 @@ function Discover() {
                         <button
                             className="minecraft next-button block"
                             onClick={() => {
-                                if ((page + 1) * 30 < totalProjects) {
+                                if ((page + 1) * searchNumber < totalProjects) {
                                     setPage((prevPage) => prevPage + 1)
                                 }
                             }}
                             disabled={
-                                (page + 1) * 30 >= totalProjects
+                                (page + 1) * searchNumber >= totalProjects
                             }
                         >
                             )
                         </button>
                         <div className="actual-page">
-                            <p>{page + 1} / {Math.ceil(totalProjects / 30)}</p>
+                            <p>{page + 1} / {Math.ceil(totalProjects / searchNumber)}</p>
                         </div>
                     </div>
                 </section>

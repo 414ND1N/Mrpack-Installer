@@ -1,5 +1,7 @@
 import { memo, useEffect, useState } from 'react'
 import { ipcRenderer } from 'electron'
+import { useTranslation } from 'react-i18next'
+
 // Componentes
 import SidebarMinecraftComponent from '@/components/SidebarMinecraft/SidebarMinecraft'
 
@@ -15,45 +17,46 @@ import { SidebarLink  } from "@/types/Sidebar";
 function Sidebar({ current_path = "/" }: { current_path?: string }) {
 
     const [version, setVersion] = useState<string>("N/A")
-
+    const { t } = useTranslation(['menu'])
+    
     useEffect(() => {
         // Obtener la versión de la aplicación al cargar el componente
         const getVersion = async () => {
-            const appVersion = await ipcRenderer.invoke('get-version');
-            setVersion(appVersion);
+            const appVersion = await ipcRenderer.invoke('get-version')
+            setVersion(appVersion)
         }
         getVersion()
-    }, []);
+    }, [])
 
     // Definicion de los enlaces del sidebar
     let SidebarLinks: Record<string, SidebarLink> = {
-        "NOTICIAS": {
-            href: `/`,
+        "/": {
+            title: t('sidebar.views.news.title'),
+            subtitle: t('sidebar.views.news.subtitle'),
             icon: HomeIcon,
-            subtitle: "Minecraft",
         },
-        "DESCUBRIR": {
-            href: `/Discover`,
+        "/Discover": {
+            title: t('sidebar.views.discover.title'),
+            subtitle: t('sidebar.views.discover.subtitle'),
             icon: CraftingIcon,
-            subtitle: "Proyectos",
         },
-        "INSTALAR": {
-            href: `/Install`,
+        "/Install": {
+            title: t('sidebar.views.install.title'),
+            subtitle: t('sidebar.views.install.subtitle'),
             icon: AnvilIcon,
-            subtitle: "Mrpacks",
         }
-        ,"CONFIGURACIÓN": {
-            href: `/Settings`,
+        ,"/Settings": {
+            title: t('sidebar.views.settings.title'),
             icon: TuneIcon,
             footer: true
         }
     }
 
     Object.keys(SidebarLinks).forEach(key => {
-        if (SidebarLinks[key].href === current_path) {
-            SidebarLinks[key].active = true;
+        if (key === current_path) {
+            SidebarLinks[key].active = true
         } else {
-            SidebarLinks[key].active = false;
+            SidebarLinks[key].active = false
         }
     })
 

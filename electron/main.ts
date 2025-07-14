@@ -2,12 +2,10 @@ import { app, BrowserWindow } from 'electron'
 import { Menu } from 'electron'
 import Store from 'electron-store'
 import { ipcMain } from 'electron'
-// import { autoUpdater, AppUpdater } from 'electron-updater'
 import { autoUpdater } from 'electron-updater'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
-// const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 process.env.APP_ROOT = path.join(__dirname, '..')
 
@@ -27,13 +25,13 @@ interface WindowBounds {
   height: number
 }
 
-// Crear ventana principal de la aplicación
+// --------- Ventana ---------
+
 function createWindow() {
 
   // Obtener datos persistentes
-  const windowBounds = store.get('windowBounds', { width: 1100, height: 700 }) as WindowBounds;
-  const isFullscreen = store.get('isFullscreen', false) as boolean;
-  const theme = store.get('theme', 'classic'); // 'classic' es el valor predeterminado
+  const windowBounds = store.get('windowBounds', { width: 1100, height: 700 }) as WindowBounds
+  const isFullscreen = store.get('isFullscreen', false) as boolean
 
   win = new BrowserWindow({
     title: 'Modpack Installer',
@@ -53,12 +51,12 @@ function createWindow() {
 
   // Limpiar la referencia a la ventana cuando se cierre
   win.on('closed', () => {
-    win = null; // Asegurarse de que la referencia a la ventana se elimine
-  });
+    win = null // Asegurarse de que la referencia a la ventana se elimine
+  })
 
   // Acciones al iniciar la ventana
   win.webContents.on('did-finish-load', () => {
-    win?.webContents.send('apply-theme', theme)
+    console.log('Ventana cargada con éxito')
   })
 
   // Cargar la URL de desarrollo o el archivo HTML
@@ -83,7 +81,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
-});
+})
 
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
@@ -127,7 +125,7 @@ function setupIpcEvents() {
   ipcMain.handle('set-fullscreen', (_, isFullscreen: boolean) => {
     if (win) {
       win.setFullScreen(isFullscreen)
-      // store.set('isFullscreen', isFullscreen);
+      store.set('isFullscreen', isFullscreen)
     }
   })
 
@@ -145,24 +143,23 @@ function setupIpcEvents() {
   })
 
   ipcMain.handle('get-theme', () => {
-    const theme = store.get('theme', 'classic'); // 'classic' es el valor predeterminado si no hay tema guardado
-    return theme // Responder de manera síncrona
+    return store.get('theme', 'classic') // Responder de manera síncrona
   })
 
   ipcMain.handle('get-version', () => {
     return app.getVersion()
   })
-
+  
   ipcMain.handle('update-app', async () => {
     try {
       console.log('Updating app...')
       await autoUpdater.downloadUpdate()
     } catch (error) {
       console.error('Error downloading update:', error)
-      throw error;
+      throw error
     }
   })
-
+  
   ipcMain.handle('check-update', async () => {
     try {
       console.log('Checking for updates...')
@@ -170,7 +167,20 @@ function setupIpcEvents() {
       return updateCheckResult?.isUpdateAvailable || false
     } catch (error) {
       console.error('Error checking for updates:', error)
-      throw error;
+      throw error
+    }
+  })
+
+  ipcMain.handle('get-language', () => {
+    return store.get('language', 'en') // Responder de manera síncrona
+  })
+
+  ipcMain.handle('set-language', (_, lang: string) => {
+    try {
+      store.set('language', lang)
+      console.log(`Language saved to: ${lang}`)
+    } catch (error) {
+      console.error('Error saving language:', error)
     }
   })
 }

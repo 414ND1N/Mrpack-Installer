@@ -13,25 +13,33 @@ import Discover from '@/pages/Discover/Discover.tsx'
 import Install from '@/pages/Install/Install.tsx'
 import Config from '@/pages/Config/Config.tsx'
 import { useGlobalMessage } from "@/context/GlobalMessageContext"
+import { useTranslation } from 'react-i18next'
 
 function App() {
 
   const { showMessage } = useGlobalMessage();
+  const { i18n } = useTranslation(['menu'])
 
   useEffect(() => {
     // Aplicar el tema al cargar la aplicación
-
     const getInitialConfig = async () => {
       try {
-        const savedTheme = await ipcRenderer.invoke('get-theme');
+        const savedTheme = await ipcRenderer.invoke('get-theme')
         if (savedTheme) {
-          document.body.setAttribute('data-theme', savedTheme);
+          document.body.setAttribute('data-theme', savedTheme)
         }
 
-        const updateAvaliable = await ipcRenderer.invoke('check-update');
+        const updateAvaliable = await ipcRenderer.invoke('check-update')
         if (updateAvaliable === true) {
           showMessage("Se ha encontrado una actualización disponible. Actualiza la aplicación para disfrutar de las últimas características y mejoras. Dirigite a la seccion de Configuración > Acerca De.");
         }
+
+        const language = await ipcRenderer.invoke('get-language')
+        if (language) {
+          // Cambiar el idioma de la aplicación
+          i18n.changeLanguage(language)
+        }
+
       } catch (error) {
         console.error("Error al cargar la app:", error)
       }

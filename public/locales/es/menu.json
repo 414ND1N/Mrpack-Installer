@@ -1,0 +1,31 @@
+{
+    "appTitle": "Instalador de Modpacks",
+    "sidebar": {
+        "header": {
+            "title": "Bienvenido",
+            "subtitle": "De vuelta !!"
+        },
+        "views": {
+            "news": {
+                "title": "NOTICIAS",
+                "subtitle": "Minecraft"
+            },
+            "discover": {
+                "title": "DESCUBRIR",
+                "subtitle": "Proyectos"
+            },
+            "install": {
+                "title": "INSTALAR",
+                "subtitle": "Mrpacks"
+            },
+            "settings": {
+                "title": "CONFIGURACIÓN",
+                "subtitle": ""
+            }
+        }
+    },
+    "settings": {
+        "theme": "Tema",
+        "language": "Idioma"
+    }
+}

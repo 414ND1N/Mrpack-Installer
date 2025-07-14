@@ -1,0 +1,202 @@
+/* SECCION APARIENCIA */
+
+.settings-container .container {
+    
+    .section-appearance .content {
+        display: flex;
+        flex-direction: column;
+        gap: 2em;
+
+        h3.subtitle{
+            font-size: var(--step--1);
+            color: var(--font-color, white);
+            text-transform: uppercase;
+        }
+
+        .themes-list {
+            display: flex;
+            gap: 2em;
+            flex-direction: row;
+            .item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                border-radius: 20px;
+                background-color: var(--mc-gray-1, dimgray);
+                color: white;
+                border: 2px solid var(--font-color, white);
+                width: 15rem;
+            }
+        }
+
+        .behavior .controls {
+
+            .language > select {
+                width: 20em;
+            }
+            .fullscreen-page {
+
+                .checkbox {
+                    .switch{
+                        width: 50%;
+                        height: 2.25em;
+                    }
+
+                    .slider:before{
+                        height: 1.75em;
+                    }
+                    input:checked+.slider::before{
+                        transform: translateX(6em);
+                    }
+                }
+            }
+        }
+        
+        .themes-list .item {
+
+            &:hover {
+                background-color: var(--mc-gray-2, gray);
+                scale: 1.05;
+                transition: all 0.2s ease-in-out;
+            }
+        
+            .preview {
+                width: 100%;
+                height: 10em;
+                border-radius: 16px 16px 0 0;
+                background-size: cover;
+                background-position: center;
+                .navbar {
+                    width: 100%;
+                    height: 3em;
+                    border-radius: 20px 20px 0 0;
+                }
+                .card {
+                    width: 50%;
+                    height: 5em;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 0.5em;
+                    margin: auto;
+                    margin-top: 1em;
+                    .line {
+                        width: 70%;
+                        height: 0.4em;
+                        margin: 0.2em 0;
+                        border-radius: 0.5em;
+                    }
+                    .secondary {
+                        width: 50%;
+                    }
+                }
+            }
+        
+            /* TEMAS */
+            &.classic .preview {
+                background-color: var(--primary-bgc-classic);
+                .navbar {
+                    background-color: var(--navbar-navbgc-classic);
+                }
+                .card {
+                    background-color: var(--secondary-bgc-classic);
+                    .line {
+                        background-color: var(--primary-fc-classic);
+                    }
+                    .secondary {
+                        background-color: var(--secondary-fc-classic);
+                    }
+                }
+            
+            }
+            &.light .preview {
+                background-color: var(--primary-bgc-light);
+                .navbar {
+                    background-color: var(--navbar-navbgc-light);
+                }
+                .card {
+                    background-color: var(--secondary-bgc-light);
+                    .line {
+                        background-color: var(--primary-fc-light);
+                    }
+                    .secondary {
+                        background-color: var(--secondary-fc-light);
+                    }
+                }
+            }
+        
+            &.dark .preview {
+                background-color: var(--primary-bgc-dark);
+                .navbar {
+                    background-color: var(--navbar-navbgc-dark);
+                }
+                .card {
+                    background-color: var(--secondary-bgc-dark);
+                    .line {
+                        background-color: var(--primary-fc-dark);
+                    }
+                    .secondary {
+                        background-color: var(--secondary-fc-dark);
+                    }
+                }
+            }
+        
+            .information {
+                display: flex;
+                flex-direction: row;
+                align-items: start;
+                gap: 1em;
+                width: 80%;
+                margin: 0 auto;
+                padding: 1em 0.5em;
+                > input[type="radio"] {
+                    width: 1.5em;
+                    height: 1.5em;
+                    margin-right: 0.5em;
+                }
+            }
+        }
+    
+    
+    }
+
+    .section-appearance .behaviour {
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+    }
+
+
+    /* SECCION ACERCA DE */
+    .section-about .content {
+        display: flex;
+        flex-direction: column;
+        gap: 2em;
+
+        .about {
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            gap: 2em;
+            font-size: var(--step-0);
+        }
+        .update-status.disabled{
+            display: none;
+            > button {
+                font-size: var(--step-0);
+                /* font-family: var(--secondary-font); */
+            }
+        }
+        .about h2,
+        .about a,
+        .about p {
+            font-family: inherit;
+        }
+        .about a {
+            color: var(--mc-green-2, green);
+            display: inline;
+        }
+    }
+}
