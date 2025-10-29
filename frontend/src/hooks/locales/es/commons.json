@@ -1,4 +1,14 @@
 {
+    "actions": {
+        "import": "Importar",
+        "cancel": "Cancelar",
+        "close": "Cerrar",
+        "download": "Descargar",
+        "open": "Abrir",
+        "accept": "Aceptar",
+        "reject": "Rechazar",
+        "update": "Actualizar"
+    },
     "file": {
         "placeholder": "Importar archivo",
         "alerts": {

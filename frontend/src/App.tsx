@@ -5,7 +5,6 @@ import { useEffect } from 'react'
 // Estilos globales
 import '@/styles/globales.css'
 import '@/styles/variables.css'
-import '@/styles/minecraft.css'
 
 // Paginas
 import Home from '@/pages/Home/Home.tsx'

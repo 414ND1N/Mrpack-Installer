@@ -1,0 +1,11 @@
+{
+    "search_field_placeholder": "Name of proyect",
+    "search_button": "Search",
+    "filters_list": {
+        "all": "All",
+        "mod": "Mods",
+        "modpack": "Modpacks",
+        "resourcepack": "Resourcepacks",
+        "shader": "Shaders"
+    }
+}

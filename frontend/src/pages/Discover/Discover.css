@@ -1,7 +1,8 @@
 .discover-container {
   display: grid;
-  grid-template-areas: "header" "list" "footer-pagination";
-  grid-template-rows: min-content 1fr min-content;
+  grid-template-areas: "header" "list";
+  grid-template-rows: min-content 1fr;
+  max-height: 100svh;
 }
 .discover-container .header {
   grid-area: header;
@@ -51,7 +52,6 @@
 }
 .discover-container section .pagination .back-button,
 .discover-container section .pagination .next-button {
-  height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,10 +63,35 @@
 .discover-container .projects-list {
   grid-area: list;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
   gap: 1rem;
   width: 90%;
   margin: 1rem auto;
+  max-height: 100%;
+  overflow-y: auto;
+  padding-right: 0.5rem; /* space for scrollbar */
+}
+
+.discover-container .projects-list::-webkit-scrollbar {
+  width: 10px;
+}
+.discover-container .projects-list::-webkit-scrollbar-thumb {
+  background: var(--secondary-background-color, rgba(0,0,0,0.2));
+  border-radius: 6px;
+}
+
+/* Sticky navigation bar that appears at the top of the projects list when present in markup */
+.discover-container .projects-list .list-nav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.25rem;
+  background: linear-gradient(var(--primary-background-color, #fff), rgba(255,255,255,0.98));
+  border-bottom: 1px solid rgba(0,0,0,0.04);
 }
 .discover-container .projects-list .project.item {
   display: flex;

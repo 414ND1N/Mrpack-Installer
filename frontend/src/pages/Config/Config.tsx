@@ -9,6 +9,7 @@ import Sidebar from "@/pages/Sidebar"
 import SectionsMinecraftComponent from "@/components/SectionsMinecraft/SectionsMinecraft"
 import i18n from '@/hooks/localsConfig'
 import { useTranslation } from 'react-i18next'
+import { MCButton, MCSelect, MCCheckbox } from "@/components/MC/MC"
 
 // Css
 import "./Config.css"
@@ -16,10 +17,10 @@ import "./Config.css"
 function Config() {
     const [theme, setThemeState] = useState<string>("classic")
     const [fullscreen, setFullscreen] = useState<boolean>(false)
-    const [updateStatus, setUpdateStatus] = useState<boolean>(false)
+    const [newUpdateAvailable, setNewUpdateAvailable] = useState<boolean>(false)
     const [language, setLanguage] = useState<string>('en')
     const { showMessage } = useGlobalMessage()
-    const { t } = useTranslation(['views'])
+    const { t } = useTranslation(['settings', 'commons'])
 
     const updateTheme = async (newTheme: string) => {
         await ipcRenderer.invoke('set-theme', newTheme)
@@ -64,7 +65,7 @@ function Config() {
             // Obtener el estado de actualización
             const updateAvaliable = await ipcRenderer.invoke('check-update')
             if (updateAvaliable !== undefined) {
-                setUpdateStatus(updateAvaliable)
+                setNewUpdateAvailable(updateAvaliable)
             }
             // Obtener el idioma
             const savedLanguage = await ipcRenderer.invoke('get-language')
@@ -72,7 +73,7 @@ function Config() {
                 setLanguage(savedLanguage)
             }
         }
-        
+
         getInitialConfig()
 
     }, [])
@@ -81,13 +82,13 @@ function Config() {
     const sectionGeneral = (
         <>
             <section className="header">
-                <h2>{t('settings.sections.general.title')}</h2>
-                <p>{t('settings.sections.general.subtitle')}</p>
+                <h2>{t('sections.general.title')}</h2>
+                <p>{t('sections.general.subtitle')}</p>
             </section>
             <section className="content">
 
                 <section className="theme">
-                    <h3 className="subtitle">{t('settings.sections.general.theme.title')}</h3>
+                    <h3 className="subtitle">{t('sections.general.theme.title')}</h3>
 
                     <div className="themes-list">
                         <div className="item classic">
@@ -101,12 +102,12 @@ function Config() {
 
                             </div>
                             <div className="information">
-                                <input 
-                                    type="radio" name="theme" value="classic" 
+                                <input
+                                    type="radio" name="theme" value="classic"
                                     checked={theme === "classic"} // Controlado por el estado
                                     onChange={(e) => updateTheme(e.target.value)}
                                 />
-                                <h4>{t('settings.sections.general.theme.list.classic')}</h4>
+                                <h4>{t('sections.general.theme.list.classic')}</h4>
                             </div>
                         </div>
                         <div className="item light">
@@ -121,12 +122,12 @@ function Config() {
 
                             </div>
                             <div className="information">
-                                <input 
-                                    type="radio" name="theme" value="light" 
+                                <input
+                                    type="radio" name="theme" value="light"
                                     checked={theme === "light"} // Controlado por el estado
                                     onChange={(e) => updateTheme(e.target.value)}
                                 />
-                                <h4>{t('settings.sections.general.theme.list.light')}</h4>
+                                <h4>{t('sections.general.theme.list.light')}</h4>
                             </div>
                         </div>
                         <div className="item dark">
@@ -139,44 +140,40 @@ function Config() {
                                 </div>
                             </div>
                             <div className="information">
-                                <input 
+                                <input
                                     type="radio" name="theme" value="dark"
                                     checked={theme === "dark"} // Controlado por el estado
                                     onChange={(e) => updateTheme(e.target.value)}
                                 />
-                                <h4>{t('settings.sections.general.theme.list.oled')}</h4>
+                                <h4>{t('sections.general.theme.list.oled')}</h4>
                             </div>
                         </div>
                     </div>
                 </section>
 
                 <section className="language">
-                    <h3 className="subtitle">{t('settings.sections.general.language.title')}</h3>
-
-                    <select
-                        className="minecraft style-2"
+                    <h3 className="subtitle">{t('sections.general.language.title')}</h3>
+                    <MCSelect
+                        variant="block"
                         value={language}
                         onChange={(event) =>
                             updateLanguage(event.target.value)
                         }
                     >
-                        <option value="en">{t('settings.sections.general.language.list.en')}</option>
-                        <option value="es">{t('settings.sections.general.language.list.es')}</option>
-                    </select>
+                        <option value="en">{t('sections.general.language.list.en')}</option>
+                        <option value="es">{t('sections.general.language.list.es')}</option>
+                    </MCSelect>
+
                 </section>
 
                 <section className="behavior">
-                    <h3 className="subtitle">{t('settings.sections.general.behavior.title')}</h3>
+                    <h3 className="subtitle">{t('sections.general.behavior.title')}</h3>
 
-                    <div className="checkbox minecraft">
-                        <input 
-                            type="checkbox"
-                            onChange={(e) => updateFullscreen(e.target.checked)}
-                            checked={fullscreen}
-                        />
-                        <h4 className="subtitle">{t('settings.sections.general.behavior.fullscreen.title')}</h4>
-                    </div>
-                        
+                    <MCCheckbox
+                        checked={fullscreen}
+                        onChange={(e) => updateFullscreen(e.target.checked)}
+                        subtitle={t('sections.general.behavior.fullscreen.title')}
+                    />
                 </section>
 
 
@@ -188,42 +185,50 @@ function Config() {
     const sectionAcercaDe = (
         <>
             <section className="header">
-                <h2>{t('settings.sections.about.title')}</h2>
-                <p>{t('settings.sections.about.subtitle')}</p>
+                <h2>{t('sections.about.title')}</h2>
+                <p>{t('sections.about.subtitle')}</p>
             </section>
             <section className="content">
                 <div className="about">
                     <p>
-                        <strong>{t('settings.sections.about.side_info.description.part1')}</strong>{t('settings.sections.about.side_info.description.part2')}
-                        <a 
+                        <strong>{t('sections.about.side_info.description.part1')}</strong>{t('sections.about.side_info.description.part2')}
+                        <a
                             href="https://support.modrinth.com/en/articles/8802351-modrinth-modpack-format-mrpack"
                             target="_blank"
-                            rel="noopener noreferrer"    
+                            rel="noopener noreferrer"
                         >
                             mrpack
                         </a>
-                        {t('settings.sections.about.side_info.description.part3')}
+                        {t('sections.about.side_info.description.part3')}
                     </p>
                     <p>
-                        {t('settings.sections.about.side_info.simplicity.part1')} <strong>Minecraft</strong>.
+                        {t('sections.about.side_info.simplicity.part1')} <strong>Minecraft</strong>.
                     </p>
                     <p>
-                        {t('settings.sections.about.side_info.developed_by.part1')}
-                        <a 
+                        {t('sections.about.side_info.developed_by.part1')}
+                        <a
                             href="https://github.com/414ND1N"
                             target="_blank"
-                            rel="noopener noreferrer"    
+                            rel="noopener noreferrer"
                         >
                             @ALANDLN
                         </a>.
                     </p>
                 </div>
 
-                <div className={`update-status ${ !updateStatus ? "disabled" : ""}`}>
-                    <h3>{t('settings.sections.about.update.title')}</h3>
-                    <button className='minecraft updater' onClick={HandleUpdate}>
-                        {t('settings.sections.about.update.button')}
-                    </button>
+                <div className={`update-status ${newUpdateAvailable ? "disabled" : ""}`}>
+                    <h3>{newUpdateAvailable ? t('sections.about.update.update_available'): t('sections.about.update.no_update_available')}</h3>
+                    {
+                        newUpdateAvailable &&
+                        (
+                            <MCButton
+                                disabled={!newUpdateAvailable}
+                                onClick={HandleUpdate}
+                            >
+                                {!newUpdateAvailable ? t('sections.about.update.button_no_update') : t('sections.about.update.button')}
+                            </MCButton>
+                        )
+                    }
                 </div>
             </section>
         </>
@@ -231,9 +236,9 @@ function Config() {
 
 
     return (
-        
+
         <main className="main-container">
-            <Sidebar current_path="/Settings"/>
+            <Sidebar current_path="/Settings" />
             <section className="settings-container">
                 <SectionsMinecraftComponent
                     title="CONFIGURACIÓN"
@@ -241,12 +246,12 @@ function Config() {
                         [
                             {
                                 id: "appearance",
-                                title: t('settings.sections.general.title'),
+                                title: t('sections.general.title'),
                                 content: sectionGeneral
                             },
                             {
                                 id: "about",
-                                title: t('settings.sections.about.title'),
+                                title: t('sections.about.title'),
                                 content: sectionAcercaDe
                             }
                         ]

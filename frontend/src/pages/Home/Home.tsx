@@ -2,7 +2,7 @@
 // Componentes
 import Sidebar from "@/pages/Sidebar"
 import { useRef } from "react";
-
+import { MCButton } from "@/components/MC/MC";
 // Css
 import "./Home.css"
 
@@ -16,16 +16,17 @@ function Home() {
             <Sidebar/>
             <section className="home-container">
 
-                <button 
-                    className="back-button minecraft block" 
+                <MCButton
+                    className="back-button"
+                    variant="block"
                     onClick={() => {
                         if (webviewRef.current) {
                             webviewRef.current.goBack();
                         }
                     }}
                 >
-                    <strong>(</strong>
-                </button>
+                    <strong> ( </strong>
+                </MCButton>
 
                 <webview
                     ref={webviewRef}

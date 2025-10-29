@@ -11,8 +11,29 @@ function clsx(...parts: Array<string | false | undefined | null>) {
 /* Dialog context to manage open state when using Dialog + DialogTrigger + DialogContent */
 const DialogContext = createContext<{open: boolean; setOpen: (v: boolean) => void} | undefined>(undefined)
 
-function Dialog({ children, defaultOpen = false }: { children?: ReactNode; defaultOpen?: boolean }) {
-  const [open, setOpen] = useState<boolean>(defaultOpen)
+function Dialog({
+  children,
+  defaultOpen = false,
+  open: openProp,
+  onOpenChange,
+}: {
+  children?: ReactNode
+  defaultOpen?: boolean
+  open?: boolean
+  onOpenChange?: (v: boolean) => void
+}) {
+  const [internalOpen, setInternalOpen] = useState<boolean>(defaultOpen)
+  const isControlled = typeof openProp === "boolean"
+  const open = isControlled ? openProp! : internalOpen
+
+  const setOpen = (v: boolean) => {
+    if (isControlled) {
+      if (typeof onOpenChange === "function") onOpenChange(v)
+    } else {
+      setInternalOpen(v)
+    }
+  }
+
   return (
     <DialogContext.Provider value={{ open, setOpen }}>
       {children}
@@ -89,7 +110,7 @@ function DialogFooter({ children, className }: { children?: ReactNode; className
 }
 
 function DialogTitle({ children, className }: { children?: ReactNode; className?: string }) {
-  return <h3 className={clsx("dialog-title", className)}>{children}</h3>
+  return <h1 className={clsx("dialog-title", className)}>{children}</h1>
 }
 
 function DialogDescription({ children, className }: { children?: ReactNode; className?: string }) {

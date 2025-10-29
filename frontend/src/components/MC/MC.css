@@ -9,7 +9,8 @@
   --mc-gray-2: #262423;
   --mc-white: #dfd9d9;
 }
-code.minecraft {
+
+code.mc-style {
   font-family: var(--secondary-font, sans-serif);
   color: var(--mc-green-1);
   background-color: var(--mc-gray-1);
@@ -17,10 +18,10 @@ code.minecraft {
   border-radius: 0.15rem;
   margin: 0 0.25rem;
 }
-button.minecraft,
-select.minecraft,
-input.minecraft,
-select.minecraft {
+button.mc-style,
+select.mc-style,
+input.mc-style,
+select.mc-style {
   background-color: var(--mc-green-1);
   font-family: var(--primary-font, sans-serif);
   font-weight: 500;
@@ -30,123 +31,124 @@ select.minecraft {
   border: 0.2rem solid white;
   outline-color: var(--font-color, white);
 }
-button.minecraft:disabled,
-select.minecraft:disabled,
-input.minecraft:disabled,
-select.minecraft:disabled {
+button.mc-style:disabled,
+select.mc-style:disabled,
+input.mc-style:disabled,
+select.mc-style:disabled {
   background-color: var(--mc-disabled-green-1);
   color: gray;
 }
-button.minecraft.block,
-select.minecraft.block,
-input.minecraft.block,
-select.minecraft.block {
+
+
+button.mc-style.variant-block,
+select.mc-style.variant-block,
+input.mc-style.variant-block,
+select.mc-style.variant-block {
   font-family: var(--secondary-font, sans-serif);
 }
-a.minecraft {
+
+
+a.mc-style {
   color: var(--mc-green-1);
   text-decoration: none;
   font-weight: 500;
   font-family: var(--secondary-font, sans-serif);
   font-size: calc(1em * 1.2);
 }
-button.minecraft {
+button.mc-style {
   border: none;
   border-top: 0.2rem solid var(--mc-green-1-top);
   border-bottom: 0.2rem solid var(--mc-green-1-bottom);
   color: white;
   padding: 0.5rem 1rem;
 }
-button.minecraft:hover {
+button.mc-style:hover {
   background-color: var(--mc-darken-green-1);
   border: none;
   border-top: 0.2rem solid var(--mc-green-1-top);
   border-bottom: 0.2rem solid var(--mc-green-1-bottom);
 }
-button.minecraft:disabled {
+button.mc-style:disabled {
   border-top: 0.2rem transparent;
   border-bottom: 0.2rem transparent;
   cursor: not-allowed;
 }
-button.minecraft.style-2 {
+button.mc-style.variant-ghost {
   background-color: transparent;
   color: var(--mc-green-2);
   border: 0.2rem solid var(--mc-green-1);
   padding: 0.5rem 1rem;
 }
-button.minecraft.style-2:hover {
+button.mc-style.variant-ghost:hover {
   background-color: rgba(94, 123, 202, 0.25);
   border: 0.2rem solid var(--mc-green-1);
 }
-button.minecraft.style-3 {
+button.mc-style.variant-solid {
   background-color: black;
   color: white;
   border: 0.2rem solid white;
   padding: 0.5rem 1rem;
 }
-button.minecraft.style-3:hover {
+button.mc-style.variant-solid:hover {
   background-color: white;
   border: 0.2rem solid transparent;
   color: black;
 }
-select.minecraft {
+select.mc-style {
   border: none;
   border-top: 0.2rem solid var(--mc-green-1-top);
   border-bottom: 0.2rem solid var(--mc-green-1-bottom);
   color: white;
   padding: 0.5rem;
 }
-select.minecraft:hover {
+select.mc-style:hover {
   background-color: var(--mc-darken-green-1);
   border: none;
   border-top: 0.2rem solid var(--mc-green-1-top);
   border-bottom: 0.2rem solid var(--mc-green-1-bottom);
 }
-select.minecraft.style-2 {
+select.mc-style.variant-ghost {
   border: none;
   background-color: var(--mc-gray-1);
   color: white;
   padding: 0.5rem;
 }
-select.minecraft.style-2:hover:not(:disabled) {
+select.mc-style.variant-ghost:hover:not(:disabled) {
   background-color: var(--mc-gray-1);
   border: none;
 }
-input.minecraft {
+input.mc-style {
   background-color: var(--mc-gray-2);
   border: none;
   border: 0.2rem solid var(--mc-green-2);
   color: white;
   padding: 0.5rem;
 }
-input.minecraft:hover:not(:disabled) {
+input.mc-style:hover:not(:disabled) {
   background-color: var(--mc-gray-1);
 }
-input.minecraft:focus {
+input.mc-style:focus {
   border: 0.2rem solid white;
 }
+
 /* Checkbox */
-.checkslider.minecraft {
-  /* Style-2 */
-  /* Style-3 */
-}
-.checkslider.minecraft input[type="checkbox"] {
+.mc-slider input[type="checkbox"] {
   visibility: hidden;
   display: none;
 }
-.checkslider.minecraft *,
-.checkslider.minecraft ::after,
-.checkslider.minecraft ::before {
+.mc-slider *,
+.mc-slider ::after,
+.mc-slider ::before {
   box-sizing: border-box;
 }
-.checkslider.minecraft .switch {
+.mc-slider .switch {
   font-size: 1rem;
   position: relative;
   display: inline-block;
   width: 4em;
   height: 2em;
 }
-.checkslider.minecraft .slider {
+.mc-slider .slider {
   position: absolute;
   cursor: pointer;
   inset: 0;
@@ -154,7 +156,7 @@ input.minecraft:focus {
   transition: 0.4s;
   border-radius: 0.15em;
 }
-.checkslider.minecraft .slider:before {
+.mc-slider .slider:before {
   position: absolute;
   content: "";
   height: 1.5em;
@@ -165,44 +167,45 @@ input.minecraft:focus {
   background-color: var(--mc-gray-1);
   transition: 0.4s;
 }
-.checkslider.minecraft input:checked + .slider::before {
+.mc-slider input:checked + .slider::before {
   transform: translateX(2em);
   background: white;
 }
-.checkslider.minecraft.style-2 .slider {
+.mc-slider.variant-ghost .slider {
   background-color: var(--mc-gray-1);
 }
-.checkslider.minecraft.style-2 .slider:before {
+.mc-slider.variant-ghost .slider:before {
   background-color: var(--mc-gray-2);
 }
-.checkslider.minecraft.style-2 input:checked + .slider::before {
+.mc-slider.variant-ghost input:checked + .slider::before {
   background: var(--mc-green-1);
 }
-.checkslider.minecraft.style-3 .slider {
+.mc-slider.variant-solid .slider {
   background-color: #eee;
   border-radius: 0.25em;
   box-shadow: 0 0.2em var(--mc-white);
 }
-.checkslider.minecraft.style-3 .slider:before {
+.mc-slider.variant-solid .slider:before {
   border-radius: 0.3em;
   bottom: 0.75em;
   background-color: var(--mc-gray-2);
   box-shadow: 0 0.4em #bcb4b4;
 }
-.checkslider.minecraft.style-3 .slider:hover::before {
+.mc-slider.variant-solid .slider:hover::before {
   box-shadow: 0 0.2em #bcb4b4;
   bottom: 0.5em;
 }
-.checkslider.minecraft.style-3 input:checked + .slider::before {
+.mc-slider.variant-solid input:checked + .slider::before {
   background: var(--mc-green-2);
 }
-.checkbox.minecraft {
+
+.mc-checkbox {
   display: flex;
   align-items: center;
   gap: 0.5em;
   flex-direction: row;
 }
-.checkbox.minecraft input[type="checkbox"] {
+.mc-checkbox input[type="checkbox"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -216,10 +219,10 @@ input.minecraft:focus {
   align-items: center;
   justify-content: center;
 }
-.checkbox.minecraft input[type="checkbox"]:checked {
+.mc-checkbox input[type="checkbox"]:checked {
   background-color: var(--mc-green-1);
 }
-.checkbox.minecraft input[type="checkbox"]:checked::after {
+.mc-checkbox input[type="checkbox"]:checked::after {
   content: "";
   position: absolute;
   width: 0.8em;
@@ -230,20 +233,21 @@ input.minecraft:focus {
   transform: rotate(-45deg);
   margin-top: -0.1em;
 }
-/* Selector component */
-.file-selector-component.minecraft {
+
+/* Selector component integration */
+.file-selector-component.mc-style {
   border: 2px dashed var(--mc-green-2, green);
   border-radius: 0.2em;
   font-family: var(--secondary-font, sans-serif);
   font-weight: bolder;
   font-size: var(--step-1, 1.2rem);
 }
-.file-selector-component.minecraft .file-label,
-.file-selector-component.minecraft .file-selector-component.minecraft span {
+.file-selector-component.mc-style .file-label,
+.file-selector-component.mc-style .file-selector-component.mc-style span {
   font-size: inherit;
 }
-.file-selector-component.minecraft .file-label svg,
-.file-selector-component.minecraft .file-label img {
+.file-selector-component.mc-style .file-label svg,
+.file-selector-component.mc-style .file-label img {
   aspect-ratio: 1 / 1;
   cursor: inherit;
   padding: 1em 0;

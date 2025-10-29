@@ -1,0 +1,20 @@
+/* Separator styles for horizontal and vertical */
+
+.sep {
+  background: var(--border, rgba(0,0,0,0.08));
+}
+
+.sep--horizontal {
+  height: 1px;
+  width: 100%;
+  display: block;
+}
+
+.sep--vertical {
+  width: 1px;
+  height: 100%;
+  display: inline-block;
+}
+
+/* Allow custom color via variable */
+.sep { background: var(--separator-color, var(--border, rgba(0,0,0,0.08))); }

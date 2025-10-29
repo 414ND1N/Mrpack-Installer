@@ -1,0 +1,64 @@
+/* Basic button styles replacing tailwind/cva
+   Use theme variables where possible, with fallbacks.
+*/
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 6px;
+  font-size: 0.9375rem; /* ~15px */
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: var(--btn-bg, #111827);
+  color: var(--btn-foreground, #fff);
+  transition: background 150ms ease, transform 100ms ease, opacity 150ms ease;
+}
+
+.btn:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Variants */
+.btn--default {
+  background: var(--btn-default-bg, #111827);
+  color: var(--btn-default-foreground, #fff);
+}
+
+.btn--destructive {
+  background: var(--btn-destructive-bg, #dc2626);
+  color: var(--btn-destructive-foreground, #fff);
+}
+
+.btn--outline {
+  background: transparent;
+  border: 1px solid var(--btn-outline-border, #d1d5db);
+  color: var(--btn-outline-foreground, #111827);
+}
+
+.btn--secondary {
+  background: var(--btn-secondary-bg, #6b7280);
+  color: var(--btn-secondary-foreground, #fff);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--btn-ghost-foreground, #111827);
+}
+
+.btn--link {
+  background: transparent;
+  color: var(--btn-link-color, #2563eb);
+  text-decoration: underline;
+  padding: 0;
+}
+
+/* Sizes */
+.btn--default { height: 36px; }
+.btn--sm { height: 32px; padding: 0 0.75rem; }
+.btn--lg { height: 40px; padding: 0 1.25rem; }
+.btn--icon { width: 36px; height: 36px; padding: 0; }

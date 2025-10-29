@@ -2,7 +2,7 @@
 import Sidebar from "@/pages/Sidebar"
 import { useState, useEffect } from "react"
 import { useTranslation } from 'react-i18next'
-
+import { MCButton, MCInput, MCSelect } from "@/components/MC/MC"
 // Css
 import "./Discover.css"
 
@@ -20,7 +20,7 @@ function Discover() {
     const [totalProjects, setTotalProjects] = useState(0)
     const [searchQuery, setSearchQuery] = useState<string>("")
     const [projectType, setProjectType] = useState<string>("")
-    const { t } = useTranslation(['views'])
+    const { t } = useTranslation(['discover', 'commons'])
     const searchNumber = 32 // Número de proyectos por página
 
     const loadProjects = async () => {
@@ -41,37 +41,38 @@ function Discover() {
 
     return (
         <main className="main-container">
-            <Sidebar current_path="/Discover"/>
+            <Sidebar current_path="/Discover" />
             <section className="discover-container">
                 <section className="header">
-                    <input type="text" className="minecraft" placeholder={t('discover.search_field_placeholder')}
+                    <MCInput
+                        placeholder={t('search_field_placeholder')}
                         onChange={(e) => {
                             setSearchQuery(e.target.value)
                         }}
                     />
-                    <button className="minecraft"
+                    <MCButton
                         onClick={() => {
                             setPage(0)
                             loadProjects()
                         }}
                     >
-                        {t('discover.search_button')}
-                    </button>
-                    <select name="" id="" className="minecraft"
+                        {t('search_button')}
+                    </MCButton>
+                    <MCSelect
                         onChange={(e) => {
                             setProjectType(e.target.value)
                         }}
                     >
-                        <option value="">{t('discover.filters_list.all')}</option>
-                        <option value="modpack">{t('discover.filters_list.modpack')}</option>
-                        <option value="mod">{t('discover.filters_list.mod')}</option>
-                        <option value="resourcepack">{t('discover.filters_list.resourcepack')}</option>
-                        <option value="shader">{t('discover.filters_list.shader')}</option>
-                    </select>
+                        <option value="">{t('filters_list.all')}</option>
+                        <option value="modpack">{t('filters_list.modpack')}</option>
+                        <option value="mod">{t('filters_list.mod')}</option>
+                        <option value="resourcepack">{t('filters_list.resourcepack')}</option>
+                        <option value="shader">{t('filters_list.shader')}</option>
+                    </MCSelect>
 
                     <div className="pagination">
-                        <button
-                            className="minecraft back-button block"
+                        <MCButton
+                            variant="block"
                             onClick={() => {
                                 if (page > 0) {
                                     setPage((prevPage) => prevPage - 1)
@@ -82,9 +83,11 @@ function Discover() {
                             }
                         >
                             (
-                        </button>
-                        <button
-                            className="minecraft next-button block"
+                        </MCButton>
+
+                        <MCButton
+                            variant="block"
+                            className="next-button"
                             onClick={() => {
                                 if ((page + 1) * searchNumber < totalProjects) {
                                     setPage((prevPage) => prevPage + 1)
@@ -95,7 +98,7 @@ function Discover() {
                             }
                         >
                             )
-                        </button>
+                        </MCButton>
                         <div className="actual-page">
                             <p>{page + 1} / {Math.ceil(totalProjects / searchNumber)}</p>
                         </div>
@@ -150,39 +153,6 @@ function Discover() {
                             </div>
                         </a>
                     ))}
-                </section>
-                <section className="footer">
-                    <div className="pagination">
-                        <button
-                            className="minecraft back-button block"
-                            onClick={() => {
-                                if (page > 0) {
-                                    setPage((prevPage) => prevPage - 1)
-                                }
-                            }}
-                            disabled={
-                                page <= 0
-                            }
-                        >
-                            (
-                        </button>
-                        <button
-                            className="minecraft next-button block"
-                            onClick={() => {
-                                if ((page + 1) * searchNumber < totalProjects) {
-                                    setPage((prevPage) => prevPage + 1)
-                                }
-                            }}
-                            disabled={
-                                (page + 1) * searchNumber >= totalProjects
-                            }
-                        >
-                            )
-                        </button>
-                        <div className="actual-page">
-                            <p>{page + 1} / {Math.ceil(totalProjects / searchNumber)}</p>
-                        </div>
-                    </div>
                 </section>
             </section>
         </main>

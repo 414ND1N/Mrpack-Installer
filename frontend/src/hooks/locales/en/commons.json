@@ -1,4 +1,14 @@
 {
+    "actions": {
+        "import": "Import",
+        "cancel": "Cancel",
+        "close": "Close",
+        "download": "Download",
+        "open": "Open",
+        "accept": "Accept",
+        "reject": "Reject",
+        "update": "Update"
+    },
     "file": {
         "placeholder": "Import file",
         "alerts": {

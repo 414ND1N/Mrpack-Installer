@@ -42,27 +42,22 @@
 	overflow: hidden;
 	position: relative;
 	padding: 1rem;
+	font-family: var(--secondary-font);
+	font-size: var(--step-0);
 }
+
+.dialog-content ul {
+  list-style: none;
+  padding: 0 1em;
+}
+.dialog-content ul li {
+  margin-bottom: 0.5rem;
+}
+
 
 .dialog-scroll {
 	overflow: auto;
 	max-height: calc(85vh - 48px);
-}
-
-.dialog-content {
-	pointer-events: auto;
-	position: relative;
-	z-index: 1; /* make sure content is above the overlay */
-	background: var(--primary-background-color);
-	color: var(--font-color);
-	border: 1px solid var(--dialog-border);
-	box-shadow: var(--dialog-shadow);
-	border-radius: 8px;
-	width: 100%;
-	max-width: 640px;
-	max-height: 85vh;
-	overflow: hidden;
-	padding: 1rem;
 }
 
 .dialog-header {
@@ -70,26 +65,38 @@
 	flex-direction: column;
 	gap: 8px;
 	text-align: left;
+	padding-bottom: 0.5rem;
+	font-size: var(--step-2);
+	text-align: center;
+	border-bottom: 2px var(--prymary-border-color, rgba(0,0,0,0.08));
 }
 
 .dialog-footer {
 	display: flex;
 	gap: 8px;
 	justify-content: flex-end;
-	margin-top: 12px;
+	margin-top: 16px;
+	padding-top: 0.75rem;
+	border-top: 1px solid rgba(0,0,0,0.04);
 }
 
 .dialog-title {
 	margin: 0;
-	font-size: 1.125rem;
-	font-weight: 600;
+	line-height: 1.2;
+	color: var(--dialog-title-color, var(--font-color, #111827));
+	font-family: inherit;
+	font-size: var(--step-1);
+	text-align: center;
 }
 
 .dialog-description {
-	margin: 0;
-	color: var(--font-color-secondary);
-	font-size: 0.95rem;
+	margin: 0.25rem 0 0 0;
+	color: var(--dialog-desc-color, var(--font-color-secondary, #6b7280));
+	line-height: 1.4;
+	font-family: inherit;
+	font-size: var(--step-0) !important;
 }
+
 
 @media (max-width: 640px) {
 	.dialog-content {

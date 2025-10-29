@@ -31,19 +31,17 @@
 .settings-container .container .section-appearance .content .behavior .controls .language > select {
   width: 20em;
 }
-.settings-container .container .section-appearance .content .behavior .controls .fullscreen-page .checkbox .switch {
+.settings-container .container .section-appearance .content .behavior .controls .fullscreen-page .mc-checkbox .switch {
   width: 50%;
   height: 2.25em;
 }
-.settings-container .container .section-appearance .content .behavior .controls .fullscreen-page .checkbox .slider:before {
+.settings-container .container .section-appearance .content .behavior .controls .fullscreen-page .mc-checkbox .slider:before {
   height: 1.75em;
 }
-.settings-container .container .section-appearance .content .behavior .controls .fullscreen-page .checkbox input:checked + .slider::before {
+.settings-container .container .section-appearance .content .behavior .controls .fullscreen-page .mc-checkbox input:checked + .slider::before {
   transform: translateX(6em);
 }
-.settings-container .container .section-appearance .content .themes-list .item {
-  /* TEMAS */
-}
+
 .settings-container .container .section-appearance .content .themes-list .item:hover {
   background-color: var(--mc-gray-2, gray);
   scale: 1.05;

@@ -1,0 +1,80 @@
+{
+    "header": {
+        "title": "Instalación",
+        "subtitle": "Administra tus instalaciones"
+    },
+    "sections": {
+        "file": {
+            "title": "Archivo",
+            "subtitle": "Selecciona el archivo mrpack que deseas instalar",
+            "information": {
+                "summary": {
+                    "name": "Nombre",
+                    "description": "Descripción",
+                    "version": "Versión de Minecraft"
+                },
+                "list": {
+                    "label": "Archivos del paquete de mods",
+                    "empty": "No se encontraron archivos de paquetes de mods",
+                    "description": "Lista de archivos incluidos en el paquete de mods"
+                }
+            },
+            "configuration": {
+                "profile": {
+                    "label": "Icono del perfil"
+                },
+                "type": {
+                    "label": "Tipo de instalación",
+                    "list": {
+                        "singleplayer": "Un jugador",
+                        "client": "Cliente",
+                        "server": "Servidor"
+                    }
+                },
+                "install": {
+                    "button": "Instalar"
+                },
+                "advanced": {
+                    "activate": "Habilitar configuración avanzada",
+                    "title": "Configuración avanzada",
+                    "ask": "¿ Deseas activar la configuración avanzada ?",
+                    "activation_warning": "Has esto solo si sabes lo que estas haciendo",
+                    "description": "Personaliza la ruta de instalación y la asignación de memoria",
+                    "path": {
+                        "label": "Ruta de instalación relativa al juego",
+                        "placeholder": "Ruta de instalación"
+                    },
+                    "memory": {
+                        "label": "Asignación de memoria",
+                        "min_placeholder": "Mínima (GB)",
+                        "max_placeholder": "Máxima (GB)"
+                    }
+                }
+            },
+            "messages": {
+                "error": {
+                    "no_file_selected": "No se ha seleccionado ningún archivo",
+                    "invalid_file_type": "Tipo de archivo inválido. Por favor, selecciona un archivo mrpack válido.",
+                    "invalid_path": "Ruta de instalación inválida. Por favor, asegúrate de que la ruta sea correcta y accesible.",
+                    "invalid_modpack": "Archivo de paquete de mods inválido. Por favor, asegúrate de que el archivo sea un mrpack válido.",
+                    "invalid_mrpack_file": "Archivo mrpack inválido. Por favor, asegúrate de que el archivo sea un mrpack válido.",
+                    "adding_profile": "Error al agregar el perfil.",
+                    "adding_dependencies": "Error al agregar las dependencias.",
+                    "creating_start_script": "Error creando el script de inicio."
+                },
+                "installation": {
+                    "need_launcher_closed": "Por favor, cierra el lanzador antes de instalar.",
+                    "starting": "Iniciando instalación...",
+                    "adding_profile": "Agregando perfil...",
+                    "downloading_mods": "Descargando mods...",
+                    "finish": "Instalación completada con éxito.",
+                    "dependencies": "Instalando dependencias...",
+                    "finish_dependencies": "Dependencias instaladas con éxito.",
+                    "finish_start_script": "Script de inicio creado satisfactoriamente.",
+                    "server_dependencies": "Descargando instalador de servidor...",
+                    "finish_server_dependencies": "Descargado satisfactoriamente."
+                }
+            }
+        }
+    }
+}
