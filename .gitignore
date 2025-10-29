@@ -24,3 +24,12 @@ dist-ssr
 *.sw?
 
 release
+
+venv/
+python-env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
