@@ -1,11 +1,33 @@
+.install-container p, 
+.install-container h1,
+.install-container h2,
+.install-container h3,
+.install-container {
+  font-family: var(--secondary-font);
+  font-size: var(--step-0);
+  letter-spacing: 0.02em;
+  cursor: default;
+}
+
+.install-container select,
+.install-container button,
+.install-container input {
+  font-family: var(--secondary-font);
+  font-size:  var(--step--1);
+  letter-spacing: 0.02em;
+}
+
+.install-container .header p {
+  color: var(--font-color-secondary, #6b7280);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
 .install-container .sections-minecraft .configuration p {
   font-family: var(--secondary-font);
   font-size: var(--step-0);
 }
-.install-container .sections-minecraft .inputs p {
-  font-family: var(--secondary-font);
-  font-size: calc(var(--step--1) + 0.1rem);
-}
+
 .install-container .sections-minecraft h1 {
   font-size: var(--step-1);
 }
@@ -32,12 +54,23 @@
 .install-container .sections-minecraft .section-from-file .content .installation-configuration .type-selector {
   grid-area: type;
 }
+
+a.information-toggle {
+  font-size: var(--step-0);
+  color: var(--font-color, #6b7280);
+}
+a.information-toggle:hover {
+  color: var(--mc-green-2, green);
+  scale: 1.2;
+  transition: all 0.2s ease-in-out;
+}
+
 .install-container .sections-minecraft .section-from-file .content .installation-configuration .icon-selector {
   grid-area: icon;
 }
-.install-container .sections-minecraft .section-from-file .content .installation-configuration .install {
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .installation-button {
   grid-area: install;
-  margin-top: 1.4em;
+  align-self: flex-end;
 }
 .install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration {
   grid-area: config;
@@ -53,20 +86,7 @@
   align-items: center;
   gap: 1em;
 }
-.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .toggle .information {
-  cursor: pointer;
-  font-family: var(--secondary-font);
-  font-size: var(--step--2);
-}
-.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .toggle .information > h1 {
-  font-family: inherit;
-}
-.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .toggle .information > h1:hover {
-  scale: 1.5;
-  rotate: 5deg;
-  transition: all 0.2s ease-in-out;
-  color: var(--mc-green-2, green);
-}
+
 .install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .toggle > p {
   font-family: var(--secondary-font);
   font-size: var(--step-0);
@@ -104,12 +124,17 @@
   margin-top: 0.5rem;
 }
 .install-container .sections-minecraft .section-from-file .content .installation-configuration .type-selector select,
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .installation-button button,
+.install-container .sections-minecraft .section-from-file .content .installation-configuration input,
 .install-container .sections-minecraft .section-from-file .content .installation-configuration .icon-selector select {
   width: 100%;
 }
-.install-container .sections-minecraft .section-from-file .content .installation-configuration input {
-  width: 100%;
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .installation-button button {
+  padding: 0.7em 1em;
+  margin-top: auto;
+  margin-bottom: 0;
 }
+
 .install-container .sections-minecraft .section-from-file .content .installation-configuration .status {
   grid-area: status;
   display: none;
@@ -125,14 +150,13 @@
 }
 .install-container .sections-minecraft .section-from-file .content .installation-configuration .inputs {
   grid-area: selectors;
-  display: flex;
-  flex-direction: row;
+  display: grid;
   gap: 1em;
+  grid-template-areas: "icon type install";
+  width: 100%;
+  grid-template-columns: 1fr 1fr 2fr;
 }
-.install-container .sections-minecraft .section-from-file .content .installation-configuration .inputs .type-selector,
-.install-container .sections-minecraft .section-from-file .content .installation-configuration .inputs .icon-selector {
-  width: 20%;
-}
+
 .install-container .sections-minecraft .section-from-file .content .installation-configuration .inputs .dialog-trigger {
   min-width: 60%;
   margin-top: 0.25rem;

@@ -14,10 +14,9 @@
 }
 
 .sections-minecraft  .container section .header {
-    display: flex;
-    flex-direction: column;
     width: 100%;
     margin-top: unset;
+    font-size: var(--step-0);
 }
 
 .sections-minecraft  .container section .content {

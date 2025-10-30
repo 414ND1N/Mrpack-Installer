@@ -10,7 +10,7 @@ import '@/styles/variables.css'
 import Home from '@/pages/Home/Home.tsx'
 import Discover from '@/pages/Discover/Discover.tsx'
 import Install from '@/pages/Install/Install.tsx'
-import Config from '@/pages/Config/Config.tsx'
+import Settings from '@/pages/Settings/Settings'
 import { useGlobalMessage } from "@/context/GlobalMessageContext"
 import { useTranslation } from 'react-i18next'
 
@@ -54,7 +54,7 @@ function App() {
         <Route path={`/`} element={<Home />} />
         <Route path={`/Discover`} element={<Discover />} />
         <Route path={`/Install`} element={<Install />} />
-        <Route path={`/Settings`} element={<Config />} />
+        <Route path={`/Settings`} element={<Settings />} />
       </Routes>
     </HashRouter>
   )

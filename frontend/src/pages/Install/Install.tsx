@@ -16,10 +16,10 @@ import { InstallationModpackProps } from "@/hooks/minecraft/minecraft"
 import { ProfileIcons } from '@/interfaces/MinecraftLauncherIcons'
 import { useGlobalMessage } from "@/context/GlobalMessageContext"
 
-import { Dialog, DialogTrigger, DialogContent, DialogClose, DialogFooter , DialogHeader, DialogDescription} from "@/components/Dialog/Dialog"
+import { Dialog, DialogTrigger, DialogContent, DialogClose, DialogFooter, DialogHeader, DialogDescription } from "@/components/Dialog/Dialog"
 import { toast } from "@/hooks/use-toast"
-import { MCButton, MCInput, MCSelect, MCSlider } from "@/components/MC/MC"
-
+import { MCButton, MCInput, MCSelect, MCSlider, MCAskButton } from "@/components/MC/MC"
+import { Separator } from "@/components/Separator/separator"
 
 function Install() {
 
@@ -107,7 +107,6 @@ function Install() {
     const sectionFromFile = (
         <>
             <section className="header">
-                <h2>{t('sections.file.title')}</h2>
                 <p>{t('sections.file.subtitle')}</p>
             </section>
             <section className='content'>
@@ -137,9 +136,7 @@ function Install() {
                                 <p>{t('sections.file.configuration.advanced.activate')}</p>
                                 <Dialog>
                                     <DialogTrigger>
-                                        <div className="information">
-                                            <h1>?</h1>
-                                        </div>
+                                        <MCAskButton />
                                     </DialogTrigger>
                                     <DialogContent>
                                         <DialogHeader>
@@ -148,6 +145,7 @@ function Install() {
                                         <DialogDescription>
                                             {t('sections.file.information.list.description')}
                                         </DialogDescription>
+                                        <Separator />
                                         {installationConfig.mrpack_info?.files && installationConfig.mrpack_info.files.length > 0 ? (
                                             <ul>
                                                 {installationConfig.mrpack_info.files
@@ -164,7 +162,7 @@ function Install() {
                                         <DialogFooter>
                                             <DialogClose>
                                                 <MCButton>
-                                                    {t('actions.close', {ns: 'commons'})}
+                                                    {t('actions.close', { ns: 'commons' })}
                                                 </MCButton>
                                             </DialogClose>
                                         </DialogFooter>
@@ -175,7 +173,9 @@ function Install() {
 
                             <Dialog open={openDialogConfig}>
                                 <DialogContent>
-                                    <h2>{t('sections.file.configuration.advanced.title')}</h2>
+                                    <DialogHeader>
+                                        <h2>{t('sections.file.configuration.advanced.title')}</h2>
+                                    </DialogHeader>
                                     <p>{t('sections.file.configuration.advanced.ask')}</p>
                                     <p>{t('sections.file.configuration.advanced.activation_warning')}</p>
 
@@ -184,13 +184,13 @@ function Install() {
                                             setPersonalizedConfig(true)
                                             setOpenDialogConfig(false)
                                         }}>
-                                            {t('actions.accept', {ns: 'commons'})}
+                                            {t('actions.accept', { ns: 'commons' })}
                                         </MCButton>
                                         <MCButton onClick={() => {
                                             setPersonalizedConfig(false)
                                             setOpenDialogConfig(false)
                                         }}>
-                                            {t('actions.close', {ns: 'commons'})}
+                                            {t('actions.close', { ns: 'commons' })}
                                         </MCButton>
                                     </DialogFooter>
                                 </DialogContent>
@@ -201,7 +201,26 @@ function Install() {
                         <div className={`advanced-configuration ${personalizedConfig ? "active" : ""}`}>
 
                             <div className="path">
-                                <p className="title">{t('sections.file.configuration.advanced.path.label')}</p>
+                                <Dialog>
+                                    <DialogTrigger>
+                                        <a className="information-toggle">{t('sections.file.configuration.advanced.path.label')}</a>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            {t('sections.file.configuration.advanced.path.label')}
+                                        </DialogHeader>
+                                        <DialogDescription>
+                                            {t('sections.file.configuration.advanced.path.description')}
+                                        </DialogDescription>
+                                        <DialogFooter>
+                                            <DialogClose>
+                                                <MCButton>
+                                                    {t('actions.close', { ns: 'commons' })}
+                                                </MCButton>
+                                            </DialogClose>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
                                 <MCInput
                                     placeholder={t('sections.file.configuration.advanced.path.placeholder')}
                                     value={installationConfig.installation_directory} // Ruta de instalación del modpack
@@ -221,7 +240,26 @@ function Install() {
                             </div>
 
                             <div className="memory">
-                                <p>{t('sections.file.configuration.advanced.memory.label')}</p>
+                                <Dialog>
+                                    <DialogTrigger>
+                                        <a className="information-toggle">{t('sections.file.configuration.advanced.memory.label')}</a>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            {t('sections.file.configuration.advanced.memory.label')}
+                                        </DialogHeader>
+                                        <DialogDescription>
+                                            {t('sections.file.configuration.advanced.memory.description')}
+                                        </DialogDescription>
+                                        <DialogFooter>
+                                            <DialogClose>
+                                                <MCButton>
+                                                    {t('actions.close', { ns: 'commons' })}
+                                                </MCButton>
+                                            </DialogClose>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
                                 <div className="memory-inputs">
                                     <MCInput
                                         placeholder={t('sections.file.configuration.advanced.memory.min_placeholder')}
@@ -255,11 +293,29 @@ function Install() {
                     </section>
 
                     <section className="inputs">
-                        <div
-                            className="icon-selector"
+                        <div className="icon-selector"
                             style={{ display: installationConfig.type === "server" ? "none" : "block" }}
                         >
-                            <p>{t('sections.file.configuration.profile.label')}</p>
+                            <Dialog>
+                                <DialogTrigger>
+                                    <a className="information-toggle">{t('sections.file.configuration.profile.label')}</a>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        {t('sections.file.configuration.profile.label')}
+                                    </DialogHeader>
+                                    <DialogDescription>
+                                        {t('sections.file.configuration.profile.description')}
+                                    </DialogDescription>
+                                    <DialogFooter>
+                                        <DialogClose>
+                                            <MCButton>
+                                                {t('actions.close', { ns: 'commons' })}
+                                            </MCButton>
+                                        </DialogClose>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
                             <MCSelect
                                 value={installationConfig.profile_icon}
                                 onChange={(event) =>
@@ -277,7 +333,32 @@ function Install() {
                             </MCSelect>
                         </div>
                         <div className="type-selector">
-                            <p>{t('sections.file.configuration.type.label')}</p>
+                            <Dialog>
+                                <DialogTrigger>
+                                    <a className="information-toggle">{t('sections.file.configuration.type.label')}</a>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                       {t('sections.file.configuration.type.label')}
+                                    </DialogHeader>
+                                    <DialogDescription>
+                                        {t('sections.file.configuration.type.description')}:
+                                    </DialogDescription>
+                                    <Separator borderless={true}/>
+                                    <ul>
+                                        <li><strong>{t('sections.file.configuration.type.list.singleplayer')}:</strong> {t('sections.file.configuration.type.list.singleplayer_description')}</li>
+                                        <li><strong>{t('sections.file.configuration.type.list.client')}:</strong> {t('sections.file.configuration.type.list.client_description')}</li>
+                                        <li><strong>{t('sections.file.configuration.type.list.server')}:</strong> {t('sections.file.configuration.type.list.server_description')}</li>
+                                    </ul>
+                                    <DialogFooter>
+                                        <DialogClose>
+                                            <MCButton>
+                                                {t('actions.close', { ns: 'commons' })}
+                                            </MCButton>
+                                        </DialogClose>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
                             <MCSelect
                                 value={installationConfig.type}
                                 onChange={(event) =>
@@ -292,47 +373,51 @@ function Install() {
                                 <option value="server">{t('sections.file.configuration.type.list.server')}</option>
                             </MCSelect>
                         </div>
+                        <div className="installation-button">
+                            <Dialog>
+                                <DialogTrigger>
+                                    <MCButton disabled={!installationProgress} className="install">
+                                        {t('sections.file.configuration.install.button')}
+                                    </MCButton>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <h2>{t('sections.file.messages.installation.need_launcher_closed')}</h2>
+                                    </DialogHeader>
+                                    <Separator/>
+                                    <p>{t('sections.file.messages.installation.need_launcher_closed_desc')}</p>
 
-                        <Dialog>
-                            <DialogTrigger>
-                                <MCButton disabled={!installationProgress} className="install">
-                                    {t('sections.file.configuration.install.button')}
-                                </MCButton>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <h2>{t('sections.file.messages.installation.need_launcher_closed')}</h2>
-                                <p>{t('sections.file.configuration.install.dialog.description')}</p>
+                                    <DialogFooter>
+                                        <DialogClose>
+                                            <MCButton
+                                                onClick={async () => {
+                                                    if (!installationConfig.mrpack_info) {
+                                                        alert(t('sections.file.messages.error.no_file_selected'))
+                                                        return
+                                                    }
+                                                    callBack(t('sections.file.messages.installation.starting'))
 
-                                <DialogFooter>
-                                    <DialogClose>
-                                        <MCButton
-                                            onClick={async () => {
-                                                if (!installationConfig.mrpack_info) {
-                                                    alert(t('sections.file.messages.error.no_file_selected'))
-                                                    return
-                                                }
-                                                callBack(t('sections.file.messages.installation.starting'))
+                                                    console.log("Iniciando instalación con la siguiente configuración:", installationConfig)
+                                                    // InstallModpack(
+                                                    //     installationConfig, // Configuración de instalación del modpack
+                                                    //     callBack //callback
+                                                    // )
+                                                    hideMessage()
+                                                }}
+                                            >
+                                                {t('actions.accept', { ns: 'commons' })}
+                                            </MCButton>
+                                        </DialogClose>
+                                        <DialogClose>
+                                            <MCButton>
+                                                {t('actions.close', { ns: 'commons' })}
+                                            </MCButton>
+                                        </DialogClose>
+                                    </DialogFooter>
 
-                                                console.log("Iniciando instalación con la siguiente configuración:", installationConfig)
-                                                // InstallModpack(
-                                                //     installationConfig, // Configuración de instalación del modpack
-                                                //     callBack //callback
-                                                // )
-                                                hideMessage()
-                                            }}
-                                        >
-                                            {t('actions.accept', {ns: 'commons'})}
-                                        </MCButton>
-                                    </DialogClose>
-                                    <DialogClose>
-                                        <MCButton>
-                                            {t('actions.close', {ns: 'commons'})}
-                                        </MCButton>
-                                    </DialogClose>
-                                </DialogFooter>
-
-                            </DialogContent>
-                        </Dialog>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
 
                     </section>
 

@@ -1,8 +1,8 @@
 /* Dialog base styles */
 
 :root {
-	--dialog-border: var(--prymary-border-color, rgba(0,0,0,0.08));
-	--dialog-shadow: 0 10px 30px rgba(0,0,0,0.12);
+	--dialog-border: var(--prymary-border-color, rgba(0, 0, 0, 0.08));
+	--dialog-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
 }
 
 .dialog-overlay {
@@ -12,10 +12,11 @@
 	position: absolute;
 	inset: 0;
 	z-index: 0;
-	background: var(--dialog-overlay-bg, rgba(0,0,0,0.6));
+	background: var(--dialog-overlay-bg, rgba(0, 0, 0, 0.6));
 	backdrop-filter: blur(2px);
 	-webkit-backdrop-filter: blur(2px);
-	pointer-events: auto; /* allow clicks on overlay to close if needed */
+	pointer-events: auto;
+	/* allow clicks on overlay to close if needed */
 }
 
 .dialog-portal {
@@ -24,9 +25,11 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	z-index: 1000; /* ensure portal sits above app content */
+	z-index: 1000;
+	/* ensure portal sits above app content */
 	padding: 1rem;
-	pointer-events: auto; /* allow overlay to receive clicks */
+	pointer-events: auto;
+	/* allow overlay to receive clicks */
 }
 
 .dialog-content {
@@ -47,11 +50,12 @@
 }
 
 .dialog-content ul {
-  list-style: none;
-  padding: 0 1em;
+	list-style: none;
+	padding: 0 1em;
 }
+
 .dialog-content ul li {
-  margin-bottom: 0.5rem;
+	margin-bottom: 0.5rem;
 }
 
 
@@ -68,7 +72,7 @@
 	padding-bottom: 0.5rem;
 	font-size: var(--step-2);
 	text-align: center;
-	border-bottom: 2px var(--prymary-border-color, rgba(0,0,0,0.08));
+	border-bottom: 2px var(--prymary-border-color, rgba(0, 0, 0, 0.08));
 }
 
 .dialog-footer {
@@ -77,7 +81,7 @@
 	justify-content: flex-end;
 	margin-top: 16px;
 	padding-top: 0.75rem;
-	border-top: 1px solid rgba(0,0,0,0.04);
+	border-top: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .dialog-title {
@@ -87,6 +91,15 @@
 	font-family: inherit;
 	font-size: var(--step-1);
 	text-align: center;
+}
+
+.dialog-trigger > * {
+	cursor: pointer;
+	
+}
+
+.dialog-trigger>a {
+	text-decoration: none;
 }
 
 .dialog-description {
@@ -104,4 +117,3 @@
 		border-radius: 6px;
 	}
 }
-

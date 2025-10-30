@@ -1,20 +1,22 @@
-/* Separator styles for horizontal and vertical */
-
-.sep {
-  background: var(--border, rgba(0,0,0,0.08));
-}
-
 .sep--horizontal {
-  height: 1px;
+  height: 0.25em;
   width: 100%;
   display: block;
+  border-radius: 10px;
+  margin: 1em 0;
 }
 
 .sep--vertical {
-  width: 1px;
+  width: 0.25em;
   height: 100%;
   display: inline-block;
+  border-radius: 10px;
+  margin: 0 1em;
 }
 
-/* Allow custom color via variable */
-.sep { background: var(--separator-color, var(--border, rgba(0,0,0,0.08))); }
+.sep {
+  background: var(--prymary-border-color, var(--border, rgba(0, 0, 0, 0.08)));
+}
+.sep.borderless {
+  background-color: transparent !important;
+}

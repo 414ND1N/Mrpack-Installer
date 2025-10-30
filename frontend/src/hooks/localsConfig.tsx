@@ -8,7 +8,7 @@ i18n
 .init({
   lng: 'en', // Idioma predeterminado
   fallbackLng: 'en',
-  ns: ['commons','menu', 'views'],
+  ns: ['commons','menu', 'discover', 'installation', 'settings'],
   interpolation: {
     escapeValue: false, // React ya maneja la protección contra XSS
   }

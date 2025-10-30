@@ -21,14 +21,19 @@
             },
             "configuration": {
                 "profile": {
-                    "label": "Profile icon"
+                    "label": "Profile icon",
+                    "description": "Select the icon you want to use for the Minecraft launcher profile"
                 },
                 "type": {
-                    "label": "Installation type",
+                    "label": "Type",
+                    "description": "Select the installation type",
                     "list": {
                         "singleplayer": "Singleplayer",
+                        "singleplayer_description": "Install the modpack for singleplayer and server use (includes all mods)",
                         "client": "Client",
-                        "server": "Server"
+                        "client_description": "Install the modpack for client use only (connect to multiplayer servers, doesn't include all mods)",
+                        "server": "Server",
+                        "server_description": "Download the server files for hosting a multiplayer server"
                     }
                 },
                 "install": {
@@ -42,12 +47,14 @@
                     "description": "Customize the installation path and memory allocation",
                     "path": {
                         "label": "Installation path relative to the game",
-                        "placeholder": "Installation path"
+                        "placeholder": "Installation path",
+                        "description": "Specify the path where the modpack will be installed"
                     },
                     "memory": {
                         "label": "Memory allocation",
                         "min_placeholder": "Min (GB)",
-                        "max_placeholder": "Max (GB)"
+                        "max_placeholder": "Max (GB)",
+                        "description": "Set the amount of RAM allocated to run the modpack in GB, leave blank to use the default settings"
                     }
                 }
             },
@@ -64,6 +71,7 @@
                 },
                 "installation": {
                     "need_launcher_closed": "Please close the launcher before installing.",
+                    "need_launcher_closed_desc": "The Minecraft launcher must be closed to proceed with the installation. Please save your progress and close the launcher.",
                     "starting": "Starting installation...",
                     "adding_profile": "Adding profile...",
                     "downloading_mods": "Downloading mods...",

@@ -10,11 +10,11 @@ import SectionsMinecraftComponent from "@/components/SectionsMinecraft/SectionsM
 import i18n from '@/hooks/localsConfig'
 import { useTranslation } from 'react-i18next'
 import { MCButton, MCSelect, MCCheckbox } from "@/components/MC/MC"
-
+import { Separator } from "@/components/Separator/separator"
 // Css
-import "./Config.css"
+import "./Settings.css"
 
-function Config() {
+function Settings() {
     const [theme, setThemeState] = useState<string>("classic")
     const [fullscreen, setFullscreen] = useState<boolean>(false)
     const [newUpdateAvailable, setNewUpdateAvailable] = useState<boolean>(false)
@@ -82,9 +82,9 @@ function Config() {
     const sectionGeneral = (
         <>
             <section className="header">
-                <h2>{t('sections.general.title')}</h2>
                 <p>{t('sections.general.subtitle')}</p>
             </section>
+            <Separator/>
             <section className="content">
 
                 <section className="theme">
@@ -185,9 +185,9 @@ function Config() {
     const sectionAcercaDe = (
         <>
             <section className="header">
-                <h2>{t('sections.about.title')}</h2>
                 <p>{t('sections.about.subtitle')}</p>
             </section>
+            <Separator/>
             <section className="content">
                 <div className="about">
                     <p>
@@ -263,4 +263,4 @@ function Config() {
 
 }
 
-export default Config
+export default Settings

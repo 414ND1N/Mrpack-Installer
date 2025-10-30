@@ -120,6 +120,19 @@ function MCCheckbox({ variant = "default", checked, onChange, className, subtitl
   )
 }
 
+interface AskButtonProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: Variant
+  icon?: React.ReactNode
+}
+function MCAskButton({ variant = "default", icon="?",...props }: AskButtonProps) {
+  const classes = ["mc-ask-button", "mc-style", `variant-${variant}`].filter(Boolean).join(" ")
+  return (
+    <div className={classes} {...props}>
+      <h1>{icon}</h1>
+    </div>
+  )
+}
+
 export {
   MCButton,
   MCCode,
@@ -127,5 +140,6 @@ export {
   MCInput,
   MCAnchoredButton,
   MCSlider,
-  MCCheckbox
+  MCCheckbox,
+  MCAskButton
 }

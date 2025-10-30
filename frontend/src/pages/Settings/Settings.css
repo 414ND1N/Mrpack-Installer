@@ -1,6 +1,20 @@
-/* SECCION APARIENCIA */
-.settings-container .container {
-  /* SECCION ACERCA DE */
+.settings-container p, 
+.settings-container h1,
+.settings-container h2,
+.settings-container h3,
+.settings-container span,
+.settings-container select,
+.settings-container input,
+.settings-container {
+  font-family: var(--secondary-font);
+  font-size: var(--step-0);
+}
+
+.settings-container .header p {
+  font-size: var(--step-0);
+  color: var(--font-color-secondary, #6b7280);
+  margin: 0;
+  letter-spacing: 0.02em;
 }
 .settings-container .container .section-appearance .content {
   display: flex;
@@ -8,9 +22,10 @@
   gap: 2em;
 }
 .settings-container .container .section-appearance .content h3.subtitle {
-  font-size: var(--step--1);
+  font-size: var(--step-0);
   color: var(--font-color, white);
   text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 .settings-container .container .section-appearance .content .themes-list {
   display: flex;
@@ -27,19 +42,6 @@
   color: white;
   border: 2px solid var(--font-color, white);
   width: 15rem;
-}
-.settings-container .container .section-appearance .content .behavior .controls .language > select {
-  width: 20em;
-}
-.settings-container .container .section-appearance .content .behavior .controls .fullscreen-page .mc-checkbox .switch {
-  width: 50%;
-  height: 2.25em;
-}
-.settings-container .container .section-appearance .content .behavior .controls .fullscreen-page .mc-checkbox .slider:before {
-  height: 1.75em;
-}
-.settings-container .container .section-appearance .content .behavior .controls .fullscreen-page .mc-checkbox input:checked + .slider::before {
-  transform: translateX(6em);
 }
 
 .settings-container .container .section-appearance .content .themes-list .item:hover {
@@ -147,6 +149,7 @@
   display: flex;
   flex-direction: column;
   gap: 2em;
+  letter-spacing: 0.05em;
 }
 .settings-container .container .section-about .content .about {
   width: 90%;
@@ -155,12 +158,15 @@
   gap: 2em;
   font-size: var(--step-0);
 }
+.settings-container .container .section-about .content .update-status{
+  margin-top: 10%;
+  font-size: var(--step-0);
+}
+.settings-container .container .section-about .content .update-status > *{
+  font-family: inherit;
+}
 .settings-container .container .section-about .content .update-status.disabled {
   display: none;
-}
-.settings-container .container .section-about .content .update-status.disabled > button {
-  font-size: var(--step-0);
-  /* font-family: var(--secondary-font); */
 }
 .settings-container .container .section-about .content .about h2,
 .settings-container .container .section-about .content .about a,

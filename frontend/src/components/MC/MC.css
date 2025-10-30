@@ -8,10 +8,11 @@
   --mc-gray-1: #3d3938;
   --mc-gray-2: #262423;
   --mc-white: #dfd9d9;
+  --mc-font-family: 'Pixelify Sans', monospace, sans-serif;
 }
 
 code.mc-style {
-  font-family: var(--secondary-font, sans-serif);
+  font-family: var(--mc-font-family, sans-serif);
   color: var(--mc-green-1);
   background-color: var(--mc-gray-1);
   padding: 0.25rem;
@@ -23,7 +24,8 @@ select.mc-style,
 input.mc-style,
 select.mc-style {
   background-color: var(--mc-green-1);
-  font-family: var(--primary-font, sans-serif);
+  font-family: var(--mc-font-family, sans-serif);
+  letter-spacing: 0.02em;
   font-weight: 500;
   font-size: var(--step--1);
   transition: background-color 0.3s ease, border 0.3s ease, color 0.3s ease;
@@ -131,7 +133,7 @@ input.mc-style:focus {
   border: 0.2rem solid white;
 }
 
-/* Checkbox */
+/* SLIDER */
 .mc-slider input[type="checkbox"] {
   visibility: hidden;
   display: none;
@@ -199,6 +201,7 @@ input.mc-style:focus {
   background: var(--mc-green-2);
 }
 
+/* CHECKBOX */
 .mc-checkbox {
   display: flex;
   align-items: center;
@@ -234,7 +237,7 @@ input.mc-style:focus {
   margin-top: -0.1em;
 }
 
-/* Selector component integration */
+/* FILE SELECTOR */
 .file-selector-component.mc-style {
   border: 2px dashed var(--mc-green-2, green);
   border-radius: 0.2em;
@@ -253,4 +256,24 @@ input.mc-style:focus {
   padding: 1em 0;
   max-width: 10rem;
   max-height: 10rem;
+}
+
+
+/* ASK BUTTON */
+.mc-ask-button {
+  font-family: var(--secondary-font);
+  font-size: var(--step--2);
+  cursor: pointer;
+}
+.mc-ask-button h1 {
+  font-family: inherit;
+  font-size: inherit;
+}
+.mc-ask-button h1:hover {
+  cursor: pointer;
+  scale: 1.5;
+  rotate: 5deg;
+  transition: all 0.2s ease-in-out;
+  color: var(--mc-green-2, green);
+  
 }

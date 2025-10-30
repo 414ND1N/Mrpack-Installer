@@ -21,14 +21,19 @@
             },
             "configuration": {
                 "profile": {
-                    "label": "Icono del perfil"
+                    "label": "Icono del perfil",
+                    "description": "Selecciona el icono que deseas usar para el perfil del lanzador de Minecraft"
                 },
                 "type": {
-                    "label": "Tipo de instalación",
+                    "label": "Tipo",
+                    "description": "Selecciona el tipo de instalación",
                     "list": {
                         "singleplayer": "Un jugador",
+                        "singleplayer_description": "Instala el paquete de mods para un jugador y uso en servidores (incluye todos los mods)",
                         "client": "Cliente",
-                        "server": "Servidor"
+                        "client_description": "Instala el paquete de mods para uso en cliente unicamente (conéctate a servidores multijugador, no incluye todos los mods)",
+                        "server": "Servidor",
+                        "server_description": "Descarga los archivos del servidor para alojar un servidor"
                     }
                 },
                 "install": {
@@ -42,10 +47,12 @@
                     "description": "Personaliza la ruta de instalación y la asignación de memoria",
                     "path": {
                         "label": "Ruta de instalación relativa al juego",
+                        "description": "Especifica la ruta donde se instalará el paquete de mods",
                         "placeholder": "Ruta de instalación"
                     },
                     "memory": {
                         "label": "Asignación de memoria",
+                        "description": "Configura la cantidad de memoria RAM asignada para ejecutar el paquete de mods en GB, deja en blanco para usar la configuración predeterminada",
                         "min_placeholder": "Mínima (GB)",
                         "max_placeholder": "Máxima (GB)"
                     }
@@ -64,6 +71,7 @@
                 },
                 "installation": {
                     "need_launcher_closed": "Por favor, cierra el lanzador antes de instalar.",
+                    "need_launcher_closed_desc": "El lanzador de Minecraft debe estar cerrado para proceder con la instalación. Por favor, guarda tu progreso y cierra el lanzador.",
                     "starting": "Iniciando instalación...",
                     "adding_profile": "Agregando perfil...",
                     "downloading_mods": "Descargando mods...",
