@@ -74,3 +74,42 @@ async def GetMrpackMetadata(file_path: str) -> Any:
         }
     except Exception as e:
         raise e
+    
+async def GetMrpackInfo(file_path: str) -> Any:
+    try:
+
+        file_path_obj = Path(file_path)
+
+        if not file_path_obj.exists() or not file_path_obj.is_file():
+            raise Exception(f"File not found: {file_path}")
+
+        file_bytes = file_path_obj.read_bytes()
+
+        with zipfile.ZipFile(io.BytesIO(file_bytes)) as z:
+            if "modrinth.index.json" not in z.namelist():
+                raise Exception(f"modrinth.index.json not found in the mrpack file")
+
+            with z.open("modrinth.index.json") as f:
+                index_content = f.read().decode("utf-8")
+
+        index = json.loads(index_content)
+
+        raw_deps = index.get("dependencies", [])
+        if isinstance(raw_deps, dict):
+            dependencies = [{"id": k, "version": v} for k, v in raw_deps.items()]
+        elif isinstance(raw_deps, list):
+            dependencies = raw_deps
+        else:
+            dependencies = []
+
+        return {
+            "game": index.get("game"),
+            "formatVersion": index.get("formatVersion"),
+            "versionId": index.get("versionId"),
+            "name": index.get("name"),
+            "summary": index.get("summary", ""),
+            "files": index.get("files", []),
+            "dependencies": dependencies,
+        }
+    except Exception as e:
+        raise e

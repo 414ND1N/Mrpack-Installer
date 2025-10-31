@@ -1,6 +1,6 @@
 import { Project } from '@/interfaces/modrinth/Projects';
 import { SearchHit } from '@/interfaces/modrinth/Hit';
-import { MrpackInfo, MrpackMetadata, MrpackDependency } from '@/interfaces/modrinth/MrPack'
+import { MrpackInfo, MrpackMetadata } from '@/interfaces/modrinth/MrPack'
 
 const modrinthFetchRandomProjects = async (count: number = 10): Promise<Project[]> => {
     try {
@@ -47,9 +47,22 @@ const GetMrpackMedatadaInfo = async (filePath: string): Promise<MrpackMetadata> 
     }
 }
 
+const GetMrpackInfo = async (filePath: string): Promise<MrpackInfo> => {
+    try {
+        const resp = await fetch(`http://127.0.0.1:8001/mrpack/info/?file_path=${encodeURIComponent(filePath)}`, { method: 'GET', cache: 'no-store' })
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
+        const data = await resp.json()
+        return data as MrpackInfo
+    } catch (error) {
+        console.error('Error fetching Mrpack metadata:', error)
+        throw error
+    }
+}
+
 
 export {
     modrinthFetchRandomProjects,
     modrinthSearchProjects,
-    GetMrpackMedatadaInfo
+    GetMrpackMedatadaInfo,
+    GetMrpackInfo
 }

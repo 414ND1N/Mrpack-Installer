@@ -68,6 +68,13 @@ async def get_mrpack_metadata(file_path: str = Query(..., description="Path to t
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching mrpack metadata: {e}")
 
+@app.get("/mrpack/info/", summary="Get Mrpack info from file")
+async def get_mrpack_info(file_path: str = Query(..., description="Path to the .mrpack file")) -> Any:
+    try:
+        return await Mr.GetMrpackInfo(file_path=file_path)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching mrpack info: {e}")
+
 @app.get("/utils/path_join/", summary="Join paths")
 async def path_join(paths: list[str] = Query(..., description="Paths to join")) -> str:
     try:
