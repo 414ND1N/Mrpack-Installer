@@ -1,4 +1,4 @@
-import { Project } from "@/interfaces/Projects"
+import { Project } from "@/interfaces/modrinth/Projects"
 
 export interface Search {
     hits: Project[];

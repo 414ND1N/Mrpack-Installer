@@ -5,6 +5,9 @@ import { ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
+// import axios from 'axios'
+import { modrinthFetchRandomProjects, modrinthSearchProjects } from './backend/modrinth'
+// import fs from 'node:fs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 process.env.APP_ROOT = path.join(__dirname, '..')
@@ -32,14 +35,15 @@ function createWindow() {
   // Obtener datos persistentes
   const windowBounds = store.get('windowBounds', { width: 1100, height: 700 }) as WindowBounds
   const isFullscreen = store.get('isFullscreen', false) as boolean
+  // const theme = store.get('theme', 'classic');
 
   win = new BrowserWindow({
     title: 'Modpack Installer',
-    icon: path.join(process.env.VITE_PUBLIC, 'app-icon.png'),
+    icon: path.join(process.env.VITE_PUBLIC ?? '', 'app-icon.png'),
     webPreferences: {
-      // preload: path.join(__dirname, 'preload.mjs'),
-      nodeIntegration: true,
-      contextIsolation: false,
+      preload: path.join(__dirname, 'preload.mjs'),
+      nodeIntegration: false,
+      contextIsolation: true,
       webviewTag: true,
     },
     fullscreen: isFullscreen,
@@ -58,6 +62,13 @@ function createWindow() {
   win.webContents.on('did-finish-load', () => {
     console.log('Ventana cargada con éxito')
   })
+
+  // Abrir DevTools en modo separado para depuración
+  try {
+    win.webContents.openDevTools({ mode: 'detach' })
+  } catch (e) {
+    console.warn('No se pudo abrir DevTools:', e)
+  }
 
   // Cargar la URL de desarrollo o el archivo HTML
   if (VITE_DEV_SERVER_URL) {
@@ -120,7 +131,6 @@ autoUpdater.on('update-downloaded', (info) => {
 })
 
 // --------- App Events ---------
-
 function setupIpcEvents() {
   ipcMain.handle('set-fullscreen', (_, isFullscreen: boolean) => {
     if (win) {
@@ -149,7 +159,7 @@ function setupIpcEvents() {
   ipcMain.handle('get-version', () => {
     return app.getVersion()
   })
-  
+
   ipcMain.handle('update-app', async () => {
     try {
       console.log('Updating app...')
@@ -159,7 +169,7 @@ function setupIpcEvents() {
       throw error
     }
   })
-  
+
   ipcMain.handle('check-update', async () => {
     try {
       console.log('Checking for updates...')
@@ -193,7 +203,7 @@ app.whenReady().then(() => {
   if (!(process.platform === 'darwin') && !VITE_DEV_SERVER_URL) {
     Menu.setApplicationMenu(null)
   }
- 
+
   setupIpcEvents()
 
   console.log('Checking for updates...')

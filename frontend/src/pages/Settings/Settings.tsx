@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { ipcRenderer } from 'electron'
+// import { ipcRenderer } from 'electron'
 
 
 import { useGlobalMessage } from "@/context/GlobalMessageContext"
@@ -23,20 +23,23 @@ function Settings() {
     const { t } = useTranslation(['settings', 'commons'])
 
     const updateTheme = async (newTheme: string) => {
-        await ipcRenderer.invoke('set-theme', newTheme)
+        // await ipcRenderer.invoke('set-theme', newTheme)
+        await (window as any).winConfig.setTheme(newTheme)
         document.body.setAttribute("data-theme", newTheme)
         setThemeState(newTheme)
     }
 
     const updateFullscreen = async (isFullscreen: boolean) => {
-        await ipcRenderer.invoke('set-fullscreen', isFullscreen)
+        // await ipcRenderer.invoke('set-fullscreen', isFullscreen)
+        await (window as any).winConfig.setFullscreen(isFullscreen)
         setFullscreen(isFullscreen)
     }
 
     const HandleUpdate = async () => {
         try {
             showMessage("Descargando actualización...")
-            await ipcRenderer.invoke("update-app")
+            // await ipcRenderer.invoke("update-app")
+            await (window as any).winConfig.updateApp()
             showMessage("Actualización descargada. Debes de reiniciar la aplicación para aplicar los cambios.")
         } catch (error) {
             console.error("Error durante la actualización:", error)
@@ -44,7 +47,8 @@ function Settings() {
     }
 
     const updateLanguage = async (lang: string) => {
-        await ipcRenderer.invoke('set-language', lang)
+        // await ipcRenderer.invoke('set-language', lang)
+        // await (window as any).winConfig.setLanguage(lang)
         i18n.changeLanguage(lang)
         setLanguage(lang)
     }
@@ -53,22 +57,27 @@ function Settings() {
         const getInitialConfig = async () => {
 
             // Aplicar el tema al estado
-            const savedTheme = await ipcRenderer.invoke('get-theme')
+            // const savedTheme = await ipcRenderer.invoke('get-theme')
+            const savedTheme = await (window as any).winConfig.getTheme()
             if (savedTheme) {
                 setThemeState(savedTheme)
             }
             // Aplicar el estado de pantalla completa
-            const isFullscreen = await ipcRenderer.invoke('get-fullscreen')
+            // const isFullscreen = await ipcRenderer.invoke('get-fullscreen')
+            const isFullscreen = await (window as any).winConfig.getFullscreen()
             if (isFullscreen !== undefined) {
                 setFullscreen(isFullscreen)
             }
             // Obtener el estado de actualización
-            const updateAvaliable = await ipcRenderer.invoke('check-update')
+            // const updateAvaliable = await ipcRenderer.invoke('check-update')
+            const updateAvaliable = await (window as any).winConfig.checkUpdate()
             if (updateAvaliable !== undefined) {
                 setNewUpdateAvailable(updateAvaliable)
             }
             // Obtener el idioma
-            const savedLanguage = await ipcRenderer.invoke('get-language')
+            // const savedLanguage = await ipcRenderer.invoke('get-language')
+            // const savedLanguage = await (window as any).winConfig.getLanguage()
+            const savedLanguage = 'en'
             if (savedLanguage) {
                 setLanguage(savedLanguage)
             }

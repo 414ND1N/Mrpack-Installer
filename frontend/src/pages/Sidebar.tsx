@@ -1,5 +1,4 @@
 import { memo, useEffect, useState } from 'react'
-import { ipcRenderer } from 'electron'
 import { useTranslation } from 'react-i18next'
 
 // Componentes
@@ -22,7 +21,9 @@ function Sidebar({ current_path = "/" }: { current_path?: string }) {
     useEffect(() => {
         // Obtener la versión de la aplicación al cargar el componente
         const getVersion = async () => {
-            const appVersion = await ipcRenderer.invoke('get-version')
+            const appVersion = await (window as any).winConfig?.getVersion()
+            console.log("win config:", (window as any).winConfig)
+            console.log("App version:", appVersion)
             setVersion(appVersion)
         }
         getVersion()

@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react"
-import path from "path"
+// import path from "path"
 import { useTranslation } from 'react-i18next'
 
 // Css
@@ -11,13 +11,12 @@ import SectionsMinecraftComponent from "@/components/SectionsMinecraft/SectionsM
 import FileSelector from "@/components/FileSelector/FileSelector"
 
 // Hooks
-import { GetMrpackMedatadaInfo, MinecraftVersionFromDependencies } from "@/hooks/modrinth/mrpack"
+import { MinecraftVersionFromDependencies } from "@/hooks/modrinth/mrpack"
 import { InstallationModpackProps } from "@/hooks/minecraft/minecraft"
 import { ProfileIcons } from '@/interfaces/MinecraftLauncherIcons'
 import { useGlobalMessage } from "@/context/GlobalMessageContext"
 
 import { Dialog, DialogTrigger, DialogContent, DialogClose, DialogFooter, DialogHeader, DialogDescription } from "@/components/Dialog/Dialog"
-import { toast } from "@/hooks/use-toast"
 import { MCButton, MCInput, MCSelect, MCSlider, MCAskButton } from "@/components/MC/MC"
 import { Separator } from "@/components/Separator/separator"
 
@@ -51,45 +50,35 @@ function Install() {
         // Verificar si el archivo es un modpack válido
         if (!file?.name.endsWith(".mrpack")) {
             alert(t('sections.file.messages.error.invalid_mrpack_file'))
-
-            toast({
-                title: "Error",
-                description: t('sections.file.messages.error.invalid_mrpack_file'),
-                variant: "destructive",
-            })
-
             setInstallationProgress(false)
             setInstallationConfig((prevInfo) => ({
                 ...prevInfo,
                 mrpack_info: undefined // Metadatos del modpack, inicialmente vacío
             }))
-
-            return
         }
 
         try {
 
-            const _data = await GetMrpackMedatadaInfo(file.path)
+            // const _data = await GetMrpackMedatadaInfo(file.path)
+            const _data = await (window as any).backend.GetMrpackMedatadaInfo(file.path)
+            console.log("Metadatos del modpack obtenidos:", _data)
+
             const _modpack_dir_name = `${_data.name.trim().replace(/\s+/g, "-").toLowerCase() || "modpack"}`
+            const _modpack_directory = await (window as any).backend.PathJoin("instances", _modpack_dir_name)
+            const _minecraft_version = MinecraftVersionFromDependencies(_data.dependencies)
 
             setInstallationConfig((prevInfo) => ({
                 ...prevInfo,
-                minecraft_version: MinecraftVersionFromDependencies(_data.dependencies), // versión obtenida buscando una dependencia con id "minecraft"
+                minecraft_version: _minecraft_version, // versión obtenida buscando una dependencia con id "minecraft"
                 mrpack_info: _data,
                 mrpack_path: file.path,
-                modpack_directory: path.join("instances", _modpack_dir_name)
+                modpack_directory: _modpack_directory
             }))
             setInstallationProgress(true)
 
         } catch (error) {
             console.error("Error al obtener los metadatos del modpack:", error)
             // alert(t('sections.file.messages.error.invalid_modpack'))
-            toast({
-                title: "Cuidado",
-                description: t('sections.file.messages.error.invalid_modpack'),
-                variant: "destructive",
-            })
-
             setInstallationConfig((prevInfo) => ({
                 ...prevInfo,
                 mrpack_info: undefined,         // Metadatos del modpack, inicialmente vacío

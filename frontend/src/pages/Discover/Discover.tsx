@@ -6,11 +6,10 @@ import { MCButton, MCInput, MCSelect } from "@/components/MC/MC"
 // Css
 import "./Discover.css"
 
-// Hooks
-import { searchProjects } from "@/hooks/modrinth/api"
+// Interfaces
+// import { searchProjects } from "@/hooks/modrinth/api"
+import { Hit } from "@/interfaces/modrinth/Hit"
 
-// Types
-import { Hit } from "@/interfaces/Hit"
 
 function Discover() {
 
@@ -25,7 +24,8 @@ function Discover() {
 
     const loadProjects = async () => {
         try {
-            const projects = await searchProjects(searchNumber, projectType ?? undefined, searchQuery ?? undefined, page * searchNumber)
+            // const projects = await searchProjects(searchNumber, projectType ?? undefined, searchQuery ?? undefined, page * searchNumber)
+            const projects = await (window as any).backend.searchProjects(searchNumber, projectType ?? undefined, searchQuery ?? undefined, page * searchNumber)
             setProjects(projects.hits)
             setTotalProjects(projects.total_hits)
         } catch (error) {

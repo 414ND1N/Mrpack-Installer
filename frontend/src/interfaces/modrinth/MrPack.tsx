@@ -22,6 +22,16 @@ export interface MrpackMetadata {
     dependencies:       MrpackDependency[];
 }
 
+export interface MrpackInformation { // minecraft launcher lib format
+    name:               string;
+    summary:            string;
+    versionId:          string;
+    formatVersion:      string;
+    minecraftVersion:   string;
+    optionalFiles:     string[];
+}
+
+
 export interface MrpackDependency {
     id: string; // e.g., "minecraft", "forge"
     version: string; // e.g., "1.20.2", "40.1.0"

@@ -28678,11 +28678,11 @@ function createWindow() {
   const isFullscreen = store.get("isFullscreen", false);
   win = new BrowserWindow({
     title: "Modpack Installer",
-    icon: path.join(process.env.VITE_PUBLIC, "app-icon.png"),
+    icon: path.join(process.env.VITE_PUBLIC ?? "", "app-icon.png"),
     webPreferences: {
-      // preload: path.join(__dirname, 'preload.mjs'),
-      nodeIntegration: true,
-      contextIsolation: false,
+      preload: path.join(__dirname, "preload.mjs"),
+      nodeIntegration: false,
+      contextIsolation: true,
       webviewTag: true
     },
     fullscreen: isFullscreen,
@@ -28697,6 +28697,11 @@ function createWindow() {
   win.webContents.on("did-finish-load", () => {
     console.log("Ventana cargada con éxito");
   });
+  try {
+    win.webContents.openDevTools({ mode: "detach" });
+  } catch (e) {
+    console.warn("No se pudo abrir DevTools:", e);
+  }
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
   } else {
