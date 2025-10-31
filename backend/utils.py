@@ -1,4 +1,4 @@
-from pathlib import Path
+import os
 
 async def PathJoin(*paths: str) -> str:
-    return str(Path().joinpath(*paths))
+    return os.path.join(*paths)

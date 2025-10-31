@@ -9,11 +9,11 @@ import "./Install.css"
 import Sidebar from "@/pages/Sidebar"
 import SectionsMinecraftComponent from "@/components/SectionsMinecraft/SectionsMinecraft"
 import FileSelector from "@/components/FileSelector/FileSelector"
-
+import { MrpackMetadata } from "@/interfaces/modrinth/MrPack"
 // Hooks
 import { MinecraftVersionFromDependencies } from "@/hooks/modrinth/mrpack"
-import { InstallationModpackProps } from "@/hooks/minecraft/minecraft"
-import { ProfileIcons } from '@/interfaces/MinecraftLauncherIcons'
+import { InstallationModpackProps } from "@/interfaces/MrpackInstaller"
+import { ProfileIcons } from '@/interfaces/minecraft/MinecraftLauncherIcons'
 import { useGlobalMessage } from "@/context/GlobalMessageContext"
 
 import { Dialog, DialogTrigger, DialogContent, DialogClose, DialogFooter, DialogHeader, DialogDescription } from "@/components/Dialog/Dialog"
@@ -38,6 +38,7 @@ function Install() {
         // translator: t
     })
 
+    const [mrpackInfo, setMrpackInfo] = useState<MrpackMetadata | null>(null)
     const [installationProgress, setInstallationProgress] = useState<boolean>(false)
     const [personalizedConfig, setPersonalizedConfig] = useState<boolean>(false)
     const [openDialogConfig, setOpenDialogConfig] = useState<boolean>(false)
@@ -51,10 +52,6 @@ function Install() {
         if (!file?.name.endsWith(".mrpack")) {
             alert(t('sections.file.messages.error.invalid_mrpack_file'))
             setInstallationProgress(false)
-            setInstallationConfig((prevInfo) => ({
-                ...prevInfo,
-                mrpack_info: undefined // Metadatos del modpack, inicialmente vacío
-            }))
         }
 
         try {
@@ -65,15 +62,16 @@ function Install() {
 
             const _modpack_dir_name = `${_data.name.trim().replace(/\s+/g, "-").toLowerCase() || "modpack"}`
             const _modpack_directory = await (window as any).backend.PathJoin("instances", _modpack_dir_name)
+            console.log("uniendo paths:", "instances", _modpack_dir_name, "=>", _modpack_directory)
             const _minecraft_version = MinecraftVersionFromDependencies(_data.dependencies)
 
             setInstallationConfig((prevInfo) => ({
                 ...prevInfo,
                 minecraft_version: _minecraft_version, // versión obtenida buscando una dependencia con id "minecraft"
-                mrpack_info: _data,
                 mrpack_path: file.path,
                 modpack_directory: _modpack_directory
             }))
+            setMrpackInfo(_data)
             setInstallationProgress(true)
 
         } catch (error) {
@@ -81,10 +79,10 @@ function Install() {
             // alert(t('sections.file.messages.error.invalid_modpack'))
             setInstallationConfig((prevInfo) => ({
                 ...prevInfo,
-                mrpack_info: undefined,         // Metadatos del modpack, inicialmente vacío
                 modpack_directory: "instances" // Reiniciar la ruta de instalación del modpack
             }))
             setInstallationProgress(false)
+            setMrpackInfo(null)
         }
     }
 
@@ -105,8 +103,8 @@ function Install() {
                 <section className={`installation-configuration ${installationProgress ? "active" : ""}`}>
 
                     <section className="mrpack-summary">
-                        {installationConfig.mrpack_info ? <p>{t('sections.file.information.summary.name')}: {installationConfig.mrpack_info?.name || "NA"} </p> : null}
-                        {installationConfig.mrpack_info?.summary ? <p>{t('sections.file.information.summary.description')}: {installationConfig.mrpack_info?.summary || "NA"} </p> : null}
+                        {mrpackInfo ? <p>{t('sections.file.information.summary.name')}: {mrpackInfo?.name || "NA"} </p> : null}
+                        {mrpackInfo?.summary ? <p>{t('sections.file.information.summary.description')}: {mrpackInfo?.summary || "NA"} </p> : null}
                         {installationConfig.minecraft_version ? <p>{t('sections.file.information.summary.version')}: {installationConfig.minecraft_version || "NA"}</p> : null}
                     </section>
 
@@ -135,9 +133,9 @@ function Install() {
                                             {t('sections.file.information.list.description')}
                                         </DialogDescription>
                                         <Separator />
-                                        {installationConfig.mrpack_info?.files && installationConfig.mrpack_info.files.length > 0 ? (
+                                        {mrpackInfo?.files && mrpackInfo.files.length > 0 ? (
                                             <ul>
-                                                {installationConfig.mrpack_info.files
+                                                {mrpackInfo.files
                                                     ?.sort((a, b) => a.path.localeCompare(b.path)) // Order
                                                     .map((file) => {
                                                         if (file.path) {
@@ -380,7 +378,7 @@ function Install() {
                                         <DialogClose>
                                             <MCButton
                                                 onClick={async () => {
-                                                    if (!installationConfig.mrpack_info) {
+                                                    if (!mrpackInfo) {
                                                         alert(t('sections.file.messages.error.no_file_selected'))
                                                         return
                                                     }
@@ -391,6 +389,7 @@ function Install() {
                                                     //     installationConfig, // Configuración de instalación del modpack
                                                     //     callBack //callback
                                                     // )
+                                                    await (window as any).backend.AddVanillaLauncher(installationConfig)
                                                     hideMessage()
                                                 }}
                                             >

@@ -49,5 +49,7 @@ interface Window {
     searchProjects: (count: number, type?: string, querry?: string, offset?: number) => Promise<unknown>;
     GetMrpackMedatadaInfo: (filePath: string) => Promise<unknown>;
     PathJoin: (...paths: string[]) => Promise<string>;
+    GetMinecraftDirectory: () => Promise<string>;
+    AddVanillaLauncher: (props: any) => Promise<string>;
   }
 }

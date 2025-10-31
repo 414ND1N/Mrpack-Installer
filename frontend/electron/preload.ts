@@ -1,4 +1,5 @@
 import { ipcRenderer, contextBridge } from 'electron'
+
 import { 
   modrinthFetchRandomProjects,
   modrinthSearchProjects,
@@ -8,6 +9,11 @@ import {
 import {
   PathJoin
 } from './backend/utils'
+
+import {
+  GetMinecraftDirectory,
+  AddVanillaLauncher
+} from './backend/minecraft'
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('electronAPI', {
@@ -34,6 +40,8 @@ contextBridge.exposeInMainWorld('backend', {
   searchProjects: (count: number, type?: string, querry?: string, offset?: number) => modrinthSearchProjects(count, type, querry, offset),
   GetMrpackMedatadaInfo: (filePath: string) => GetMrpackMedatadaInfo(filePath),
   PathJoin: (...paths: string[]) => PathJoin(...paths),
+  GetMinecraftDirectory: () => GetMinecraftDirectory(),
+  AddVanillaLauncher: (props: any) => AddVanillaLauncher(props),
 })
 
 console.log("Preload script loaded successfully.")

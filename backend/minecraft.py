@@ -1,119 +1,88 @@
 import minecraft_launcher_lib
-import subprocess
-import sys
 import os
+import traceback
 
-
-def run_modpack(modpack_directory, mrpack_path, minecraft_directory):
-    options = minecraft_launcher_lib.utils.generate_test_options()
-    options["gameDirectory"] = modpack_directory
-    command = minecraft_launcher_lib.command.get_minecraft_command(
-        minecraft_launcher_lib.mrpack.get_mrpack_launch_version(mrpack_path),
-        minecraft_directory, options
-    )
-    subprocess.run(command)
-
-def get_mrpack_information(mrpack_path):
+async def getMinecraftDirectory():
     try:
-        return minecraft_launcher_lib.mrpack.get_mrpack_information(mrpack_path)
-    except Exception:
-        print(f"{mrpack_path} is not a valid .mrpack File")
-        return None
+        d = minecraft_launcher_lib.utils.get_minecraft_directory()
+        return os.path.abspath(os.path.expanduser(d))
+    except Exception as e:
+        raise RuntimeError(f"Error obteniendo directorio de Minecraft: {e}")
 
-def add_vanilla_profile(minecraft_directory, mrpack_path, profile_directory, jargs=None, icon=None) -> bool:
+async def addVanillaLauncher(mrpack_directory: str, profile_directory:str, minecraft_directory: str = "", jargs=None, icon=None):
+
+    try:
+        mrpack_directory = os.path.abspath(os.path.expanduser(mrpack_directory))
+        if not minecraft_directory:
+            minecraft_directory = await getMinecraftDirectory()
+        minecraft_directory = os.path.abspath(os.path.expanduser(minecraft_directory))
+
+        if not os.path.isfile(mrpack_directory):
+            raise FileNotFoundError(f"{mrpack_directory} was not found")
+        
+        mrpack_information = minecraft_launcher_lib.mrpack.get_mrpack_information(mrpack_directory)
+        if not mrpack_information:
+            raise ValueError(f"{mrpack_directory} is not a valid .mrpack File")
+        
+        if not minecraft_launcher_lib.vanilla_launcher.do_vanilla_launcher_profiles_exists(minecraft_directory):
+            raise RuntimeError("No se encontraron perfiles del Vanilla Launcher en el directorio de Minecraft")
+        
+        java_arguments = None
+        if jargs:
+            try:
+                # Si vienen números (o strings numéricos), convertir a "-Xms.. -Xmx.."
+                min_g = int(jargs[0])
+                max_g = int(jargs[1])
+                if min_g < 1 or max_g < min_g:
+                    raise ValueError("Valores de memoria java inválidos")
+                java_arguments = [f"-Xms{min_g}G", f"-Xmx{max_g}G"]
+            except Exception:
+                # si no se pudo parsear, asumir que jargs ya es una lista de strings
+                java_arguments = jargs
+
+        profile = {
+            "name": mrpack_information["name"],
+            "version": minecraft_launcher_lib.mrpack.get_mrpack_launch_version(mrpack_directory),
+            "versionType": "custom",
+            "gameDirectory": os.path.join(minecraft_directory, profile_directory),
+            "javaExecutable": None,
+            "javaArguments": java_arguments,
+            "customResolution": None,
+            "icon": icon,
+        }
+
+        minecraft_launcher_lib.vanilla_launcher.add_vanilla_launcher_profile(minecraft_directory, profile)
+
+        return {"ok": True}
     
-    print("\nCREANDO PERFIL...")
-    print("Directorio del modpack: ", profile_directory)
-    print("Directorio del mrpack a instalar: ", mrpack_path)
+    except Exception as e:
+        traceback.print_exc()
+        raise e
 
-    if not os.path.isfile(mrpack_path):
-        print(f"{mrpack_path} was not found", file=sys.stderr)
-        sys.exit(1)
+async def InstallMrpack(profile_directory: str, mrpack_directory: str, minecraft_directory: str = ""):
 
     try:
-        mrpack_information = get_mrpack_information(mrpack_path)
+        if not minecraft_directory:
+            minecraft_directory = await getMinecraftDirectory()
 
+        if not os.path.isfile(mrpack_directory):
+            raise FileNotFoundError(f"{mrpack_directory} was not found")
+        
+        mrpack_information = minecraft_launcher_lib.utils.get_mrpack_information(mrpack_directory)
         if not mrpack_information:
-            sys.exit(1)
+            raise Exception(f"{mrpack_directory} is not a valid .mrpack File")
 
-    except Exception:
-        print(f"{mrpack_path} no es un archivo .mrpack válido !!")
-        sys.exit(1)
+       # Adds the Optional Files
+        mrpack_install_options: minecraft_launcher_lib.types.MrpackInstallOptions = {"optionalFiles": []}
+        for i in mrpack_information["optionalFiles"]:
+            mrpack_install_options["optionalFiles"].append(i)
 
-    # Print some Information
-    #print("Name: ", mrpack_information["name"])    
-    #print("Summary: ", mrpack_information["summary"])
-    #print("versionId: ", mrpack_information["versionId"])
-    #print("formatVersion: ", mrpack_information["formatVersion"])
-    #print("Minecraft version: ", mrpack_information["minecraftVersion"])
-    #print("optionalFiles: ", mrpack_information["optionalFiles"])
-
-    if not minecraft_launcher_lib.vanilla_launcher.do_vanilla_launcher_profiles_exists(minecraft_directory):
-        print("No se encontraron perfiles de Minecraft !!")
-        sys.exit(1)
-
-    # Profile
-    profile = {
-        "name": mrpack_information["name"],
-        "version": minecraft_launcher_lib.mrpack.get_mrpack_launch_version(mrpack_path),
-        "versionType": "custom",
-        "gameDirectory": profile_directory,
-        "javaExecutable": None,
-        "javaArguments": jargs,
-        "customResolution": None,
-        "icon": icon,
-    }
-
-    print("\nDatos del perfil a crear:")
-    print(profile)
-
-    minecraft_launcher_lib.vanilla_launcher.add_vanilla_launcher_profile(minecraft_directory, profile)
-
-
-async def install_mrpack(minecraft_directory, modpack_directory, mrpack_path) -> None:
-
-    print("\nINSTALANDO MODPACK...")
-
-    if not os.path.isfile(mrpack_path):
-        print(f"{mrpack_path} no fue encontrado !!", file=sys.stderr)
-        sys.exit(1)
-
-    try:
-        mrpack_information = get_mrpack_information(mrpack_path)
-        if not mrpack_information:
-            sys.exit(1)
-    except Exception:
-        print(f"{mrpack_path} no es un archivo .mrpack válido !!")
-        sys.exit(1)
-
-    # Print some Information
-    print("\nDatos del modpack encontrado:")
-    print("Nombre: ", mrpack_information["name"])    
-    print("Resumen: ", mrpack_information["summary"])
-    print("Version Minecraft: ", mrpack_information["minecraftVersion"])
-
-    if minecraft_directory == "":
-        minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
-
-    if modpack_directory == "":
-        modpack_directory = minecraft_directory
-
-    # Adds the Optional Files
-    mrpack_install_options: minecraft_launcher_lib.types.MrpackInstallOptions = {"optionalFiles": []}
-    for i in mrpack_information["optionalFiles"]:
-        mrpack_install_options["optionalFiles"].append(i)
-
-    # Install
-    print("\nInstalando modpack...")
-    print("Directorio del modpack: ", modpack_directory)
-    print("Directorio del mrpack: ", mrpack_path)
-    print("Archivos opcionales: ", mrpack_install_options)
-
-    minecraft_launcher_lib.mrpack.install_mrpack(
-        mrpack_path,
-        minecraft_directory,
-        modpack_directory=modpack_directory,
-        mrpack_install_options=mrpack_install_options,
-        callback={"setStatus": print}
-    )
-    print("\nSe ha instalado el Pack con éxito !!")
+        minecraft_launcher_lib.mrpack.install_mrpack(
+            mrpack_directory,
+            minecraft_directory,
+            modpack_directory=profile_directory,
+            mrpack_install_options=mrpack_install_options,
+            callback={"setStatus": print}
+        )
+    except Exception as e: 
+        raise e

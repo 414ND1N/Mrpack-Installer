@@ -8,7 +8,7 @@ import { MrpackMetadata } from '@/interfaces/modrinth/MrPack'
 // import Launch, { LaunchOPTS } from "@/hooks/minecraft-java-core/src/Launch"
 // import Downloader from "@/hooks/minecraft-java-core/src/utils/Downloader"
 // import { AddLauncherProfile} from '@/hooks/minecraft/launcher_profile'
-import { ProfileIcons } from '@/interfaces/MinecraftLauncherIcons'
+import { ProfileIcons } from '@/interfaces/minecraft/MinecraftLauncherIcons'
 import { TFunction } from 'i18next'
 
 type LoaderType = "fabric" | "forge" | "quilt" | "liteloader" | "vanilla" | "other"
@@ -16,7 +16,7 @@ type LoaderType = "fabric" | "forge" | "quilt" | "liteloader" | "vanilla" | "oth
 export interface InstallationModpackProps {
     type: string,                       // Por defecto, tipo cliente
     installation_directory: string,          // Directorio donde se instalará el modpack, por defecto el directorio de Minecraft
-    memory: {
+    memory?: {
         max: string,                    // Memoria máxima por defecto
         min: string                     // Memoria mínima por defecto
     },
