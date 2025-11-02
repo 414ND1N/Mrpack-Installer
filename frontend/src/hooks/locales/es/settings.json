@@ -49,14 +49,15 @@
                 "developed_by": {
                     "part1": "Desarrollado por "
                 }
-            },
-            "update": {
-                "title": "Actualizaciónes",
-                "update_available": "Nueva Actualización Disponible",
-                "no_update_available": "No Hay Actualizaciones Disponibles",
-                "button": "Descargar Actualización",
-                "button_no_update": "Buscar Actualizaciones"
             }
+        },
+        "update": {
+            "title": "Actualizaciones",
+            "subtitle": "Mantén la aplicación actualizada",
+            "update_available": "Nueva Actualización Disponible",
+            "no_update_available": "No Hay Actualizaciones Disponibles",
+            "button": "Descargar Actualización",
+            "button_no_update": "Buscar Actualizaciones"
         }
     }
 }

@@ -27,21 +27,18 @@ function App() {
         if (savedTheme) {
           document.body.setAttribute('data-theme', savedTheme)
         }
-
-        // const updateAvaliable = await ipcRenderer.invoke('check-update')
-        const updateAvaliable = await (window as any).winConfig?.checkUpdate()
-        if (updateAvaliable === true) {
-          showMessage("Se ha encontrado una actualización disponible. Actualiza la aplicación para disfrutar de las últimas características y mejoras. Dirigite a la seccion de Configuración > Acerca De.");
-          showMessage(`${t('update.avaliable', { ns: "commons" })} ${t('update.instructions', { ns: "commons" })}`);
-        }
-
-        // const language = await ipcRenderer.invoke('get-language')
-        // const language = await (window as any).winConfig.getLanguage()
         const savedLanguage = await (window as any).winConfig?.getLanguage()
         const language = savedLanguage || navigator.language.split('-')[0]; // Usar el idioma del navegador si no hay uno guardado
         if (language) {
           i18n.changeLanguage(language)
         }
+
+        // const updateAvaliable = await ipcRenderer.invoke('check-update')
+        const updateAvaliable = await (window as any).winConfig?.checkUpdate()
+        if (updateAvaliable === true) {
+          showMessage(`${t('update.avaliable', { ns: "commons" })} ${t('update.instructions', { ns: "commons" })}`);
+        }
+
 
       } catch (error) {
         console.error("Error al cargar la app:", error)

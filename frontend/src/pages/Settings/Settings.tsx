@@ -255,9 +255,19 @@ function Settings() {
                         </a>.
                     </p>
                 </div>
+            </section>
+        </>
+    )
 
-                <div className={`update-status ${newUpdateAvailable ? "disabled" : ""}`}>
-                    <h3>{newUpdateAvailable ? t('sections.about.update.update_available'): t('sections.about.update.no_update_available')}</h3>
+    const SectionUpdates = (
+        <>
+            <section className="header">
+                <p>{t('sections.update.subtitle')}</p>
+            </section>
+            <Separator/>
+            <section className="content">
+                <div className={`update-status`}>
+                    <h3>{newUpdateAvailable ? t('sections.update.update_available'): t('sections.update.no_update_available')}</h3>
                     {
                         newUpdateAvailable &&
                         (
@@ -265,7 +275,7 @@ function Settings() {
                                 disabled={!newUpdateAvailable}
                                 onClick={HandleUpdate}
                             >
-                                {!newUpdateAvailable ? t('sections.about.update.button_no_update') : t('sections.about.update.button')}
+                                {!newUpdateAvailable ? t('sections.update.button_no_update') : t('sections.update.button')}
                             </MCButton>
                         )
                     }
@@ -293,6 +303,11 @@ function Settings() {
                                 id: "about",
                                 title: t('sections.about.title'),
                                 content: sectionAcercaDe
+                            },
+                            {
+                                id: "updates",
+                                title: t('sections.update.title'),
+                                content: SectionUpdates
                             }
                         ]
                     }
