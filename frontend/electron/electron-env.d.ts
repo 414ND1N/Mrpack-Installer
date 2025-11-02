@@ -25,6 +25,7 @@ interface Window {
     getTheme: () => Promise<string>;
     getSystemTheme: () => Promise<string>;
     getFullscreen: () => Promise<boolean>;
+    getLanguage: () => Promise<string>;
     setTheme: (theme: string) => Promise<void>;
     setFullscreen: (fullscreen: boolean) => Promise<void>;
     updateApp: () => Promise<void>;

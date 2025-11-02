@@ -46,7 +46,7 @@
                     "activate": "Enable advanced configuration",
                     "description": "Customize the installation path and memory allocation",
                     "path": {
-                        "label": "Installation path relative to the game",
+                        "label": "Installation path for modpack files",
                         "placeholder": "Installation path",
                         "description": "Specify the path where the modpack will be installed"
                     },

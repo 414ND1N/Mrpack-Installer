@@ -30,6 +30,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
 contextBridge.exposeInMainWorld('winConfig', {
   getTheme: () => ipcRenderer.invoke('get-theme'),
   getFullscreen: () => ipcRenderer.invoke('get-fullscreen'),
+  getLanguage: () => ipcRenderer.invoke('get-language'),
   setTheme: (theme: string) => ipcRenderer.invoke('set-theme', theme),
   getSystemTheme: () => ipcRenderer.invoke('get-system-theme'),
   setFullscreen: (fullscreen: boolean) => ipcRenderer.invoke('set-fullscreen', fullscreen),

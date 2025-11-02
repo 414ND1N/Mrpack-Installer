@@ -63,10 +63,9 @@ function Settings() {
     }
 
     const updateLanguage = async (lang: string) => {
-        // await ipcRenderer.invoke('set-language', lang)
-        // await (window as any).winConfig.setLanguage(lang)
         i18n.changeLanguage(lang)
         setLanguage(lang)
+        await (window as any).winConfig.setLanguage(lang)
     }
 
     useEffect(() => {
@@ -91,9 +90,7 @@ function Settings() {
                 setNewUpdateAvailable(updateAvaliable)
             }
             // Obtener el idioma
-            // const savedLanguage = await ipcRenderer.invoke('get-language')
-            // const savedLanguage = await (window as any).winConfig.getLanguage()
-            const savedLanguage = 'en'
+            const savedLanguage = await (window as any).winConfig.getLanguage()
             if (savedLanguage) {
                 setLanguage(savedLanguage)
             }
