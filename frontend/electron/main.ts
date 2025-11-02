@@ -6,7 +6,9 @@ import { autoUpdater } from 'electron-updater'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { spawn, ChildProcess } from 'child_process';
+import treeKill from 'tree-kill';
 
+const gotTheLock = app.requestSingleInstanceLock();
 let backendProcess: ChildProcess | null = null;
 const getBackendPath = (): string => {
   if (app.isPackaged) {
@@ -14,6 +16,60 @@ const getBackendPath = (): string => {
   }
   return path.join(__dirname, '..', 'backend', 'backend.exe');
 };
+
+function startBackend() {
+  // Prevenir que se inicie si ya está (por si acaso)
+  if (backendProcess) {
+    return;
+  }
+
+  const backendPath = getBackendPath();
+  console.log(`Iniciando backend desde: ${backendPath}`);
+  
+  try {
+    backendProcess = spawn(backendPath); // Ejecutar el backend
+    
+    if (!backendProcess) {
+      console.error('Error: No se pudo iniciar el proceso de backend.');
+      app.quit(); // Salir si el backend no puede iniciar
+      return;
+    }
+
+    backendProcess.stdout?.on('data', (data) => {
+      console.log(`[Backend STDOUT]: ${data.toString()}`);
+    });
+
+    backendProcess.stderr?.on('data', (data) => {
+      console.error(`[Backend STDERR]: ${data.toString()}`);
+    });
+
+    backendProcess.on('close', (code) => {
+      console.log(`Proceso de backend cerrado con código ${code}`);
+      backendProcess = null; // ¡Importante limpiar la variable!
+    });
+
+  } catch (error) {
+    console.error('Error fatal al intentar ejecutar spawn:', error);
+    app.quit(); // Salir si hay un error al spawnear
+  }
+}
+
+function stopBackend() {
+  // if (backendProcess) {
+  //   console.log('Cerrando el proceso del backend...');
+  //   backendProcess.kill();
+  //   backendProcess = null;
+  // }
+  if (backendProcess && backendProcess.pid) {
+    console.log('Cerrando el proceso del backend...');
+    try {
+      treeKill(backendProcess.pid);
+    } catch (e) {
+      console.error('Error cerrando backend:', e);
+    }
+    backendProcess = null;
+  }
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 process.env.APP_ROOT = path.join(__dirname, '..')
@@ -67,14 +123,6 @@ function createWindow() {
   win.webContents.on('did-finish-load', () => {
     console.log('Ventana cargada con éxito')
   })
-
-  // // Abrir DevTools en modo separado para depuración
-  // try {
-  //   win.webContents.openDevTools({ mode: 'detach' })
-  // } catch (e) {
-  //   console.warn('No se pudo abrir DevTools:', e)
-  // }
-
   // Cargar la URL de desarrollo o el archivo HTML
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL)
@@ -83,34 +131,10 @@ function createWindow() {
     console.log('Cargando archivo:', indexPath) // Agrega un log para depuración
     win.loadFile(indexPath)
   }
-
-  // Iniciar el proceso de Python ANTES de cargar la ventana
-  const backendPath = getBackendPath();
-  console.log(`Iniciando backend desde: ${backendPath}`);
-  try {
-    backendProcess = spawn(backendPath); // Ejecutar el backend
-    if (!backendProcess) {
-      console.error('Error: No se pudo iniciar el proceso de backend.');
-      return;
-    }
-    backendProcess.stdout?.on('data', (data) => {
-      console.log(`[Backend STDOUT]: ${data.toString()}`);
-    });
-
-    backendProcess.stderr?.on('data', (data) => {
-      console.error(`[Backend STDERR]: ${data.toString()}`);
-    });
-
-    backendProcess.on('close', (code) => {
-      console.log(`Proceso de backend cerrado con código ${code}`);
-    });
-
-  } catch (error) {
-    console.error('Error al intentar ejecutar spawn:', error);
-  }
 }
 
 app.on('window-all-closed', () => {
+  stopBackend();
   if (win) {
     const bounds = win.getBounds()
     store.set('windowBounds', { width: bounds.width, height: bounds.height })
@@ -124,11 +148,11 @@ app.on('window-all-closed', () => {
 })
 
 app.on('will-quit', () => {
-  if (backendProcess) {
-    console.log('Cerrando el proceso del backend...');
-    backendProcess.kill(); // Envía la señal para terminar el proceso
-    backendProcess = null;
-  }
+  stopBackend();
+});
+
+app.on('before-quit', () => {
+  stopBackend();
 });
 
 app.on('activate', () => {
@@ -136,6 +160,7 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
 
 
 // --------- Auto Updater ---------
@@ -265,19 +290,43 @@ function setupIpcEvents() {
 }
 
 // ------- Inicialización de la aplicación -------
-app.whenReady().then(() => {
-  createWindow()
+// app.whenReady().then(() => {
+//   startBackend();
+//   createWindow()
 
-  // Disable menu on Windows and Linux only if not in development
-  if (!(process.platform === 'darwin') && !VITE_DEV_SERVER_URL) {
-    Menu.setApplicationMenu(null)
-  }
+//   // Disable menu on Windows and Linux only if not in development
+//   if (!(process.platform === 'darwin') && !VITE_DEV_SERVER_URL) {
+//     Menu.setApplicationMenu(null)
+//   }
 
-  setupIpcEvents()
+//   setupIpcEvents()
 
-  console.log('Checking for updates...')
-  autoUpdater.checkForUpdates()
-  console.log('Last version:', autoUpdater.currentVersion)
-})
+//   console.log('Checking for updates...')
+//   autoUpdater.checkForUpdates()
+//   console.log('Last version:', autoUpdater.currentVersion)
+// })
 
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on('second-instance', () => {
+    // Si se intenta abrir otra instancia, enfoca la ventana actual
+    if (win) {
+      if (win.isMinimized()) win.restore();
+      win.focus();
+    }
+  });
+
+  app.whenReady().then(() => {
+    startBackend();
+    createWindow();
+    if (!(process.platform === 'darwin') && !VITE_DEV_SERVER_URL) {
+      Menu.setApplicationMenu(null)
+    }
+    setupIpcEvents();
+    console.log('Checking for updates...');
+    autoUpdater.checkForUpdates();
+    console.log('Last version:', autoUpdater.currentVersion);
+  });
+}
 
