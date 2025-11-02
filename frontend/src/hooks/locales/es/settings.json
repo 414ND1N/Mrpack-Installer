@@ -1,0 +1,62 @@
+{
+    "header": {
+        "title": "Configuración",
+        "subtitle": "Administra tus preferencias y ajustes"
+    },
+    "sections": {
+        "general": {
+            "title": "General",
+            "subtitle": "Configura cómo se ve y se siente la aplicación",
+            "theme": {
+                "title": "Tema",
+                "list": {
+                    "classic": "Clásico",
+                    "light": "Claro",
+                    "oled": "OLED",
+                    "system": "Sistema"
+                }
+            },
+            "behavior": {
+                "title": "Comportamiento",
+                "fullscreen": {
+                    "title": "Modo Pantalla Completa"
+                }
+            },
+            "language": {
+                "title": "IDIOMA",
+                "list": {
+                    "en": "Inglés",
+                    "fr": "Francés",
+                    "es": "Español",
+                    "de": "Alemán",
+                    "zh": "Chino"
+                }
+            }
+        },
+        "about": {
+            "title": "Acerca de",
+            "subtitle": "Conoce más sobre esta aplicación",
+            "side_info": {
+                "app_name": "Mrpack Installer",
+                "description": {
+                    "part1": "Mrpack Installer",
+                    "part2": " es una herramienta diseñada para simplificar la instalación y gestión",
+                    "part3": " de Modrinth."
+                },
+                "simplicity": {
+                    "part1": "Con un enfoque en simplicidad y facilidad de uso, permite a los usuarios encontrar, instalar y gestionar sus paquetes de mods favoritos con unos pocos clics."
+                },
+                "developed_by": {
+                    "part1": "Desarrollado por "
+                }
+            },
+            "update": {
+                "title": "Actualizaciónes",
+                "update_available": "Nueva Actualización Disponible",
+                "no_update_available": "No Hay Actualizaciones Disponibles",
+                "button": "Descargar Actualización",
+                "button_no_update": "Buscar Actualizaciones"
+            }
+        }
+    }
+}

@@ -1,0 +1,172 @@
+.install-container p, 
+.install-container h1,
+.install-container h2,
+.install-container h3,
+.install-container {
+  font-family: var(--secondary-font);
+  font-size: var(--step-0);
+  letter-spacing: 0.02em;
+  cursor: default;
+}
+
+.install-container select,
+.install-container button,
+.install-container input {
+  font-family: var(--secondary-font);
+  font-size:  var(--step--1);
+  letter-spacing: 0.02em;
+}
+
+*.inactive-component {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+
+.install-container .header p {
+  color: var(--font-color-secondary, #6b7280);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.install-container .sections-minecraft .configuration p {
+  font-family: var(--secondary-font);
+  font-size: var(--step-0);
+}
+
+.install-container .sections-minecraft h1 {
+  font-size: var(--step-1);
+}
+.install-container .sections-minecraft .section-from-file {
+  gap: 2rem;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration {
+  display: none;
+  grid-template-areas: "summary" "config" "selectors";
+  gap: 1rem;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration.active {
+  display: grid;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .mrpack-summary {
+  grid-area: summary;
+  font-family: var(--secondary-font);
+  font-size: var(--step-0);
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .mrpack-summary p {
+  font-family: inherit;
+  font-size: inherit;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .type-selector {
+  grid-area: type;
+}
+
+a.information-toggle {
+  font-size: var(--step-0);
+  color: var(--font-color, #6b7280);
+}
+a.information-toggle:hover {
+  color: var(--mc-green-2, green);
+  scale: 1.2;
+  transition: all 0.2s ease-in-out;
+}
+
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .icon-selector {
+  grid-area: icon;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .installation-button {
+  grid-area: install;
+  align-self: flex-end;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration {
+  grid-area: config;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  width: 100%;
+  gap: 1rem;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .toggle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
+}
+
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .toggle > p {
+  font-family: var(--secondary-font);
+  font-size: var(--step-0);
+  margin-top: 0.3em;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration {
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  width: 100%;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration.active {
+  display: flex;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration .memory,
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration .path {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration .memory .memory-inputs {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration .path {
+  width: 100%;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .checkbox {
+  grid-area: checkbox;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .type-selector select,
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .installation-button button,
+.install-container .sections-minecraft .section-from-file .content .installation-configuration input,
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .icon-selector select {
+  width: 100%;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .installation-button button {
+  padding: 0.7em 1em;
+  margin-top: auto;
+  margin-bottom: 0;
+}
+
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .status {
+  grid-area: status;
+  display: none;
+  font-size: var(--step-0);
+  font-family: var(--secondary-font);
+  text-align: center;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .status.active {
+  display: block;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .status p {
+  font-family: inherit;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .inputs {
+  grid-area: selectors;
+  display: grid;
+  gap: 1em;
+  grid-template-areas: "type icon install";
+  width: 100%;
+  grid-template-columns: 1fr 1fr 2fr;
+}
+
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .inputs .dialog-trigger {
+  min-width: 60%;
+  margin-top: 0.25rem;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .inputs .install {
+  min-width: 100%;
+}

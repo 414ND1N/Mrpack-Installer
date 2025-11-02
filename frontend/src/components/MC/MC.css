@@ -1,0 +1,279 @@
+:root {
+  --mc-green-1: #3c8527;
+  --mc-darken-green-1: #367723;
+  --mc-disabled-green-1: rgba(54, 119, 35, 0.75);
+  --mc-green-1-top: #52a535;
+  --mc-green-1-bottom: #2a641c;
+  --mc-green-2: #86d562;
+  --mc-gray-1: #3d3938;
+  --mc-gray-2: #262423;
+  --mc-white: #dfd9d9;
+  --mc-font-family: 'Pixelify Sans', monospace, sans-serif;
+}
+
+code.mc-style {
+  font-family: var(--mc-font-family, sans-serif);
+  color: var(--mc-green-1);
+  background-color: var(--mc-gray-1);
+  padding: 0.25rem;
+  border-radius: 0.15rem;
+  margin: 0 0.25rem;
+}
+button.mc-style,
+select.mc-style,
+input.mc-style,
+select.mc-style {
+  background-color: var(--mc-green-1);
+  font-family: var(--mc-font-family, sans-serif);
+  letter-spacing: 0.02em;
+  font-weight: 500;
+  font-size: var(--step--1);
+  transition: background-color 0.3s ease, border 0.3s ease, color 0.3s ease;
+  border-radius: 0;
+  border: 0.2rem solid white;
+  outline-color: var(--font-color, white);
+}
+button.mc-style:disabled,
+select.mc-style:disabled,
+input.mc-style:disabled,
+select.mc-style:disabled {
+  background-color: var(--mc-disabled-green-1);
+  color: gray;
+}
+
+
+button.mc-style.variant-block,
+select.mc-style.variant-block,
+input.mc-style.variant-block,
+select.mc-style.variant-block {
+  font-family: var(--secondary-font, sans-serif);
+}
+
+
+a.mc-style {
+  color: var(--mc-green-1);
+  text-decoration: none;
+  font-weight: 500;
+  font-family: var(--secondary-font, sans-serif);
+  font-size: calc(1em * 1.2);
+}
+button.mc-style {
+  border: none;
+  border-top: 0.2rem solid var(--mc-green-1-top);
+  border-bottom: 0.2rem solid var(--mc-green-1-bottom);
+  color: white;
+  padding: 0.5rem 1rem;
+}
+button.mc-style:hover {
+  background-color: var(--mc-darken-green-1);
+  border: none;
+  border-top: 0.2rem solid var(--mc-green-1-top);
+  border-bottom: 0.2rem solid var(--mc-green-1-bottom);
+}
+button.mc-style:disabled {
+  border-top: 0.2rem transparent;
+  border-bottom: 0.2rem transparent;
+  cursor: not-allowed;
+}
+button.mc-style.variant-ghost {
+  background-color: transparent;
+  color: var(--mc-green-2);
+  border: 0.2rem solid var(--mc-green-1);
+  padding: 0.5rem 1rem;
+}
+button.mc-style.variant-ghost:hover {
+  background-color: rgba(94, 123, 202, 0.25);
+  border: 0.2rem solid var(--mc-green-1);
+}
+button.mc-style.variant-solid {
+  background-color: black;
+  color: white;
+  border: 0.2rem solid white;
+  padding: 0.5rem 1rem;
+}
+button.mc-style.variant-solid:hover {
+  background-color: white;
+  border: 0.2rem solid transparent;
+  color: black;
+}
+select.mc-style {
+  border: none;
+  border-top: 0.2rem solid var(--mc-green-1-top);
+  border-bottom: 0.2rem solid var(--mc-green-1-bottom);
+  color: white;
+  padding: 0.5rem;
+}
+select.mc-style:hover {
+  background-color: var(--mc-darken-green-1);
+  border: none;
+  border-top: 0.2rem solid var(--mc-green-1-top);
+  border-bottom: 0.2rem solid var(--mc-green-1-bottom);
+}
+select.mc-style.variant-ghost {
+  border: none;
+  background-color: var(--mc-gray-1);
+  color: white;
+  padding: 0.5rem;
+}
+select.mc-style.variant-ghost:hover:not(:disabled) {
+  background-color: var(--mc-gray-1);
+  border: none;
+}
+input.mc-style {
+  background-color: var(--mc-gray-2);
+  border: none;
+  border: 0.2rem solid var(--mc-green-2);
+  color: white;
+  padding: 0.5rem;
+}
+input.mc-style:hover:not(:disabled) {
+  background-color: var(--mc-gray-1);
+}
+input.mc-style:focus {
+  border: 0.2rem solid white;
+}
+
+/* SLIDER */
+.mc-slider input[type="checkbox"] {
+  visibility: hidden;
+  display: none;
+}
+.mc-slider *,
+.mc-slider ::after,
+.mc-slider ::before {
+  box-sizing: border-box;
+}
+.mc-slider .switch {
+  font-size: 1rem;
+  position: relative;
+  display: inline-block;
+  width: 4em;
+  height: 2em;
+}
+.mc-slider .slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: var(--mc-green-1);
+  transition: 0.4s;
+  border-radius: 0.15em;
+}
+.mc-slider .slider:before {
+  position: absolute;
+  content: "";
+  height: 1.5em;
+  width: 1.4em;
+  border-radius: 0.15em;
+  left: 0.3em;
+  bottom: 0.25em;
+  background-color: var(--mc-gray-1);
+  transition: 0.4s;
+}
+.mc-slider input:checked + .slider::before {
+  transform: translateX(2em);
+  background: white;
+}
+.mc-slider.variant-ghost .slider {
+  background-color: var(--mc-gray-1);
+}
+.mc-slider.variant-ghost .slider:before {
+  background-color: var(--mc-gray-2);
+}
+.mc-slider.variant-ghost input:checked + .slider::before {
+  background: var(--mc-green-1);
+}
+.mc-slider.variant-solid .slider {
+  background-color: #eee;
+  border-radius: 0.25em;
+  box-shadow: 0 0.2em var(--mc-white);
+}
+.mc-slider.variant-solid .slider:before {
+  border-radius: 0.3em;
+  bottom: 0.75em;
+  background-color: var(--mc-gray-2);
+  box-shadow: 0 0.4em #bcb4b4;
+}
+.mc-slider.variant-solid .slider:hover::before {
+  box-shadow: 0 0.2em #bcb4b4;
+  bottom: 0.5em;
+}
+.mc-slider.variant-solid input:checked + .slider::before {
+  background: var(--mc-green-2);
+}
+
+/* CHECKBOX */
+.mc-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  flex-direction: row;
+}
+.mc-checkbox input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0.1em solid var(--mc-green-1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mc-checkbox input[type="checkbox"]:checked {
+  background-color: var(--mc-green-1);
+}
+.mc-checkbox input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  width: 0.8em;
+  height: 0.4em;
+  border: 0.15em solid white;
+  border-top: none;
+  border-right: none;
+  transform: rotate(-45deg);
+  margin-top: -0.1em;
+}
+
+/* FILE SELECTOR */
+.file-selector-component.mc-style {
+  border: 2px dashed var(--mc-green-2, green);
+  border-radius: 0.2em;
+  font-family: var(--secondary-font, sans-serif);
+  font-weight: bolder;
+  font-size: var(--step-1, 1.2rem);
+}
+.file-selector-component.mc-style .file-label,
+.file-selector-component.mc-style .file-selector-component.mc-style span {
+  font-size: inherit;
+}
+.file-selector-component.mc-style .file-label svg,
+.file-selector-component.mc-style .file-label img {
+  aspect-ratio: 1 / 1;
+  cursor: inherit;
+  padding: 1em 0;
+  max-width: 10rem;
+  max-height: 10rem;
+}
+
+
+/* ASK BUTTON */
+.mc-ask-button {
+  font-family: var(--secondary-font);
+  font-size: var(--step--2);
+  cursor: pointer;
+}
+.mc-ask-button h1 {
+  font-family: inherit;
+  font-size: inherit;
+}
+.mc-ask-button h1:hover {
+  cursor: pointer;
+  scale: 1.5;
+  rotate: 5deg;
+  transition: all 0.2s ease-in-out;
+  color: var(--mc-green-2, green);
+  
+}

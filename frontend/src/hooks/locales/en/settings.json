@@ -1,0 +1,62 @@
+{
+    "header": {
+        "title": "Settings",
+        "subtitle": "Manage your preferences settings"
+    },
+    "sections": {
+        "general": {
+            "title": "General",
+            "subtitle": "Configure how the application looks and feels",
+            "theme": {
+                "title": "Theme",
+                "list": {
+                    "classic": "Classic",
+                    "light": "Light",
+                    "oled": "OLED",
+                    "system": "System"
+                }
+            },
+            "behavior": {
+                "title": "Behavior",
+                "fullscreen": {
+                    "title": "Fullscreen Mode"
+                }
+            },
+            "language": {
+                "title": "Language",
+                "list": {
+                    "en": "English",
+                    "fr": "French",
+                    "es": "Spanish",
+                    "de": "German",
+                    "zh": "Chinese"
+                }
+            }
+        },
+        "about": {
+            "title": "About",
+            "subtitle": "Learn more about this application",
+            "side_info": {
+                "app_name": "Mrpack Installer",
+                "description": {
+                    "part1": "Mrpack Installer",
+                    "part2": " is a tool designed to simplify the installation and management of",
+                    "part3": " of Modrinth."
+                },
+                "simplicity": {
+                    "part1": "With a focus on simplicity and ease of use, it allows users to quickly find, install, and manage their favorite modspacks with a few clicks."
+                },
+                "developed_by": {
+                    "part1": "Developed by "
+                }
+            },
+            "update": {
+                "title": "Updates",
+                "update_available": "New Update Available",
+                "no_update_available": "No Updates Available",
+                "button": "Download Update",
+                "button_no_update": "Check for Updates"
+            }
+        }
+    }
+}

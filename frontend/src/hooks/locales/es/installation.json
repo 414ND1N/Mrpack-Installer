@@ -1,0 +1,94 @@
+{
+    "header": {
+        "title": "Instalación",
+        "subtitle": "Administra tus instalaciones"
+    },
+    "sections": {
+        "file": {
+            "title": "Archivo",
+            "subtitle": "Selecciona el archivo mrpack que deseas instalar",
+            "information": {
+                "summary": {
+                    "name": "Nombre",
+                    "description": "Descripción",
+                    "version": "Versión de Minecraft"
+                },
+                "list": {
+                    "label": "Archivos del paquete de mods",
+                    "empty": "No se encontraron archivos de paquetes de mods",
+                    "description": "Lista de archivos incluidos en el paquete de mods"
+                }
+            },
+            "configuration": {
+                "profile": {
+                    "label": "Icono del perfil",
+                    "description": "Selecciona el icono que deseas usar para el perfil del lanzador de Minecraft"
+                },
+                "type": {
+                    "label": "Tipo",
+                    "description": "Selecciona el tipo de instalación",
+                    "list": {
+                        "singleplayer": "Un jugador",
+                        "singleplayer_description": "Instala el paquete de mods para un jugador y uso en servidores (incluye todos los mods)",
+                        "client": "Cliente",
+                        "client_description": "Instala el paquete de mods para uso en cliente unicamente (conéctate a servidores multijugador, no incluye todos los mods)",
+                        "server": "Servidor",
+                        "server_description": "Descarga los archivos del servidor para alojar un servidor"
+                    }
+                },
+                "install": {
+                    "button": "Instalar"
+                },
+                "advanced": {
+                    "activate": "Habilitar configuración avanzada",
+                    "title": "Configuración avanzada",
+                    "ask": "¿ Deseas activar la configuración avanzada ?",
+                    "activation_warning": "Has esto solo si sabes lo que estas haciendo",
+                    "description": "Personaliza la ruta de instalación y la asignación de memoria",
+                    "path": {
+                        "label": "Ruta de instalación relativa al juego",
+                        "description": "Especifica la ruta donde se instalará el paquete de mods",
+                        "placeholder": "Ruta de instalación"
+                    },
+                    "memory": {
+                        "label": "Asignación de memoria",
+                        "description": "Configura la cantidad de memoria RAM asignada para ejecutar el paquete de mods en GB, deja en blanco para usar la configuración predeterminada",
+                        "min_placeholder": "Mínima (GB)",
+                        "max_placeholder": "Máxima (GB)"
+                    }
+                }
+            },
+            "messages": {
+                "error": {
+                    "no_file_selected": "No se ha seleccionado ningún archivo",
+                    "invalid_file_type": "Tipo de archivo inválido. Por favor, selecciona un archivo mrpack válido.",
+                    "invalid_path": "Ruta de instalación inválida. Por favor, asegúrate de que la ruta sea correcta y accesible.",
+                    "invalid_modpack": "Archivo de paquete de mods inválido. Por favor, asegúrate de que el archivo sea un mrpack válido.",
+                    "invalid_mrpack_file": "Archivo mrpack inválido. Por favor, asegúrate de que el archivo sea un mrpack válido.",
+                    "adding_profile": "Error al agregar el perfil.",
+                    "adding_dependencies": "Error al agregar las dependencias.",
+                    "creating_start_script": "Error creando el script de inicio."
+                },
+                "installation": {
+                    "need_launcher_closed": "Por favor, cierra el lanzador antes de instalar.",
+                    "need_launcher_closed_desc": "El lanzador de Minecraft debe estar cerrado para proceder con la instalación. Por favor, guarda tu progreso y cierra el lanzador.",
+                    "starting": "Iniciando instalación...",
+                    "finish": "Instalación completada con éxito.",
+                    "error": "Instalación fallida. Por favor, revisa los detalles del error e intenta nuevamente.",
+                    "dependencies": {
+                        "mods": "Descargando mods...",
+                        "installing": "Instalando dependencias...",
+                        "server": "Descargando instalador de servidor...",
+                        "server_finish": "Instalador de servidor descargado con éxito.",
+                        "finish": "Dependencias instaladas con éxito.",
+                        "finish_server": "Descargado satisfactoriamente."
+                    },
+                    "vanilla_launcher": {
+                        "adding": "Agregando perfil al lanzador vanilla...",
+                        "finish": "Perfil agregado al lanzador vanilla con éxito."
+                    }
+                }
+            }
+        }
+    }
+}

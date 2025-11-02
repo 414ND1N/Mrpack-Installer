@@ -1,0 +1,11 @@
+{
+    "search_field_placeholder": "Nombre del proyecto",
+    "search_button": "Buscar",
+    "filters_list": {
+        "all": "Todas",
+        "mod": "Mods",
+        "modpack": "Paquetes de mods",
+        "resourcepack": "Paquetes de recursos",
+        "shader": "Shaders"
+    }
+}
