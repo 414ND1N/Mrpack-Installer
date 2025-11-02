@@ -46,7 +46,7 @@
                     "activation_warning": "Has esto solo si sabes lo que estas haciendo",
                     "description": "Personaliza la ruta de instalación y la asignación de memoria",
                     "path": {
-                        "label": "Ruta de instalación relativa al juego",
+                        "label": "Ruta de instalación para los archivos",
                         "description": "Especifica la ruta donde se instalará el paquete de mods",
                         "placeholder": "Ruta de instalación"
                     },

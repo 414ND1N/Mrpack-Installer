@@ -24,7 +24,6 @@ function App() {
       try {
         // const savedTheme = await ipcRenderer.invoke('get-theme')
         const savedTheme = await (window as any).winConfig?.getTheme()
-        console.log("Tema guardado:", savedTheme)
         if (savedTheme) {
           document.body.setAttribute('data-theme', savedTheme)
         }
@@ -38,9 +37,9 @@ function App() {
 
         // const language = await ipcRenderer.invoke('get-language')
         // const language = await (window as any).winConfig.getLanguage()
-        const language = 'en'
+        const savedLanguage = await (window as any).winConfig?.getLanguage()
+        const language = savedLanguage || navigator.language.split('-')[0]; // Usar el idioma del navegador si no hay uno guardado
         if (language) {
-          // Cambiar el idioma de la aplicación
           i18n.changeLanguage(language)
         }
 
