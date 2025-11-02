@@ -8,7 +8,6 @@ import '@/hooks/localsConfig.tsx'
 import { GlobalMessageProvider } from "@/context/GlobalMessageContext"
 import GlobalMessageModal from "@/components/GlobalMessage/GlobalMessage.tsx"
 import LoadingScreen from "@/components/loadingScreen/loadingScreen.tsx"
-import { Toaster } from "@/components/Toast/toaster"
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <GlobalMessageProvider>
@@ -16,6 +15,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <Suspense fallback={<LoadingScreen />}>
       <App />
     </Suspense>
-    <Toaster />
   </GlobalMessageProvider>
 )
