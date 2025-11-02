@@ -3,7 +3,7 @@ import { ipcRenderer, contextBridge } from 'electron'
 import { 
   modrinthFetchRandomProjects,
   modrinthSearchProjects,
-  GetMrpackMedatadaInfo
+  GetMrpackMedatadaInfo,
 } from './backend/modrinth'
 
 import {
@@ -12,7 +12,9 @@ import {
 
 import {
   GetMinecraftDirectory,
-  AddVanillaLauncher
+  AddVanillaLauncher,
+  // InstallModpack,
+  StartMrpackInstallation
 } from './backend/minecraft'
 
 // --------- Expose some API to the Renderer process ---------
@@ -29,6 +31,7 @@ contextBridge.exposeInMainWorld('winConfig', {
   getTheme: () => ipcRenderer.invoke('get-theme'),
   getFullscreen: () => ipcRenderer.invoke('get-fullscreen'),
   setTheme: (theme: string) => ipcRenderer.invoke('set-theme', theme),
+  getSystemTheme: () => ipcRenderer.invoke('get-system-theme'),
   setFullscreen: (fullscreen: boolean) => ipcRenderer.invoke('set-fullscreen', fullscreen),
   updateApp: () => ipcRenderer.invoke('update-app'),
   checkUpdate: () => ipcRenderer.invoke('check-update'),
@@ -42,6 +45,15 @@ contextBridge.exposeInMainWorld('backend', {
   PathJoin: (...paths: string[]) => PathJoin(...paths),
   GetMinecraftDirectory: () => GetMinecraftDirectory(),
   AddVanillaLauncher: (props: any) => AddVanillaLauncher(props),
+  // InstallModpack: (props: any) => InstallModpack(props),
+  StartMrpackInstallation: (
+    props: any,
+    cbStatus?: (status: string) => void,
+    cbMax?: (max: number) => void,
+    cbProgress?: (progress: number) => void,
+    cbFinish?: (status: string) => void,
+    cbError?: (status: string) => void,
+  ) => StartMrpackInstallation(props, cbStatus, cbMax, cbProgress, cbFinish, cbError)
 })
 
 console.log("Preload script loaded successfully.")

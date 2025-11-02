@@ -12,7 +12,8 @@
                 "list": {
                     "classic": "Classic",
                     "light": "Light",
-                    "oled": "OLED"
+                    "oled": "OLED",
+                    "system": "System"
                 }
             },
             "behavior": {

@@ -19,14 +19,30 @@ function Settings() {
     const [fullscreen, setFullscreen] = useState<boolean>(false)
     const [newUpdateAvailable, setNewUpdateAvailable] = useState<boolean>(false)
     const [language, setLanguage] = useState<string>('en')
+    const [sysTheme, setSysTheme ] = useState<string>("classic")
     const { showMessage } = useGlobalMessage()
     const { t } = useTranslation(['settings', 'commons'])
 
+    useEffect(() => {
+        const fetchSysTheme = async () => {
+            const currentSysTheme = await (window as any).winConfig.getSystemTheme()
+            setSysTheme(currentSysTheme)
+        }
+        fetchSysTheme()
+    }, [])
+
     const updateTheme = async (newTheme: string) => {
-        // await ipcRenderer.invoke('set-theme', newTheme)
         await (window as any).winConfig.setTheme(newTheme)
-        document.body.setAttribute("data-theme", newTheme)
-        setThemeState(newTheme)
+
+        if (newTheme === 'system') {
+            const sysTheme = await (window as any).winConfig.getSystemTheme()
+            document.body.setAttribute("data-theme", sysTheme)
+            setThemeState(newTheme)
+            setSysTheme(sysTheme)
+        } else {
+            document.body.setAttribute("data-theme", newTheme)
+            setThemeState(newTheme)
+        }
     }
 
     const updateFullscreen = async (isFullscreen: boolean) => {
@@ -100,6 +116,24 @@ function Settings() {
                     <h3 className="subtitle">{t('sections.general.theme.title')}</h3>
 
                     <div className="themes-list">
+                        <div className={`item ${sysTheme}`}>
+                            <div className="preview">
+                                <div className="navbar">
+                                </div>
+                                <div className="card">
+                                    <div className="line"></div>
+                                    <div className="line secondary"></div>
+                                </div>
+                            </div>
+                            <div className="information">
+                                <input
+                                    type="radio" name="system" value="system"
+                                    checked={theme === "system"} // Controlado por el estado
+                                    onChange={(e) => updateTheme(e.target.value)}
+                                />
+                                <h4>{t('sections.general.theme.list.system')}</h4>
+                            </div>
+                        </div>
                         <div className="item classic">
                             <div className="preview">
                                 <div className="navbar">

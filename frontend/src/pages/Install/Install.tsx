@@ -1,5 +1,4 @@
-import { useState, useCallback } from "react"
-// import path from "path"
+import { useState } from "react"
 import { useTranslation } from 'react-i18next'
 
 // Css
@@ -22,7 +21,7 @@ import { Separator } from "@/components/Separator/separator"
 
 function Install() {
 
-    const { showMessage, hideMessage } = useGlobalMessage()
+    const { showMessage } = useGlobalMessage()
     const { t } = useTranslation(["installation", "commons"])
 
     const [installationConfig, setInstallationConfig] = useState<InstallationModpackProps>({
@@ -34,12 +33,10 @@ function Install() {
             min: "" // Memoria mínima por defecto
         },
         mrpack_path: "", // Ruta del archivo mrpack, inicialmente vacío
-        profile_icon: ProfileIcons.Bedrock, // Icono del perfil, inicialmente vacío
-        // translator: t
+        profile_icon: ProfileIcons.Bedrock // Icono del perfil, inicialmente vacío
     })
 
     const [mrpackInfo, setMrpackInfo] = useState<MrpackMetadata | null>(null)
-    const [installationProgress, setInstallationProgress] = useState<boolean>(false)
     const [personalizedConfig, setPersonalizedConfig] = useState<boolean>(false)
     const [openDialogConfig, setOpenDialogConfig] = useState<boolean>(false)
 
@@ -51,7 +48,6 @@ function Install() {
         // Verificar si el archivo es un modpack válido
         if (!file?.name.endsWith(".mrpack")) {
             alert(t('sections.file.messages.error.invalid_mrpack_file'))
-            setInstallationProgress(false)
         }
 
         try {
@@ -60,35 +56,73 @@ function Install() {
             const _data = await (window as any).backend.GetMrpackMedatadaInfo(file.path)
             console.log("Metadatos del modpack obtenidos:", _data)
 
+            const _minecfraft_dir = await (window as any).backend.GetMinecraftDirectory()
+
             const _modpack_dir_name = `${_data.name.trim().replace(/\s+/g, "-").toLowerCase() || "modpack"}`
-            const _modpack_directory = await (window as any).backend.PathJoin("instances", _modpack_dir_name)
-            console.log("uniendo paths:", "instances", _modpack_dir_name, "=>", _modpack_directory)
+            const _modpack_directory = await (window as any).backend.PathJoin(_minecfraft_dir, "instances", _modpack_dir_name)
             const _minecraft_version = MinecraftVersionFromDependencies(_data.dependencies)
 
+            setMrpackInfo(_data)
             setInstallationConfig((prevInfo) => ({
                 ...prevInfo,
                 minecraft_version: _minecraft_version, // versión obtenida buscando una dependencia con id "minecraft"
                 mrpack_path: file.path,
-                modpack_directory: _modpack_directory
+                installation_directory: typeof _modpack_directory === "string"
+                    ? _modpack_directory.replace(/^"(.*)"$/, "$1") // quitar comillas dobles alrededor si existen
+                    : _modpack_directory
             }))
-            setMrpackInfo(_data)
-            setInstallationProgress(true)
 
         } catch (error) {
             console.error("Error al obtener los metadatos del modpack:", error)
             // alert(t('sections.file.messages.error.invalid_modpack'))
             setInstallationConfig((prevInfo) => ({
                 ...prevInfo,
-                modpack_directory: "instances" // Reiniciar la ruta de instalación del modpack
+                installation_directory: "instances", // Reiniciar la ruta de instalación del modpack
+                mrpack_path: ""
             }))
-            setInstallationProgress(false)
             setMrpackInfo(null)
         }
     }
 
-    const callBack = useCallback((message: string) => {
-        showMessage(message)
-    }, [setInstallationProgress])
+    const StartInstallation = async () => {
+        if (!mrpackInfo) {
+            showMessage(t('sections.file.messages.error.no_file_selected'), { showClose: true })
+            return
+        }
+
+        try {
+            // Mostrar mensaje inicial y ocultar botón de cerrar durante la instalación
+            showMessage(t('sections.file.messages.installation.starting'), { showClose: false })
+
+            // Iniciar la instalación modpack y dependencias
+            showMessage(t('sections.file.messages.installation.dependencies.installing'), { showClose: false })
+
+            await (window as any).backend.StartMrpackInstallation(
+                installationConfig,
+                (status: string) => { showMessage(status, { showClose: false }) },
+                undefined,  // cbMax               
+                undefined,  // cbProgress
+                (_: string) => { showMessage(t('sections.file.messages.installation.dependencies.finish'), { showClose: true }) },
+                (status: string) => { showMessage(t('sections.file.messages.installation.error') + `: ${status}`, { showClose: true }) },
+            )
+
+            // Añadir el lanzador si es necesario
+            if (installationConfig.type !== "serverside") {
+                showMessage(t('sections.file.messages.installation.vanilla_launcher.adding'), { showClose: false })
+                await (window as any).backend.AddVanillaLauncher(installationConfig)
+                showMessage(t('sections.file.messages.installation.vanilla_launcher.finish'), { showClose: true })
+            }
+
+            showMessage(t('sections.file.messages.installation.finish'), { showClose: true })
+        } catch (error) {
+            showMessage(
+                t('sections.file.messages.installation.error') +
+                `: ${(error as Error).message}`,
+                { showClose: true }
+            )
+        }
+
+    }
 
     // secciones
     const sectionFromFile = (
@@ -100,7 +134,7 @@ function Install() {
 
                 <FileSelector AcceptExtensions={[".mrpack"]} FileCallback={handleFile} className="mc-style" />
 
-                <section className={`installation-configuration ${installationProgress ? "active" : ""}`}>
+                <section className={`installation-configuration ${installationConfig.mrpack_path != "" ? "active" : ""}`}>
 
                     <section className="mrpack-summary">
                         {mrpackInfo ? <p>{t('sections.file.information.summary.name')}: {mrpackInfo?.name || "NA"} </p> : null}
@@ -223,13 +257,14 @@ function Install() {
                                         }))
                                     }}
                                 />
-
                             </div>
 
-                            <div className="memory">
+                            <div className={`memory ${installationConfig.type === "serverside" ? "inactive-component" : ""}`}>
                                 <Dialog>
                                     <DialogTrigger>
-                                        <a className="information-toggle">{t('sections.file.configuration.advanced.memory.label')}</a>
+                                        <a className="information-toggle">
+                                            {t('sections.file.configuration.advanced.memory.label')}
+                                        </a>
                                     </DialogTrigger>
                                     <DialogContent>
                                         <DialogHeader>
@@ -249,6 +284,7 @@ function Install() {
                                 </Dialog>
                                 <div className="memory-inputs">
                                     <MCInput
+                                        className={`${installationConfig.type === "serverside" ? "inactive-component" : ""}`}
                                         placeholder={t('sections.file.configuration.advanced.memory.min_placeholder')}
                                         value={installationConfig.memory.min}
                                         onChange={(event) =>
@@ -262,6 +298,7 @@ function Install() {
                                         }
                                     />
                                     <MCInput
+                                        className={`${installationConfig.type === "serverside" ? "inactive-component" : ""}`}
                                         placeholder={t('sections.file.configuration.advanced.memory.max_placeholder')}
                                         value={installationConfig.memory.max}
                                         onChange={(event) =>
@@ -280,8 +317,7 @@ function Install() {
                     </section>
 
                     <section className="inputs">
-                        <div className="icon-selector"
-                            style={{ display: installationConfig.type === "server" ? "none" : "block" }}
+                        <div className={`icon-selector ${installationConfig.type === "serverside" ? "inactive-component" : ""}`}
                         >
                             <Dialog>
                                 <DialogTrigger>
@@ -326,12 +362,12 @@ function Install() {
                                 </DialogTrigger>
                                 <DialogContent>
                                     <DialogHeader>
-                                       {t('sections.file.configuration.type.label')}
+                                        {t('sections.file.configuration.type.label')}
                                     </DialogHeader>
                                     <DialogDescription>
                                         {t('sections.file.configuration.type.description')}:
                                     </DialogDescription>
-                                    <Separator borderless={true}/>
+                                    <Separator borderless={true} />
                                     <ul>
                                         <li><strong>{t('sections.file.configuration.type.list.singleplayer')}:</strong> {t('sections.file.configuration.type.list.singleplayer_description')}</li>
                                         <li><strong>{t('sections.file.configuration.type.list.client')}:</strong> {t('sections.file.configuration.type.list.client_description')}</li>
@@ -356,14 +392,14 @@ function Install() {
                                 }
                             >
                                 <option value="singleplayer">{t('sections.file.configuration.type.list.singleplayer')}</option>
-                                <option value="client">{t('sections.file.configuration.type.list.client')}</option>
-                                <option value="server">{t('sections.file.configuration.type.list.server')}</option>
+                                <option value="clientside">{t('sections.file.configuration.type.list.client')}</option>
+                                <option value="serverside">{t('sections.file.configuration.type.list.server')}</option>
                             </MCSelect>
                         </div>
                         <div className="installation-button">
                             <Dialog>
                                 <DialogTrigger>
-                                    <MCButton disabled={!installationProgress} className="install">
+                                    <MCButton disabled={installationConfig.mrpack_path == "" } className="install">
                                         {t('sections.file.configuration.install.button')}
                                     </MCButton>
                                 </DialogTrigger>
@@ -371,27 +407,13 @@ function Install() {
                                     <DialogHeader>
                                         <h2>{t('sections.file.messages.installation.need_launcher_closed')}</h2>
                                     </DialogHeader>
-                                    <Separator/>
+                                    <Separator />
                                     <p>{t('sections.file.messages.installation.need_launcher_closed_desc')}</p>
 
                                     <DialogFooter>
                                         <DialogClose>
                                             <MCButton
-                                                onClick={async () => {
-                                                    if (!mrpackInfo) {
-                                                        alert(t('sections.file.messages.error.no_file_selected'))
-                                                        return
-                                                    }
-                                                    callBack(t('sections.file.messages.installation.starting'))
-
-                                                    console.log("Iniciando instalación con la siguiente configuración:", installationConfig)
-                                                    // InstallModpack(
-                                                    //     installationConfig, // Configuración de instalación del modpack
-                                                    //     callBack //callback
-                                                    // )
-                                                    await (window as any).backend.AddVanillaLauncher(installationConfig)
-                                                    hideMessage()
-                                                }}
+                                                onClick={() => StartInstallation()}
                                             >
                                                 {t('actions.accept', { ns: 'commons' })}
                                             </MCButton>

@@ -12,7 +12,8 @@
                 "list": {
                     "classic": "Clásico",
                     "light": "Claro",
-                    "oled": "OLED"
+                    "oled": "OLED",
+                    "system": "Sistema"
                 }
             },
             "behavior": {

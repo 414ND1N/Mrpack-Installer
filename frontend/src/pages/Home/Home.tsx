@@ -2,27 +2,24 @@
 // Componentes
 import Sidebar from "@/pages/Sidebar"
 import { useRef } from "react";
+import type { WebviewTag } from "electron";
 import { MCButton } from "@/components/MC/MC";
 // Css
 import "./Home.css"
 
-
 function Home() {
 
-    const webviewRef = useRef<HTMLWebViewElement>(null);
+    const webviewRef = useRef<WebviewTag | null>(null);
     
     return (
         <main className="main-container">
             <Sidebar/>
             <section className="home-container">
-
                 <MCButton
                     className="back-button"
                     variant="block"
                     onClick={() => {
-                        if (webviewRef.current) {
-                            webviewRef.current.goBack();
-                        }
+                        webviewRef.current?.goBack();
                     }}
                 >
                     <strong> ( </strong>

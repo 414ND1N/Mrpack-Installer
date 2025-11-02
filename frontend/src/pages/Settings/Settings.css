@@ -28,9 +28,9 @@
   letter-spacing: 0.02em;
 }
 .settings-container .container .section-appearance .content .themes-list {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   gap: 2em;
-  flex-direction: row;
 }
 .settings-container .container .section-appearance .content .themes-list .item {
   display: flex;
@@ -96,6 +96,7 @@
 .settings-container .container .section-appearance .content .themes-list .item.classic .preview .card .secondary {
   background-color: var(--secondary-fc-classic);
 }
+
 .settings-container .container .section-appearance .content .themes-list .item.light .preview {
   background-color: var(--primary-bgc-light);
 }
@@ -111,6 +112,7 @@
 .settings-container .container .section-appearance .content .themes-list .item.light .preview .card .secondary {
   background-color: var(--secondary-fc-light);
 }
+
 .settings-container .container .section-appearance .content .themes-list .item.dark .preview {
   background-color: var(--primary-bgc-dark);
 }
@@ -126,6 +128,23 @@
 .settings-container .container .section-appearance .content .themes-list .item.dark .preview .card .secondary {
   background-color: var(--secondary-fc-dark);
 }
+
+.settings-container .container .section-appearance .content .themes-list .item.system .preview {
+  background-color: var(--primary-bgc-dark);
+}
+.settings-container .container .section-appearance .content .themes-list .item.system .preview .navbar {
+  background-color: var(--navbar-navbgc-dark);
+}
+.settings-container .container .section-appearance .content .themes-list .item.system .preview .card {
+  background-color: var(--secondary-bgc-dark);
+}
+.settings-container .container .section-appearance .content .themes-list .item.system .preview .card .line {
+  background-color: var(--primary-fc-dark);
+}
+.settings-container .container .section-appearance .content .themes-list .item.system .preview .card .secondary {
+  background-color: var(--secondary-fc-dark);
+}
+
 .settings-container .container .section-appearance .content .themes-list .item .information {
   display: flex;
   flex-direction: row;

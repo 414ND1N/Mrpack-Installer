@@ -73,14 +73,20 @@
                     "need_launcher_closed": "Please close the launcher before installing.",
                     "need_launcher_closed_desc": "The Minecraft launcher must be closed to proceed with the installation. Please save your progress and close the launcher.",
                     "starting": "Starting installation...",
-                    "adding_profile": "Adding profile...",
-                    "downloading_mods": "Downloading mods...",
                     "finish": "Installation completed successfully.",
-                    "dependencies": "Installing dependencies...",
-                    "finish_dependencies": "Dependencies installed successfully.",
-                    "finish_start_script": "Start script created successfully.",
-                    "server_dependencies": "Downloading server installer...",
-                    "finish_server_dependencies": "Download successfully."
+                    "error": "Installation failed. Please try again.",
+                   "dependencies": {
+                        "mods": "Downloading mods...",
+                        "installing": "Installing dependencies...",
+                        "server": "Downloading server installer...",
+                        "server_finish": "Server installer downloaded successfully.",
+                        "finish": "Dependencies installed successfully.",
+                        "finish_server": "Dependencies and server installer installed successfully."
+                    },
+                    "vanilla_launcher": {
+                        "adding": "Adding profile to vanilla launcher...",
+                        "finish": "Profile added to vanilla launcher successfully."
+                    }
                 }
             }
         }

@@ -16,22 +16,22 @@ interface ToastContextProps {
 const ToastContext = createContext<ToastContextProps | undefined>(undefined);
 
 export const ToastProvider = ({ children }: { children: ReactNode }) => {
-    const [toasts, setToasts] = useState<Toast[]>([]);
+    const [_, setToasts] = useState<Toast[]>([]);
 
     const showToast = (message: string, type: ToastType = 'info') => {
         const id = Date.now();
         setToasts((prev) => [...prev, { id, message, type }]);
         setTimeout(() => {
-        setToasts((prev) => prev.filter((toast) => toast.id !== id));
+            setToasts((prev) => prev.filter((toast) => toast.id !== id));
         }, 3000);
     };
 
-return (
-    <ToastContext.Provider value={{ showToast }}>
-        {children}
-        <Toaster />
-    </ToastContext.Provider>
-);
+    return (
+        <ToastContext.Provider value={{ showToast }}>
+            {children}
+            <Toaster />
+        </ToastContext.Provider>
+    );
 };
 
 export const useToast = () => {

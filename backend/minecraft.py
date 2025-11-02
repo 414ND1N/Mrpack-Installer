@@ -1,6 +1,7 @@
 import minecraft_launcher_lib
 import os
 import traceback
+import shutil
 
 async def getMinecraftDirectory():
     try:
@@ -10,11 +11,12 @@ async def getMinecraftDirectory():
         raise RuntimeError(f"Error obteniendo directorio de Minecraft: {e}")
 
 async def addVanillaLauncher(mrpack_directory: str, profile_directory:str, minecraft_directory: str = "", jargs=None, icon=None):
-
     try:
         mrpack_directory = os.path.abspath(os.path.expanduser(mrpack_directory))
+
         if not minecraft_directory:
             minecraft_directory = await getMinecraftDirectory()
+
         minecraft_directory = os.path.abspath(os.path.expanduser(minecraft_directory))
 
         if not os.path.isfile(mrpack_directory):
@@ -40,11 +42,15 @@ async def addVanillaLauncher(mrpack_directory: str, profile_directory:str, minec
                 # si no se pudo parsear, asumir que jargs ya es una lista de strings
                 java_arguments = jargs
 
+        # Normalize modpack directory
+        _modpack_directory = os.path.join(minecraft_directory, os.path.normpath(profile_directory))
+        _modpack_directory = os.path.abspath(os.path.expanduser(_modpack_directory))
+
         profile = {
             "name": mrpack_information["name"],
             "version": minecraft_launcher_lib.mrpack.get_mrpack_launch_version(mrpack_directory),
             "versionType": "custom",
-            "gameDirectory": os.path.join(minecraft_directory, profile_directory),
+            "gameDirectory": _modpack_directory,
             "javaExecutable": None,
             "javaArguments": java_arguments,
             "customResolution": None,
@@ -58,31 +64,67 @@ async def addVanillaLauncher(mrpack_directory: str, profile_directory:str, minec
     except Exception as e:
         traceback.print_exc()
         raise e
-
-async def InstallMrpack(profile_directory: str, mrpack_directory: str, minecraft_directory: str = ""):
-
+    
+def InstallMrpack(profile_directory: str, mrpack_directory: str, installation_type="singleplayer", minecraft_directory: str = "", callbacks=None):
     try:
         if not minecraft_directory:
-            minecraft_directory = await getMinecraftDirectory()
+            # use sync utils to get minecraft directory
+            minecraft_directory = minecraft_launcher_lib.utils.get_minecraft_directory()
+        minecraft_directory = os.path.abspath(os.path.expanduser(minecraft_directory))
+
+        # Verify 'java' executable is available - installers (fabric/quilt/forge) call java
+        java_exec = shutil.which("java")
+        if not java_exec:
+            raise RuntimeError("Java executable not found in PATH. Please install a compatible Java (e.g. OpenJDK 17+) and ensure 'java' is available in PATH.")
 
         if not os.path.isfile(mrpack_directory):
+            print(f"{mrpack_directory} was not found")
             raise FileNotFoundError(f"{mrpack_directory} was not found")
-        
-        mrpack_information = minecraft_launcher_lib.utils.get_mrpack_information(mrpack_directory)
+
+        mrpack_information = minecraft_launcher_lib.mrpack.get_mrpack_information(mrpack_directory)
         if not mrpack_information:
+            print(f"{mrpack_directory} is not a valid .mrpack File")
             raise Exception(f"{mrpack_directory} is not a valid .mrpack File")
 
-       # Adds the Optional Files
+        # Adds the Optional Files
         mrpack_install_options: minecraft_launcher_lib.types.MrpackInstallOptions = {"optionalFiles": []}
         for i in mrpack_information["optionalFiles"]:
             mrpack_install_options["optionalFiles"].append(i)
 
-        minecraft_launcher_lib.mrpack.install_mrpack(
-            mrpack_directory,
-            minecraft_directory,
-            modpack_directory=profile_directory,
-            mrpack_install_options=mrpack_install_options,
-            callback={"setStatus": print}
-        )
-    except Exception as e: 
+        # Normalize modpack directory
+        _modpack_directory = os.path.abspath(os.path.expanduser(os.path.normpath(profile_directory)))
+
+        cb = callbacks if callbacks is not None else {"setStatus": print}
+
+        if installation_type == "serverside":
+            minecraft_launcher_lib.mrpack.install_mrpack_serverside(
+                mrpack_directory,
+                minecraft_directory,
+                modpack_directory=_modpack_directory,
+                mrpack_install_options=mrpack_install_options,
+                callback=cb
+            )
+        elif installation_type == "clientside":
+            minecraft_launcher_lib.mrpack.install_mrpack_clientside(
+                mrpack_directory,
+                minecraft_directory,
+                modpack_directory=_modpack_directory,
+                mrpack_install_options=mrpack_install_options,
+                callback=cb
+            )
+        elif installation_type == "singleplayer":
+            minecraft_launcher_lib.mrpack.install_mrpack(
+                mrpack_directory,
+                minecraft_directory,
+                modpack_directory=_modpack_directory,
+                mrpack_install_options=mrpack_install_options,
+                callback=cb
+            )
+        else:
+            print("installation_type no válido:", installation_type)
+            raise ValueError(f"Invalid installation_type: {installation_type}")
+
+        return {"ok": True}
+    except Exception as e:
+        traceback.print_exc()
         raise e

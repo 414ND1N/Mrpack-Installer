@@ -17,6 +17,12 @@
   letter-spacing: 0.02em;
 }
 
+*.inactive-component {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+
 .install-container .header p {
   color: var(--font-color-secondary, #6b7280);
   margin: 0;
@@ -152,7 +158,7 @@ a.information-toggle:hover {
   grid-area: selectors;
   display: grid;
   gap: 1em;
-  grid-template-areas: "icon type install";
+  grid-template-areas: "type icon install";
   width: 100%;
   grid-template-columns: 1fr 1fr 2fr;
 }

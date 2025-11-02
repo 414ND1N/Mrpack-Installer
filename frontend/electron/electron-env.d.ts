@@ -23,6 +23,7 @@ interface Window {
   },
   winConfig?: {
     getTheme: () => Promise<string>;
+    getSystemTheme: () => Promise<string>;
     getFullscreen: () => Promise<boolean>;
     setTheme: (theme: string) => Promise<void>;
     setFullscreen: (fullscreen: boolean) => Promise<void>;
@@ -51,5 +52,13 @@ interface Window {
     PathJoin: (...paths: string[]) => Promise<string>;
     GetMinecraftDirectory: () => Promise<string>;
     AddVanillaLauncher: (props: any) => Promise<string>;
+    StartMrpackInstallation: (
+      props: any,
+      cbStatus?: (status: string) => void,
+      cbMax?: (max: number) => void,
+      cbProgress?: (progress: number) => void,
+      cbFinish?: (status: string) => void,
+      cbError?: (status: string) => void
+    ) => Promise<void>;
   }
 }

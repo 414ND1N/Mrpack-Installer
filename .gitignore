@@ -33,3 +33,5 @@ __pycache__/
 *.pyd
 .Python
 env/
+backend/dist/
+backend/build/

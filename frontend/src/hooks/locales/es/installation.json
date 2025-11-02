@@ -73,14 +73,20 @@
                     "need_launcher_closed": "Por favor, cierra el lanzador antes de instalar.",
                     "need_launcher_closed_desc": "El lanzador de Minecraft debe estar cerrado para proceder con la instalación. Por favor, guarda tu progreso y cierra el lanzador.",
                     "starting": "Iniciando instalación...",
-                    "adding_profile": "Agregando perfil...",
-                    "downloading_mods": "Descargando mods...",
                     "finish": "Instalación completada con éxito.",
-                    "dependencies": "Instalando dependencias...",
-                    "finish_dependencies": "Dependencias instaladas con éxito.",
-                    "finish_start_script": "Script de inicio creado satisfactoriamente.",
-                    "server_dependencies": "Descargando instalador de servidor...",
-                    "finish_server_dependencies": "Descargado satisfactoriamente."
+                    "error": "Instalación fallida. Por favor, revisa los detalles del error e intenta nuevamente.",
+                    "dependencies": {
+                        "mods": "Descargando mods...",
+                        "installing": "Instalando dependencias...",
+                        "server": "Descargando instalador de servidor...",
+                        "server_finish": "Instalador de servidor descargado con éxito.",
+                        "finish": "Dependencias instaladas con éxito.",
+                        "finish_server": "Descargado satisfactoriamente."
+                    },
+                    "vanilla_launcher": {
+                        "adding": "Agregando perfil al lanzador vanilla...",
+                        "finish": "Perfil agregado al lanzador vanilla con éxito."
+                    }
                 }
             }
         }

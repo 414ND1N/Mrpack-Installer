@@ -1,13 +1,19 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, nativeTheme } from 'electron'
 import { Menu } from 'electron'
 import Store from 'electron-store'
 import { ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-// import axios from 'axios'
-import { modrinthFetchRandomProjects, modrinthSearchProjects } from './backend/modrinth'
-// import fs from 'node:fs'
+import { spawn, ChildProcess } from 'child_process';
+
+let backendProcess: ChildProcess | null = null;
+const getBackendPath = (): string => {
+  if (app.isPackaged) {
+    return path.join(process.resourcesPath, 'backend', 'backend.exe');
+  }
+  return path.join(__dirname, '..', 'backend', 'backend.exe');
+};
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 process.env.APP_ROOT = path.join(__dirname, '..')
@@ -35,7 +41,6 @@ function createWindow() {
   // Obtener datos persistentes
   const windowBounds = store.get('windowBounds', { width: 1100, height: 700 }) as WindowBounds
   const isFullscreen = store.get('isFullscreen', false) as boolean
-  // const theme = store.get('theme', 'classic');
 
   win = new BrowserWindow({
     title: 'Modpack Installer',
@@ -63,12 +68,12 @@ function createWindow() {
     console.log('Ventana cargada con éxito')
   })
 
-  // Abrir DevTools en modo separado para depuración
-  try {
-    win.webContents.openDevTools({ mode: 'detach' })
-  } catch (e) {
-    console.warn('No se pudo abrir DevTools:', e)
-  }
+  // // Abrir DevTools en modo separado para depuración
+  // try {
+  //   win.webContents.openDevTools({ mode: 'detach' })
+  // } catch (e) {
+  //   console.warn('No se pudo abrir DevTools:', e)
+  // }
 
   // Cargar la URL de desarrollo o el archivo HTML
   if (VITE_DEV_SERVER_URL) {
@@ -79,6 +84,30 @@ function createWindow() {
     win.loadFile(indexPath)
   }
 
+  // Iniciar el proceso de Python ANTES de cargar la ventana
+  const backendPath = getBackendPath();
+  console.log(`Iniciando backend desde: ${backendPath}`);
+  try {
+    backendProcess = spawn(backendPath); // Ejecutar el backend
+    if (!backendProcess) {
+      console.error('Error: No se pudo iniciar el proceso de backend.');
+      return;
+    }
+    backendProcess.stdout?.on('data', (data) => {
+      console.log(`[Backend STDOUT]: ${data.toString()}`);
+    });
+
+    backendProcess.stderr?.on('data', (data) => {
+      console.error(`[Backend STDERR]: ${data.toString()}`);
+    });
+
+    backendProcess.on('close', (code) => {
+      console.log(`Proceso de backend cerrado con código ${code}`);
+    });
+
+  } catch (error) {
+    console.error('Error al intentar ejecutar spawn:', error);
+  }
 }
 
 app.on('window-all-closed', () => {
@@ -93,6 +122,14 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
+
+app.on('will-quit', () => {
+  if (backendProcess) {
+    console.log('Cerrando el proceso del backend...');
+    backendProcess.kill(); // Envía la señal para terminar el proceso
+    backendProcess = null;
+  }
+});
 
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
@@ -149,11 +186,39 @@ function setupIpcEvents() {
   })
 
   ipcMain.handle('set-theme', (_, theme: string) => {
-    store.set('theme', theme)
+    try {
+      if (theme === 'system') {
+        const sysTheme = nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
+        store.set('theme', sysTheme)
+      } else {
+        store.set('theme', theme)
+      }
+      console.log(`Theme saved to: ${theme}`)
+    } catch (error) {
+      console.error('Error saving theme:', error)
+    }
   })
 
   ipcMain.handle('get-theme', () => {
-    return store.get('theme', 'classic') // Responder de manera síncrona
+    if (store.has('theme')) {
+      return store.get('theme')
+    }
+    return nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
+  })
+
+  ipcMain.handle('get-system-theme', () => {
+    return nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
+  })
+
+  nativeTheme.on('updated', () => {
+    try {
+      if (!store.has('theme') && win) {
+        const sysTheme = nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
+        win.webContents.send('system-theme-changed', sysTheme)
+      }
+    } catch (e) {
+      console.error('Error al notificar cambio de tema del sistema:', e)
+    }
   })
 
   ipcMain.handle('get-version', () => {
@@ -182,7 +247,11 @@ function setupIpcEvents() {
   })
 
   ipcMain.handle('get-language', () => {
-    return store.get('language', 'en') // Responder de manera síncrona
+    if (store.has('language')) {
+      return store.get('language', 'en')
+    }
+    const locale = app.getLocale() || 'en'
+    return String(locale).split(/[-_]/)[0]
   })
 
   ipcMain.handle('set-language', (_, lang: string) => {
@@ -210,3 +279,5 @@ app.whenReady().then(() => {
   autoUpdater.checkForUpdates()
   console.log('Last version:', autoUpdater.currentVersion)
 })
+
+

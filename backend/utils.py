@@ -1,4 +1,4 @@
 import os
 
 async def PathJoin(*paths: str) -> str:
-    return os.path.join(*paths)
+    return os.path.normpath(os.path.join(*paths))
