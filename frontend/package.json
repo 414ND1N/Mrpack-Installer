@@ -20,7 +20,7 @@
   },
   "build": {
     "appId": "com.alandln.minecraftmrpackinstaller",
-    "productName": "Mrpack-Installer",
+    "productName": "Mrpack Installer",
     "files": [
       "dist/**/*",
       "dist-electron/**/*",
@@ -50,18 +50,18 @@
         "from": "backend/",
         "to": "backend"
       }
-    ]
+    ],
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   },
   "dependencies": {
     "@mdi/react": "^1.6.1",
-    "7zip-bin": "^5.2.0",
-    "adm-zip": "^0.5.16",
-    "axios": "^1.10.0",
     "electron-store": "^10.1.0",
     "electron-updater": "^6.6.2",
     "i18next": "^25.3.2",
     "i18next-resources-to-backend": "^1.2.1",
-    "jszip": "^3.10.1",
     "prompt": "^1.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
