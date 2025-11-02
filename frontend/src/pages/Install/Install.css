@@ -17,12 +17,6 @@
   letter-spacing: 0.02em;
 }
 
-*.inactive-component {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-
 .install-container .header p {
   color: var(--font-color-secondary, #6b7280);
   margin: 0;

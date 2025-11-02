@@ -17,7 +17,7 @@
     },
     "update": {
         "avaliable": "An update is available",
-        "instructions": "Go to settings > About > Update to download the latest version."
+        "instructions": "Go to settings > Updates to download the latest version."
     },
     "minecraft": {
         "launcher": {
