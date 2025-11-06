@@ -103,13 +103,18 @@ a.information-toggle:hover {
 .install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration.active {
   display: flex;
 }
+
 .install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration .memory,
 .install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration .path {
   display: flex;
   flex-direction: column;
   align-items: start;
   justify-content: start;
+  margin-top: auto
 }
+
+
+
 .install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration .memory .memory-inputs {
   display: flex;
   flex-direction: row;
@@ -117,6 +122,25 @@ a.information-toggle:hover {
 }
 .install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration .path {
   width: 100%;
+}
+
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration .path {
+  display: grid;
+  grid-template-areas: 
+    "label label"
+    "input search";
+  grid-template-columns: 1fr min-content;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration .information-toggle {
+  grid-area: label;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration .path_input {
+  grid-area: input;
+  border-right: none;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .configuration .advanced-configuration .path_search {
+  grid-area: search;
+  border-radius: 0 0.25rem 0.25rem 0;
 }
 .install-container .sections-minecraft .section-from-file .content .installation-configuration .checkbox {
   grid-area: checkbox;

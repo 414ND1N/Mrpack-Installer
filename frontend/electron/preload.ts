@@ -34,9 +34,11 @@ contextBridge.exposeInMainWorld('winConfig', {
   setTheme: (theme: string) => ipcRenderer.invoke('set-theme', theme),
   getSystemTheme: () => ipcRenderer.invoke('get-system-theme'),
   setFullscreen: (fullscreen: boolean) => ipcRenderer.invoke('set-fullscreen', fullscreen),
+  setLanguage: (lang: string) => ipcRenderer.invoke('set-language', lang),
   updateApp: () => ipcRenderer.invoke('update-app'),
   checkUpdate: () => ipcRenderer.invoke('check-update'),
   getVersion: () => ipcRenderer.invoke('get-version'),
+  ShowOpenDialog: (options: Electron.OpenDialogOptions) => ipcRenderer.invoke('dialog:showOpenDialog', options),
 })
 
 contextBridge.exposeInMainWorld('backend', {

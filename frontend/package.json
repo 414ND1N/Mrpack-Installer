@@ -3,7 +3,7 @@
   "private": true,
   "description": "Instalador de modpacks (modrinth) para Minecraft",
   "author": "ALANDLN",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "type": "module",
   "scripts": {
     "predev": "taskkill /F /IM backend.exe || echo 'No backend process to kill'",

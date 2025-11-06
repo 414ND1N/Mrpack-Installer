@@ -48,7 +48,10 @@
                     "path": {
                         "label": "Ruta de instalación para los archivos",
                         "description": "Especifica la ruta donde se instalará el paquete de mods",
-                        "placeholder": "Ruta de instalación"
+                        "placeholder": "Ruta de instalación",
+                        "browse": "Examinar",
+                        "browse_title": "Selecciona el directorio de instalación",
+                        "browse_description": "Elige la carpeta donde deseas instalar los archivos del paquete de mods"
                     },
                     "memory": {
                         "label": "Asignación de memoria",

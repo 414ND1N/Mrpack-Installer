@@ -1,7 +1,6 @@
-import { app, BrowserWindow, nativeTheme } from 'electron'
+import { app, BrowserWindow, nativeTheme, dialog, ipcMain} from 'electron'
 import { Menu } from 'electron'
 import Store from 'electron-store'
-import { ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -170,7 +169,7 @@ autoUpdater.autoRunAppAfterInstall = true
 autoUpdater.setFeedURL({
   provider: 'github',
   repo: 'Mrpack-Installer',
-  owner: '414ND1N',
+  owner: 'MRPACK-UPDATER',
   channel: 'latest',
   private: false
 })
@@ -212,12 +211,7 @@ function setupIpcEvents() {
 
   ipcMain.handle('set-theme', (_, theme: string) => {
     try {
-      if (theme === 'system') {
-        const sysTheme = nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
-        store.set('theme', sysTheme)
-      } else {
-        store.set('theme', theme)
-      }
+      store.set('theme', theme)
       console.log(`Theme saved to: ${theme}`)
     } catch (error) {
       console.error('Error saving theme:', error)
@@ -254,6 +248,7 @@ function setupIpcEvents() {
     try {
       console.log('Updating app...')
       await autoUpdater.downloadUpdate()
+      await autoUpdater.quitAndInstall()
     } catch (error) {
       console.error('Error downloading update:', error)
       throw error
@@ -289,22 +284,22 @@ function setupIpcEvents() {
   })
 }
 
-// ------- Inicialización de la aplicación -------
-// app.whenReady().then(() => {
-//   startBackend();
-//   createWindow()
-
-//   // Disable menu on Windows and Linux only if not in development
-//   if (!(process.platform === 'darwin') && !VITE_DEV_SERVER_URL) {
-//     Menu.setApplicationMenu(null)
-//   }
-
-//   setupIpcEvents()
-
-//   console.log('Checking for updates...')
-//   autoUpdater.checkForUpdates()
-//   console.log('Last version:', autoUpdater.currentVersion)
-// })
+ipcMain.handle('dialog:showOpenDialog', async (_event, options: Electron.OpenDialogOptions) => {
+  try {
+    const parent = BrowserWindow.getAllWindows().find(w => !w.isDestroyed()) ?? undefined
+    let res
+    if (parent) {
+      res = await dialog.showOpenDialog(parent, options)
+    } else {
+      res = await dialog.showOpenDialog(options)
+    }
+    return res
+  } catch (err) {
+    console.error('Error mostrando diálogo de selección:', err)
+    // propagar error al renderer
+    throw err
+  }
+})
 
 if (!gotTheLock) {
   app.quit();
@@ -324,7 +319,6 @@ if (!gotTheLock) {
       Menu.setApplicationMenu(null)
     }
     setupIpcEvents();
-    console.log('Checking for updates...');
     autoUpdater.checkForUpdates();
     console.log('Last version:', autoUpdater.currentVersion);
   });

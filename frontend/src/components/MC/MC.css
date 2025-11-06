@@ -78,13 +78,12 @@ button.mc-style:disabled {
 button.mc-style.variant-ghost {
   background-color: transparent;
   color: var(--mc-green-2);
-  border: 0.2rem solid var(--mc-green-1);
   padding: 0.5rem 1rem;
+  background-color: var(--mc-gray-2);
+  border: none;
+  border: 0.2rem solid var(--mc-green-2);
 }
-button.mc-style.variant-ghost:hover {
-  background-color: rgba(94, 123, 202, 0.25);
-  border: 0.2rem solid var(--mc-green-1);
-}
+
 button.mc-style.variant-solid {
   background-color: black;
   color: white;
@@ -268,6 +267,7 @@ input.mc-style:focus {
 .mc-ask-button h1 {
   font-family: inherit;
   font-size: inherit;
+  cursor: pointer;
 }
 .mc-ask-button h1:hover {
   cursor: pointer;
