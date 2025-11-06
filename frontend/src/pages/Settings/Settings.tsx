@@ -46,19 +46,17 @@ function Settings() {
     }
 
     const updateFullscreen = async (isFullscreen: boolean) => {
-        // await ipcRenderer.invoke('set-fullscreen', isFullscreen)
         await (window as any).winConfig.setFullscreen(isFullscreen)
         setFullscreen(isFullscreen)
     }
 
     const HandleUpdate = async () => {
         try {
-            showMessage("Descargando actualización...")
-            // await ipcRenderer.invoke("update-app")
+            showMessage(t('sections.update.downloading'), { showClose: false })
             await (window as any).winConfig.updateApp()
-            showMessage("Actualización descargada. Debes de reiniciar la aplicación para aplicar los cambios.")
+            showMessage(t('sections.update.downloaded'))
         } catch (error) {
-            console.error("Error durante la actualización:", error)
+            console.error(t('sections.update.downlodownload_erroraded'), error)
         }
     }
 

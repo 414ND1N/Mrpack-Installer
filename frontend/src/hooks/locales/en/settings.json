@@ -57,7 +57,10 @@
             "update_available": "New Update Available",
             "no_update_available": "No Updates Available",
             "button": "Download Update",
-            "button_no_update": "Check for Updates"
+            "button_no_update": "Check for Updates",
+            "downloading": "Downloading update...",
+            "downloaded": "Update downloaded. Please restart the application to apply changes.",
+            "download_error": "An error occurred while checking for updates."
         }
     }
 }

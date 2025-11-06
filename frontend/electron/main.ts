@@ -248,7 +248,6 @@ function setupIpcEvents() {
     try {
       console.log('Updating app...')
       await autoUpdater.downloadUpdate()
-      await autoUpdater.quitAndInstall()
     } catch (error) {
       console.error('Error downloading update:', error)
       throw error
