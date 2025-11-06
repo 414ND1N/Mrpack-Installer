@@ -1,5 +1,5 @@
 // Componentes
-import Sidebar from "@/pages/Sidebar"
+// Sidebar ahora se monta globalmente desde el layout
 import { useState, useEffect } from "react"
 import { useTranslation } from 'react-i18next'
 import { MCButton, MCInput, MCSelect } from "@/components/MC/MC"
@@ -40,9 +40,7 @@ function Discover() {
 
 
     return (
-        <main className="main-container">
-            <Sidebar current_path="/Discover" />
-            <section className="discover-container">
+        <section className="discover-container">
                 <section className="header">
                     <MCInput
                         placeholder={t('search_field_placeholder')}
@@ -155,7 +153,6 @@ function Discover() {
                     ))}
                 </section>
             </section>
-        </main>
     )
 
 }

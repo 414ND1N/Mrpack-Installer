@@ -10,6 +10,7 @@ import Home from '@/pages/Home/Home.tsx'
 import Discover from '@/pages/Discover/Discover.tsx'
 import Install from '@/pages/Install/Install.tsx'
 import Settings from '@/pages/Settings/Settings'
+import MainLayout from '@/layouts/MainLayout'
 import { useGlobalMessage } from "@/context/GlobalMessageContext"
 import { useTranslation } from 'react-i18next'
 
@@ -55,12 +56,14 @@ function App() {
   }, [])
 
   return (
-    <HashRouter >
+    <HashRouter>
       <Routes>
-        <Route path={`/`} element={<Home />} />
-        <Route path={`/Discover`} element={<Discover />} />
-        <Route path={`/Install`} element={<Install />} />
-        <Route path={`/Settings`} element={<Settings />} />
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Home />} />
+          <Route path="Discover" element={<Discover />} />
+          <Route path="Install" element={<Install />} />
+          <Route path="Settings" element={<Settings />} />
+        </Route>
       </Routes>
     </HashRouter>
   )

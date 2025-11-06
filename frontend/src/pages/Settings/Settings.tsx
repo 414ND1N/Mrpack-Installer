@@ -284,34 +284,30 @@ function Settings() {
 
 
     return (
-
-        <main className="main-container">
-            <Sidebar current_path="/Settings" />
-            <section className="settings-container">
-                <SectionsMinecraftComponent
-                    title="CONFIGURACIÓN"
-                    sections={
-                        [
-                            {
-                                id: "appearance",
-                                title: t('sections.general.title'),
-                                content: sectionGeneral
-                            },
-                            {
-                                id: "about",
-                                title: t('sections.about.title'),
-                                content: sectionAcercaDe
-                            },
-                            {
-                                id: "updates",
-                                title: t('sections.update.title'),
-                                content: SectionUpdates
-                            }
-                        ]
-                    }
-                />
-            </section>
-        </main>
+        <section className="settings-container">
+            <SectionsMinecraftComponent
+                title="CONFIGURACIÓN"
+                sections={
+                    [
+                        {
+                            id: "appearance",
+                            title: t('sections.general.title'),
+                            content: sectionGeneral
+                        },
+                        {
+                            id: "about",
+                            title: t('sections.about.title'),
+                            content: sectionAcercaDe
+                        },
+                        {
+                            id: "updates",
+                            title: t('sections.update.title'),
+                            content: SectionUpdates
+                        }
+                    ]
+                }
+            />
+        </section>
     )
 
 }

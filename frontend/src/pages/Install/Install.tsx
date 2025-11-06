@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import "./Install.css"
 
 // Componentes
-import Sidebar from "@/pages/Sidebar"
+// Sidebar ahora se monta globalmente desde el layout
 import SectionsMinecraftComponent from "@/components/SectionsMinecraft/SectionsMinecraft"
 import FileSelector from "@/components/FileSelector/FileSelector"
 import { MrpackMetadata } from "@/interfaces/modrinth/MrPack"
@@ -487,23 +487,20 @@ function Install() {
     )
 
     return (
-        <main className="main-container">
-            <Sidebar current_path="/Install" />
-            <section className="install-container">
-                <SectionsMinecraftComponent
-                    title={t('header.title')}
-                    sections={
-                        [
-                            {
-                                id: "from-file",
-                                title: t('sections.file.title'),
-                                content: sectionFromFile
-                            }
-                        ]
-                    }
-                />
-            </section>
-        </main>
+        <section className="install-container">
+            <SectionsMinecraftComponent
+                title={t('header.title')}
+                sections={
+                    [
+                        {
+                            id: "from-file",
+                            title: t('sections.file.title'),
+                            content: sectionFromFile
+                        }
+                    ]
+                }
+            />
+        </section>
     )
 
 }
