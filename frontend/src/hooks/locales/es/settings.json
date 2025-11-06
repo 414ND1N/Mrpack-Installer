@@ -57,7 +57,10 @@
             "update_available": "Nueva Actualización Disponible",
             "no_update_available": "No Hay Actualizaciones Disponibles",
             "button": "Descargar Actualización",
-            "button_no_update": "Buscar Actualizaciones"
+            "button_no_update": "Buscar Actualizaciones",
+            "downloading": "Descargando actualización...",
+            "downloaded": "Actualización descargada. Por favor, reinicia la aplicación para aplicar los cambios.",
+            "download_error": "Ocurrió un error al buscar actualizaciones."
         }
     }
 }
