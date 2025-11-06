@@ -169,7 +169,7 @@ autoUpdater.autoRunAppAfterInstall = true
 autoUpdater.setFeedURL({
   provider: 'github',
   repo: 'Mrpack-Installer',
-  owner: 'MRPACK-UPDATER',
+  owner: '414ND1N',
   channel: 'latest',
   private: false
 })
