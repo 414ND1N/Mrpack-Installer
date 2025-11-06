@@ -25,7 +25,13 @@ function App() {
         // const savedTheme = await ipcRenderer.invoke('get-theme')
         const savedTheme = await (window as any).winConfig?.getTheme()
         if (savedTheme) {
-          document.body.setAttribute('data-theme', savedTheme)
+
+          if (savedTheme === 'system') {
+            const systemTheme = await (window as any).winConfig?.getSystemTheme()
+            document.body.setAttribute('data-theme', systemTheme)
+          } else {
+            document.body.setAttribute('data-theme', savedTheme)
+          }
         }
         const savedLanguage = await (window as any).winConfig?.getLanguage()
         const language = savedLanguage || navigator.language.split('-')[0]; // Usar el idioma del navegador si no hay uno guardado

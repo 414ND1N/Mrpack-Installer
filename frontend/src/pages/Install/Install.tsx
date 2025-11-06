@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useTranslation } from 'react-i18next'
 
 // Css
@@ -23,7 +23,11 @@ function Install() {
 
     const { showMessage } = useGlobalMessage()
     const { t } = useTranslation(["installation", "commons"])
-
+    // let _MINECRAFT_DIR = "instances"
+    const [minecraft_dir, setMinecraftDir] = useState<string>("")
+    const [mrpackInfo, setMrpackInfo] = useState<MrpackMetadata | null>(null)
+    const [personalizedConfig, setPersonalizedConfig] = useState<boolean>(false)
+    const [openDialogConfig, setOpenDialogConfig] = useState<boolean>(false)
     const [installationConfig, setInstallationConfig] = useState<InstallationModpackProps>({
         type: "singleplayer", // Por defecto, tipo cliente
         installation_directory: "instances",
@@ -36,9 +40,32 @@ function Install() {
         profile_icon: ProfileIcons.Bedrock // Icono del perfil, inicialmente vacío
     })
 
-    const [mrpackInfo, setMrpackInfo] = useState<MrpackMetadata | null>(null)
-    const [personalizedConfig, setPersonalizedConfig] = useState<boolean>(false)
-    const [openDialogConfig, setOpenDialogConfig] = useState<boolean>(false)
+    useEffect(() => {
+        (async () => {
+            try {
+                setMinecraftDir(await (window as any).backend.GetMinecraftDirectory())
+            } catch (error) {
+                console.error("Error al obtener el directorio de Minecraft:", error)
+            }
+        })()
+    }, [])
+
+    useEffect(() => {
+        // Resetear la configuración de instalación cuando no hay un archivo seleccionado
+        if (!mrpackInfo) {
+            setInstallationConfig({
+                type: "singleplayer", // Por defecto, tipo cliente
+                installation_directory: "instances",
+                minecraft_version: "latest", // Versión de Minecraft por defecto
+                memory: {
+                    max: "", // Memoria máxima por defecto
+                    min: "" // Memoria mínima por defecto
+                },
+                mrpack_path: "", // Ruta del archivo mrpack, inicialmente vacío
+                profile_icon: ProfileIcons.Bedrock // Icono del perfil, inicialmente vacío
+            })
+        }
+    }, [mrpackInfo])
 
     // Funcion archivo
     const handleFile = async (file: File) => {
@@ -56,7 +83,7 @@ function Install() {
             const _data = await (window as any).backend.GetMrpackMedatadaInfo(file.path)
             console.log("Metadatos del modpack obtenidos:", _data)
 
-            const _minecfraft_dir = await (window as any).backend.GetMinecraftDirectory()
+            const _minecfraft_dir = minecraft_dir || await (window as any).backend.GetMinecraftDirectory()
 
             const _modpack_dir_name = `${_data.name.trim().replace(/\s+/g, "-").toLowerCase() || "modpack"}`
             const _modpack_directory = await (window as any).backend.PathJoin(_minecfraft_dir, "instances", _modpack_dir_name)
@@ -243,6 +270,8 @@ function Install() {
                                     </DialogContent>
                                 </Dialog>
                                 <MCInput
+                                    variant="default"
+                                    className="path_input"
                                     placeholder={t('sections.file.configuration.advanced.path.placeholder')}
                                     value={installationConfig.installation_directory} // Ruta de instalación del modpack
                                     onChange={(event) => {
@@ -257,6 +286,27 @@ function Install() {
                                         }))
                                     }}
                                 />
+                                <MCButton
+                                    variant="ghost"
+                                    className="path_search"
+                                    onClick={async () => {
+                                        const result = await (window as any).winConfig.ShowOpenDialog({
+                                            defaultPath: minecraft_dir,
+                                            title: t('sections.file.configuration.advanced.path.browse_title'),
+                                            properties: ['openDirectory'],
+                                            createDirectory: true,
+                                            promptToCreate: true,
+                                            message: t('sections.file.configuration.advanced.path.browse_description')
+                                        })
+                                        if (!result || result.canceled) return
+                                        const selected = result.filePaths && result.filePaths[0]
+                                        if (selected) {
+                                            setInstallationConfig(prev => ({ ...prev, installation_directory: selected }))
+                                        }
+                                    }}
+                                >
+                                    {t('sections.file.configuration.advanced.path.browse')}
+                                </MCButton>
                             </div>
 
                             <div className={`memory ${installationConfig.type === "serverside" ? "inactive-component" : ""}`}>

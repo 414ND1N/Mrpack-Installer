@@ -124,8 +124,8 @@ interface AskButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: Variant
   icon?: React.ReactNode
 }
-function MCAskButton({ variant = "default", icon="?",...props }: AskButtonProps) {
-  const classes = ["mc-ask-button", "mc-style", `variant-${variant}`].filter(Boolean).join(" ")
+function MCAskButton({ variant = "default", icon="?", className,...props }: AskButtonProps) {
+  const classes = ["mc-ask-button", "mc-style", `variant-${variant} ${className}`].filter(Boolean).join(" ")
   return (
     <div className={classes} {...props}>
       <h1>{icon}</h1>
