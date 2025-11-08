@@ -1,9 +1,11 @@
 import { ipcRenderer, contextBridge } from 'electron'
 
 import { 
-  modrinthFetchRandomProjects,
-  modrinthSearchProjects,
+  FetchRandomProjects,
+  SearchProjects,
   GetMrpackMedatadaInfo,
+  StartMrpackInstallation,
+  DownloadCollection
 } from './backend/modrinth'
 
 import {
@@ -12,9 +14,7 @@ import {
 
 import {
   GetMinecraftDirectory,
-  AddVanillaLauncher,
-  // InstallModpack,
-  StartMrpackInstallation
+  AddVanillaLauncher
 } from './backend/minecraft'
 
 // --------- Expose some API to the Renderer process ---------
@@ -35,6 +35,7 @@ contextBridge.exposeInMainWorld('winConfig', {
   getSystemTheme: () => ipcRenderer.invoke('get-system-theme'),
   setFullscreen: (fullscreen: boolean) => ipcRenderer.invoke('set-fullscreen', fullscreen),
   setLanguage: (lang: string) => ipcRenderer.invoke('set-language', lang),
+  getSystemLanguage: () => ipcRenderer.invoke('get-system-language'),
   updateApp: () => ipcRenderer.invoke('update-app'),
   checkUpdate: () => ipcRenderer.invoke('check-update'),
   getVersion: () => ipcRenderer.invoke('get-version'),
@@ -42,13 +43,12 @@ contextBridge.exposeInMainWorld('winConfig', {
 })
 
 contextBridge.exposeInMainWorld('backend', {
-  fetchRandomProjects: (count: number) => modrinthFetchRandomProjects(count),
-  searchProjects: (count: number, type?: string, querry?: string, offset?: number) => modrinthSearchProjects(count, type, querry, offset),
+  fetchRandomProjects: (count: number) => FetchRandomProjects(count),
+  searchProjects: (count: number, type?: string, querry?: string, offset?: number) => SearchProjects(count, type, querry, offset),
   GetMrpackMedatadaInfo: (filePath: string) => GetMrpackMedatadaInfo(filePath),
   PathJoin: (...paths: string[]) => PathJoin(...paths),
   GetMinecraftDirectory: () => GetMinecraftDirectory(),
   AddVanillaLauncher: (props: any) => AddVanillaLauncher(props),
-  // InstallModpack: (props: any) => InstallModpack(props),
   StartMrpackInstallation: (
     props: any,
     cbStatus?: (status: string) => void,
@@ -56,7 +56,14 @@ contextBridge.exposeInMainWorld('backend', {
     cbProgress?: (progress: number) => void,
     cbFinish?: (status: string) => void,
     cbError?: (status: string) => void,
-  ) => StartMrpackInstallation(props, cbStatus, cbMax, cbProgress, cbFinish, cbError)
+  ) => StartMrpackInstallation(props, cbStatus, cbMax, cbProgress, cbFinish, cbError),
+  DownloadCollection: (
+    collectionId: string,
+    version: string,
+    loader: string,
+    directory: string,
+    updateExisting: boolean
+  ) => DownloadCollection(collectionId, version, loader, directory, updateExisting),
 })
 
 console.log("Preload script loaded successfully.")

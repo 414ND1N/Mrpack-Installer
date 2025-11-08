@@ -29,7 +29,8 @@
                     "fr": "Francés",
                     "es": "Español",
                     "de": "Alemán",
-                    "zh": "Chino"
+                    "zh": "Chino",
+                    "system": "Predeterminado del Sistema"
                 }
             }
         },

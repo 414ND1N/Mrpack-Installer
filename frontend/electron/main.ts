@@ -9,11 +9,12 @@ import treeKill from 'tree-kill';
 
 const gotTheLock = app.requestSingleInstanceLock();
 let backendProcess: ChildProcess | null = null;
+
 const getBackendPath = (): string => {
   if (app.isPackaged) {
-    return path.join(process.resourcesPath, 'backend', 'backend.exe');
+    return path.join(process.resourcesPath, 'backend', 'backend-mrpack-installer.exe');
   }
-  return path.join(__dirname, '..', 'backend', 'backend.exe');
+  return path.join(__dirname, '..', 'backend', 'backend-mrpack-installer.exe');
 };
 
 function startBackend() {
@@ -54,11 +55,6 @@ function startBackend() {
 }
 
 function stopBackend() {
-  // if (backendProcess) {
-  //   console.log('Cerrando el proceso del backend...');
-  //   backendProcess.kill();
-  //   backendProcess = null;
-  // }
   if (backendProcess && backendProcess.pid) {
     console.log('Cerrando el proceso del backend...');
     try {
@@ -271,6 +267,10 @@ function setupIpcEvents() {
     }
     const locale = app.getLocale() || 'en'
     return String(locale).split(/[-_]/)[0]
+  })
+
+  ipcMain.handle('get-system-language', () => {
+    return String( app.getLocale() || 'en').split(/[-_]/)[0]
   })
 
   ipcMain.handle('set-language', (_, lang: string) => {

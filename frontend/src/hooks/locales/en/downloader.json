@@ -1,0 +1,42 @@
+{
+    "header": {
+        "title": "Downloader",
+        "subtitle": "Download Modpacks"
+    },
+    "sections": {
+        "collection": {
+            "title": "Collections",
+            "subtitle": "Download a Modrinth collection by ID and configure how to install it.",
+            "process": {
+                "starting": "Starting collection download...",
+                "finished": "Collection download finished",
+                "error": "Error downloading collection",
+                "downloading": "Downloading...",
+                "download_completed_with_errors": "Download completed with errors",
+                "download_successful": "Download successful",
+                "mods_downloaded": "Mods downloaded",
+                "mods_not_found": "Mods not found",
+                "downloaded": "downloaded"
+            },
+            "download_button": "Download collection",
+            "fields": {
+                "collectionId": "Collection ID",
+                "collectionIdPlaceholder": "ej. y3Aq8bK",
+                "version": "Minecraft version",
+                "versionPlaceholder": "ej. 1.20.4",
+                "loader": "Loader",
+                "directory": "Destination directory",
+                "directoryPlaceholder": "ej. mods",
+                "update": "Update existing mods",
+                "browse_title": "Select destination directory",
+                "browse_description": "Choose the folder where you want to download the collection mods",
+                "incomplete_fields": "Please complete all fields before downloading the collection."
+            },
+            "messages": {
+                "invalid_collection_id": "Invalid collection ID.",
+                "invalid_version": "Invalid Minecraft version.",
+                "invalid_directory": "Invalid destination directory."
+            }
+        }
+    }
+}

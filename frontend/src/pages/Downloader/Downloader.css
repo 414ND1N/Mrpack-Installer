@@ -1,0 +1,55 @@
+.collection-container p, 
+.collection-container h1,
+.collection-container h2,
+.collection-container h3,
+.collection-container {
+  font-family: var(--secondary-font);
+  font-size: var(--step-0);
+  letter-spacing: 0.02em;
+  cursor: default;
+}
+
+.collection-container .header p{
+  margin: 0 0 1em 0;
+}
+
+.collection-container .content{
+  display: flex;
+  flex-direction: column;
+  gap: 2rem !important;
+}
+
+.collection-container .field{
+  display: flex;
+  flex-direction: column;
+}
+
+.collection-container .row{
+  display: flex;
+  gap: 1em;
+}
+
+.collection-container .row .field{
+  flex: 1 1 0;
+}
+
+.collection-container .field .mc-button{
+  align-self: flex-start;
+}
+
+/* Responsive */
+@media (max-width: 860px){
+  .collection-container .row{
+    flex-direction: column;
+  }
+}
+
+/* Small tweaks for the Ask button spacing */
+.collection-container .field > div{
+  display: flex;
+  align-items: center;
+}
+
+.collection-container .field > div .mc-input{
+  flex: 1 1 auto;
+}

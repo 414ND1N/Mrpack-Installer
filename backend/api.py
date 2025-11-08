@@ -1,4 +1,5 @@
 from typing import Any
+from pydantic import BaseModel
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -203,6 +204,42 @@ async def get_minecraft_directory() -> str:
         return await Mc.getMinecraftDirectory()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error getting Minecraft directory: {e}")
+
+
+class CollectionDownloadRequest(BaseModel):
+    collection_id: str
+    version: str | None = None
+    loader: str | None = None
+    directory: str | None = "mods"
+    update: bool | None = False
+    log: bool | None = True
+@app.post("/modrinth/collection/download", summary="Download Modrinth collection and save mods to disk")
+async def download_modrinth_collection(payload: CollectionDownloadRequest) -> Any:
+    collection_id = payload.collection_id
+    version = payload.version or ""
+    loader = payload.loader or ""
+    directory = payload.directory or "mods"
+    update_existing = bool(payload.update)
+    log = bool(payload.log)
+
+    try:
+        # Ensure download directory exists
+        os.makedirs(directory, exist_ok=True)
+
+        # Run blocking download in a thread pool
+        result = await asyncio.to_thread(
+            Mr.DownloadCollectionMods,
+            collection_id,
+            version,
+            loader,
+            directory,
+            update_existing,
+            log
+        )
+
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error downloading Modrinth collection: {e}")
 
 if __name__ == "__main__":
     # Guard for local development. Use uvicorn from command line as recommended in README.

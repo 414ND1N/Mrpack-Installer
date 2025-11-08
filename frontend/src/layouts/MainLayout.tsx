@@ -7,9 +7,7 @@ const MainLayout = () => {
   return (
     <main className="main-container">
       <Sidebar current_path={location.pathname} />
-      <section className="content-area">
-        <Outlet />
-      </section>
+      <Outlet />
     </main>
   )
 }

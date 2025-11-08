@@ -9,6 +9,7 @@ import HomeIcon from '@/icons/home.svg'
 import CraftingIcon from '@/icons/crafting_icon.png'
 import AnvilIcon from '@/icons/anvil_icon.png'
 import TuneIcon from '@/icons/tune.svg'
+import EmeraldIcon from '@/icons/emerald_block.png'
 
 // Types
 import { SidebarLink  } from "@/interfaces/Sidebar";
@@ -22,8 +23,6 @@ function Sidebar({ current_path = "/" }: { current_path?: string }) {
         // Obtener la versión de la aplicación al cargar el componente
         const getVersion = async () => {
             const appVersion = await (window as any).winConfig?.getVersion()
-            console.log("win config:", (window as any).winConfig)
-            console.log("App version:", appVersion)
             setVersion(appVersion)
         }
         getVersion()
@@ -45,6 +44,11 @@ function Sidebar({ current_path = "/" }: { current_path?: string }) {
             title: t('sidebar.views.install.title'),
             subtitle: t('sidebar.views.install.subtitle'),
             icon: AnvilIcon,
+        }
+        ,"/Download": {
+            title: t('sidebar.views.download.title'),
+            subtitle: t('sidebar.views.download.subtitle'),
+            icon: EmeraldIcon,
         }
         ,"/Settings": {
             title: t('sidebar.views.settings.title'),

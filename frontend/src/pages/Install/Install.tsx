@@ -111,6 +111,26 @@ function Install() {
         }
     }
 
+    const OpenFolder = async () => {
+        try {
+            const result = await (window as any).winConfig.ShowOpenDialog({
+                defaultPath: minecraft_dir,
+                title: t('sections.file.configuration.advanced.path.browse_title'),
+                properties: ['openDirectory'],
+                createDirectory: true,
+                promptToCreate: true,
+                message: t('sections.file.configuration.advanced.path.browse_description')
+            })
+            if (!result || result.canceled) return
+            const selected = result.filePaths && result.filePaths[0]
+            if (selected) {
+                setInstallationConfig(prev => ({ ...prev, installation_directory: selected }))
+            }
+        } catch (error) {
+            console.error("Error opening folder:", error)
+        }
+    }
+
     const StartInstallation = async () => {
         if (!mrpackInfo) {
             showMessage(t('sections.file.messages.error.no_file_selected'), { showClose: true })
@@ -289,23 +309,9 @@ function Install() {
                                 <MCButton
                                     variant="ghost"
                                     className="path_search"
-                                    onClick={async () => {
-                                        const result = await (window as any).winConfig.ShowOpenDialog({
-                                            defaultPath: minecraft_dir,
-                                            title: t('sections.file.configuration.advanced.path.browse_title'),
-                                            properties: ['openDirectory'],
-                                            createDirectory: true,
-                                            promptToCreate: true,
-                                            message: t('sections.file.configuration.advanced.path.browse_description')
-                                        })
-                                        if (!result || result.canceled) return
-                                        const selected = result.filePaths && result.filePaths[0]
-                                        if (selected) {
-                                            setInstallationConfig(prev => ({ ...prev, installation_directory: selected }))
-                                        }
-                                    }}
+                                    onClick={OpenFolder}
                                 >
-                                    {t('sections.file.configuration.advanced.path.browse')}
+                                    {t('actions.browse', {ns: 'commons'})}
                                 </MCButton>
                             </div>
 
@@ -449,7 +455,7 @@ function Install() {
                         <div className="installation-button">
                             <Dialog>
                                 <DialogTrigger>
-                                    <MCButton disabled={installationConfig.mrpack_path == "" } className="install">
+                                    <MCButton disabled={installationConfig.mrpack_path == ""} className="install">
                                         {t('sections.file.configuration.install.button')}
                                     </MCButton>
                                 </DialogTrigger>

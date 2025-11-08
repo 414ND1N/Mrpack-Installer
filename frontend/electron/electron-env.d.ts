@@ -1,6 +1,7 @@
 /// <reference types="vite-plugin-electron/electron-env" />
 
 import { ipcRenderer, contextBridge } from 'electron'
+import { CollectionInfo } from '@/interfaces/modrinth/Collection'
 
 declare namespace NodeJS {
   interface ProcessEnv {
@@ -23,6 +24,7 @@ interface Window {
     getSystemTheme: () => Promise<string>;
     getFullscreen: () => Promise<boolean>;
     getLanguage: () => Promise<string>;
+    getSystemLanguage: () => Promise<string>;
     setTheme: (theme: string) => Promise<void>;
     setFullscreen: (fullscreen: boolean) => Promise<void>;
     updateApp: () => Promise<void>;
@@ -45,5 +47,12 @@ interface Window {
       cbFinish?: (status: string) => void,
       cbError?: (status: string) => void
     ) => Promise<void>;
+    DownloadCollection: (
+      collectionId: string,
+      version: string,
+      loader: string,
+      directory: string,
+      updateExisting: boolean
+    ) => Promise<CollectionInfo>;
   }
 }
