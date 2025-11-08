@@ -5,7 +5,7 @@
     },
     "sections": {
         "file": {
-            "title": "File",
+            "title": "Mrpack File",
             "subtitle": "Select the mrpack file you want to install",
             "information": {
                 "summary": {
@@ -49,7 +49,6 @@
                         "label": "Installation path for modpack files",
                         "placeholder": "Installation path",
                         "description": "Specify the path where the modpack will be installed",
-                        "browse": "Browse",
                         "browse_title": "Select installation directory",
                         "browse_description": "Choose the folder where you want to install the modpack files"
                     },

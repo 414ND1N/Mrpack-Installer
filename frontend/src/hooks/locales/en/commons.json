@@ -7,7 +7,13 @@
         "open": "Open",
         "accept": "Accept",
         "reject": "Reject",
-        "update": "Update"
+        "update": "Update",
+        "browse": "Browse"
+    },
+    "errors": {
+        "header": "An error has occurred",
+        "unknown": "An unknown error has occurred.",
+        "network": "A network error has occurred. Please check your internet connection and try again."
     },
     "file": {
         "placeholder": "Import file",

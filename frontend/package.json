@@ -3,10 +3,10 @@
   "private": true,
   "description": "Instalador de modpacks (modrinth) para Minecraft",
   "author": "ALANDLN",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "type": "module",
   "scripts": {
-    "predev": "taskkill /F /IM backend.exe || echo 'No backend process to kill'",
+    "predev": "taskkill /F /IM backend-mrpack-installer.exe || echo 'No backend process to kill'",
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
     "build_notsc": "vite build && electron-builder",
@@ -24,7 +24,6 @@
     "files": [
       "dist/**/*",
       "dist-electron/**/*",
-      "node_modules/**/*",
       "package.json"
     ],
     "directories": {
@@ -62,14 +61,11 @@
     "electron-updater": "^6.6.2",
     "i18next": "^25.3.2",
     "i18next-resources-to-backend": "^1.2.1",
-    "prompt": "^1.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^15.6.0",
     "react-router-dom": "^7.6.1",
-    "semver": "^7.7.2",
     "tree-kill": "^1.2.2",
-    "tslib": "^2.8.1",
     "vite-tsconfig-paths": "^5.1.4"
   },
   "devDependencies": {

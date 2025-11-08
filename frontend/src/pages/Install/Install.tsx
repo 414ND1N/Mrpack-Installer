@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import "./Install.css"
 
 // Componentes
-import Sidebar from "@/pages/Sidebar"
+// Sidebar ahora se monta globalmente desde el layout
 import SectionsMinecraftComponent from "@/components/SectionsMinecraft/SectionsMinecraft"
 import FileSelector from "@/components/FileSelector/FileSelector"
 import { MrpackMetadata } from "@/interfaces/modrinth/MrPack"
@@ -108,6 +108,26 @@ function Install() {
                 mrpack_path: ""
             }))
             setMrpackInfo(null)
+        }
+    }
+
+    const OpenFolder = async () => {
+        try {
+            const result = await (window as any).winConfig.ShowOpenDialog({
+                defaultPath: minecraft_dir,
+                title: t('sections.file.configuration.advanced.path.browse_title'),
+                properties: ['openDirectory'],
+                createDirectory: true,
+                promptToCreate: true,
+                message: t('sections.file.configuration.advanced.path.browse_description')
+            })
+            if (!result || result.canceled) return
+            const selected = result.filePaths && result.filePaths[0]
+            if (selected) {
+                setInstallationConfig(prev => ({ ...prev, installation_directory: selected }))
+            }
+        } catch (error) {
+            console.error("Error opening folder:", error)
         }
     }
 
@@ -289,23 +309,9 @@ function Install() {
                                 <MCButton
                                     variant="ghost"
                                     className="path_search"
-                                    onClick={async () => {
-                                        const result = await (window as any).winConfig.ShowOpenDialog({
-                                            defaultPath: minecraft_dir,
-                                            title: t('sections.file.configuration.advanced.path.browse_title'),
-                                            properties: ['openDirectory'],
-                                            createDirectory: true,
-                                            promptToCreate: true,
-                                            message: t('sections.file.configuration.advanced.path.browse_description')
-                                        })
-                                        if (!result || result.canceled) return
-                                        const selected = result.filePaths && result.filePaths[0]
-                                        if (selected) {
-                                            setInstallationConfig(prev => ({ ...prev, installation_directory: selected }))
-                                        }
-                                    }}
+                                    onClick={OpenFolder}
                                 >
-                                    {t('sections.file.configuration.advanced.path.browse')}
+                                    {t('actions.browse', {ns: 'commons'})}
                                 </MCButton>
                             </div>
 
@@ -449,7 +455,7 @@ function Install() {
                         <div className="installation-button">
                             <Dialog>
                                 <DialogTrigger>
-                                    <MCButton disabled={installationConfig.mrpack_path == "" } className="install">
+                                    <MCButton disabled={installationConfig.mrpack_path == ""} className="install">
                                         {t('sections.file.configuration.install.button')}
                                     </MCButton>
                                 </DialogTrigger>
@@ -487,23 +493,20 @@ function Install() {
     )
 
     return (
-        <main className="main-container">
-            <Sidebar current_path="/Install" />
-            <section className="install-container">
-                <SectionsMinecraftComponent
-                    title={t('header.title')}
-                    sections={
-                        [
-                            {
-                                id: "from-file",
-                                title: t('sections.file.title'),
-                                content: sectionFromFile
-                            }
-                        ]
-                    }
-                />
-            </section>
-        </main>
+        <section className="install-container">
+            <SectionsMinecraftComponent
+                title={t('header.title')}
+                sections={
+                    [
+                        {
+                            id: "from-file",
+                            title: t('sections.file.title'),
+                            content: sectionFromFile
+                        }
+                    ]
+                }
+            />
+        </section>
     )
 
 }

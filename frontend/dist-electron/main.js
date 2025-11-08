@@ -1,4 +1,4 @@
-import Kt, { app as dt, BrowserWindow as Du, ipcMain as Tt, dialog as $c, Menu as hg, nativeTheme as Un } from "electron";
+import Kt, { app as lt, BrowserWindow as Du, ipcMain as wt, dialog as $c, Menu as hg, nativeTheme as Un } from "electron";
 import Ye from "node:process";
 import Ie from "node:path";
 import { promisify as nt, isDeepStrictEqual as pg } from "node:util";
@@ -1743,7 +1743,7 @@ function zg() {
   }
   return Xr;
 }
-var Pt = {}, Le = {}, jc;
+var Rt = {}, Le = {}, jc;
 function It() {
   if (jc) return Le;
   jc = 1, Object.defineProperty(Le, "__esModule", { value: !0 }), Le.validateUnion = Le.validateArray = Le.usePattern = Le.callValidateCode = Le.schemaProperties = Le.allSchemaProperties = Le.noPropertyInData = Le.propertyInData = Le.isOwnProperty = Le.hasPropFunc = Le.reportMissingProp = Le.checkMissingProp = Le.checkReportMissingProp = void 0;
@@ -1854,8 +1854,8 @@ function It() {
 }
 var Uc;
 function Kg() {
-  if (Uc) return Pt;
-  Uc = 1, Object.defineProperty(Pt, "__esModule", { value: !0 }), Pt.validateKeywordUsage = Pt.validSchemaType = Pt.funcKeywordCode = Pt.macroKeywordCode = void 0;
+  if (Uc) return Rt;
+  Uc = 1, Object.defineProperty(Rt, "__esModule", { value: !0 }), Rt.validateKeywordUsage = Rt.validSchemaType = Rt.funcKeywordCode = Rt.macroKeywordCode = void 0;
   const e = Re(), t = Ct(), u = It(), a = Va();
   function d(h, y) {
     const { gen: $, keyword: v, schema: f, parentSchema: m, it: l } = h, g = y.macro.call(l.self, f, m, l), b = c($, v, g);
@@ -1869,7 +1869,7 @@ function Kg() {
       compositeRule: !0
     }, S), h.pass(S, () => h.error(!0));
   }
-  Pt.macroKeywordCode = d;
+  Rt.macroKeywordCode = d;
   function r(h, y) {
     var $;
     const { gen: v, keyword: f, schema: m, parentSchema: l, $data: g, it: b } = h;
@@ -1901,7 +1901,7 @@ function Kg() {
       v.if((0, e.not)((U = y.valid) !== null && U !== void 0 ? U : w), V);
     }
   }
-  Pt.funcKeywordCode = r;
+  Rt.funcKeywordCode = r;
   function n(h) {
     const { gen: y, data: $, it: v } = h;
     y.if(v.parentData, () => y.assign($, (0, e._)`${v.parentData}[${v.parentDataProperty}]`));
@@ -1924,7 +1924,7 @@ function Kg() {
   function o(h, y, $ = !1) {
     return !y.length || y.some((v) => v === "array" ? Array.isArray(h) : v === "object" ? h && typeof h == "object" && !Array.isArray(h) : typeof h == v || $ && typeof h > "u");
   }
-  Pt.validSchemaType = o;
+  Rt.validSchemaType = o;
   function p({ schema: h, opts: y, self: $, errSchemaPath: v }, f, m) {
     if (Array.isArray(f.keyword) ? !f.keyword.includes(m) : f.keyword !== m)
       throw new Error("ajv implementation error");
@@ -1939,7 +1939,7 @@ function Kg() {
         throw new Error(b);
     }
   }
-  return Pt.validateKeywordUsage = p, Pt;
+  return Rt.validateKeywordUsage = p, Rt;
 }
 var Vt = {}, Lc;
 function Wg() {
@@ -6609,7 +6609,7 @@ function g_() {
   }
   return en;
 }
-var Rt = {}, Me = {}, df;
+var Tt = {}, Me = {}, df;
 function Dt() {
   if (df) return Me;
   df = 1, Object.defineProperty(Me, "__esModule", { value: !0 }), Me.validateUnion = Me.validateArray = Me.usePattern = Me.callValidateCode = Me.schemaProperties = Me.allSchemaProperties = Me.noPropertyInData = Me.propertyInData = Me.isOwnProperty = Me.hasPropFunc = Me.reportMissingProp = Me.checkMissingProp = Me.checkReportMissingProp = void 0;
@@ -6720,8 +6720,8 @@ function Dt() {
 }
 var hf;
 function v_() {
-  if (hf) return Rt;
-  hf = 1, Object.defineProperty(Rt, "__esModule", { value: !0 }), Rt.validateKeywordUsage = Rt.validSchemaType = Rt.funcKeywordCode = Rt.macroKeywordCode = void 0;
+  if (hf) return Tt;
+  hf = 1, Object.defineProperty(Tt, "__esModule", { value: !0 }), Tt.validateKeywordUsage = Tt.validSchemaType = Tt.funcKeywordCode = Tt.macroKeywordCode = void 0;
   const e = De(), t = or(), u = Dt(), a = Wa();
   function d(h, y) {
     const { gen: $, keyword: v, schema: f, parentSchema: m, it: l } = h, g = y.macro.call(l.self, f, m, l), b = c($, v, g);
@@ -6735,7 +6735,7 @@ function v_() {
       compositeRule: !0
     }, S), h.pass(S, () => h.error(!0));
   }
-  Rt.macroKeywordCode = d;
+  Tt.macroKeywordCode = d;
   function r(h, y) {
     var $;
     const { gen: v, keyword: f, schema: m, parentSchema: l, $data: g, it: b } = h;
@@ -6767,7 +6767,7 @@ function v_() {
       v.if((0, e.not)((U = y.valid) !== null && U !== void 0 ? U : w), V);
     }
   }
-  Rt.funcKeywordCode = r;
+  Tt.funcKeywordCode = r;
   function n(h) {
     const { gen: y, data: $, it: v } = h;
     y.if(v.parentData, () => y.assign($, (0, e._)`${v.parentData}[${v.parentDataProperty}]`));
@@ -6790,7 +6790,7 @@ function v_() {
   function o(h, y, $ = !1) {
     return !y.length || y.some((v) => v === "array" ? Array.isArray(h) : v === "object" ? h && typeof h == "object" && !Array.isArray(h) : typeof h == v || $ && typeof h > "u");
   }
-  Rt.validSchemaType = o;
+  Tt.validSchemaType = o;
   function p({ schema: h, opts: y, self: $, errSchemaPath: v }, f, m) {
     if (Array.isArray(f.keyword) ? !f.keyword.includes(m) : f.keyword !== m)
       throw new Error("ajv implementation error");
@@ -6805,7 +6805,7 @@ function v_() {
         throw new Error(b);
     }
   }
-  return Rt.validateKeywordUsage = p, Rt;
+  return Tt.validateKeywordUsage = p, Tt;
 }
 var Gt = {}, pf;
 function __() {
@@ -9509,7 +9509,7 @@ function Mm() {
   }, Do;
 }
 var ko, gd;
-function lt() {
+function ft() {
   if (gd) return ko;
   gd = 1;
   const e = Za(), { MAX_LENGTH: t, MAX_SAFE_INTEGER: u } = Qa(), { safeRe: a, t: d } = An(), r = zu(), { compareIdentifiers: n } = Mm();
@@ -9673,7 +9673,7 @@ var qo, vd;
 function Hr() {
   if (vd) return qo;
   vd = 1;
-  const e = lt();
+  const e = ft();
   return qo = (u, a, d = !1) => {
     if (u instanceof e)
       return u;
@@ -9710,7 +9710,7 @@ var Uo, wd;
 function D$() {
   if (wd) return Uo;
   wd = 1;
-  const e = lt();
+  const e = ft();
   return Uo = (u, a, d, r, n) => {
     typeof d == "string" && (n = r, r = d, d = void 0);
     try {
@@ -9747,21 +9747,21 @@ var Mo, bd;
 function q$() {
   if (bd) return Mo;
   bd = 1;
-  const e = lt();
+  const e = ft();
   return Mo = (u, a) => new e(u, a).major, Mo;
 }
 var xo, Sd;
 function F$() {
   if (Sd) return xo;
   Sd = 1;
-  const e = lt();
+  const e = ft();
   return xo = (u, a) => new e(u, a).minor, xo;
 }
 var Vo, Pd;
 function j$() {
   if (Pd) return Vo;
   Pd = 1;
-  const e = lt();
+  const e = ft();
   return Vo = (u, a) => new e(u, a).patch, Vo;
 }
 var Bo, Rd;
@@ -9778,7 +9778,7 @@ var Ho, Td;
 function kt() {
   if (Td) return Ho;
   Td = 1;
-  const e = lt();
+  const e = ft();
   return Ho = (u, a, d) => new e(u, d).compare(new e(a, d)), Ho;
 }
 var Go, Od;
@@ -9799,7 +9799,7 @@ var Ko, Nd;
 function Ku() {
   if (Nd) return Ko;
   Nd = 1;
-  const e = lt();
+  const e = ft();
   return Ko = (u, a, d) => {
     const r = new e(u, d), n = new e(a, d);
     return r.compare(n) || r.compareBuild(n);
@@ -9895,7 +9895,7 @@ var ns, Md;
 function B$() {
   if (Md) return ns;
   Md = 1;
-  const e = lt(), t = Hr(), { safeRe: u, t: a } = An();
+  const e = ft(), t = Hr(), { safeRe: u, t: a } = An();
   return ns = (r, n) => {
     if (r instanceof e)
       return r;
@@ -10032,7 +10032,7 @@ function qt() {
     }
   }
   as = t;
-  const u = H$(), a = new u(), d = zu(), r = to(), n = Za(), s = lt(), {
+  const u = H$(), a = new u(), d = zu(), r = to(), n = Za(), s = ft(), {
     safeRe: i,
     t: c,
     comparatorTrimReplace: o,
@@ -10129,7 +10129,7 @@ function to() {
     }
   }
   os = t;
-  const u = zu(), { safeRe: a, t: d } = An(), r = Bm(), n = Za(), s = lt(), i = qt();
+  const u = zu(), { safeRe: a, t: d } = An(), r = Bm(), n = Za(), s = ft(), i = qt();
   return os;
 }
 var ss, Hd;
@@ -10157,7 +10157,7 @@ var cs, zd;
 function z$() {
   if (zd) return cs;
   zd = 1;
-  const e = lt(), t = qt();
+  const e = ft(), t = qt();
   return cs = (a, d, r) => {
     let n = null, s = null, i = null;
     try {
@@ -10174,7 +10174,7 @@ var ls, Kd;
 function K$() {
   if (Kd) return ls;
   Kd = 1;
-  const e = lt(), t = qt();
+  const e = ft(), t = qt();
   return ls = (a, d, r) => {
     let n = null, s = null, i = null;
     try {
@@ -10191,7 +10191,7 @@ var fs, Wd;
 function W$() {
   if (Wd) return fs;
   Wd = 1;
-  const e = lt(), t = qt(), u = eo();
+  const e = ft(), t = qt(), u = eo();
   return fs = (d, r) => {
     d = new t(d, r);
     let n = new e("0.0.0");
@@ -10240,7 +10240,7 @@ var hs, Jd;
 function Xu() {
   if (Jd) return hs;
   Jd = 1;
-  const e = lt(), t = to(), { ANY: u } = t, a = qt(), d = ro(), r = eo(), n = Wu(), s = Ju(), i = Yu();
+  const e = ft(), t = to(), { ANY: u } = t, a = qt(), d = ro(), r = eo(), n = Wu(), s = Ju(), i = Yu();
   return hs = (o, p, h, y) => {
     o = new e(o, y), p = new a(p, y);
     let $, v, f, m, l;
@@ -10400,7 +10400,7 @@ var _s, rh;
 function Qu() {
   if (rh) return _s;
   rh = 1;
-  const e = An(), t = Qa(), u = lt(), a = Mm(), d = Hr(), r = C$(), n = I$(), s = D$(), i = k$(), c = q$(), o = F$(), p = j$(), h = U$(), y = kt(), $ = L$(), v = M$(), f = Ku(), m = x$(), l = V$(), g = eo(), b = Wu(), S = xm(), _ = Vm(), w = Yu(), R = Ju(), T = Bm(), M = B$(), F = to(), j = qt(), V = ro(), U = G$(), z = z$(), W = K$(), Q = W$(), ee = Y$(), ne = Xu(), K = J$(), I = X$(), G = Q$(), D = Z$(), P = ew();
+  const e = An(), t = Qa(), u = ft(), a = Mm(), d = Hr(), r = C$(), n = I$(), s = D$(), i = k$(), c = q$(), o = F$(), p = j$(), h = U$(), y = kt(), $ = L$(), v = M$(), f = Ku(), m = x$(), l = V$(), g = eo(), b = Wu(), S = xm(), _ = Vm(), w = Yu(), R = Ju(), T = Bm(), M = B$(), F = to(), j = qt(), V = ro(), U = G$(), z = z$(), W = K$(), Q = W$(), ee = Y$(), ne = Xu(), K = J$(), I = X$(), G = Q$(), D = Z$(), P = ew();
   return _s = {
     parse: d,
     valid: r,
@@ -14779,7 +14779,7 @@ function eE() {
   return su = a, su;
 }
 var uu, dp;
-function ft() {
+function dt() {
   if (dp) return uu;
   dp = 1;
   var e = Cn(), t = [
@@ -14823,7 +14823,7 @@ var cu, hp;
 function Ym() {
   if (hp) return cu;
   hp = 1;
-  var e = Cn(), t = ft();
+  var e = Cn(), t = dt();
   function u(r, n) {
     var s = [];
     return r[n].forEach(function(i) {
@@ -14885,7 +14885,7 @@ var lu, pp;
 function Jm() {
   if (pp) return lu;
   pp = 1;
-  var e = ft();
+  var e = dt();
   return lu = new e("tag:yaml.org,2002:str", {
     kind: "scalar",
     construct: function(t) {
@@ -14897,7 +14897,7 @@ var fu, mp;
 function Xm() {
   if (mp) return fu;
   mp = 1;
-  var e = ft();
+  var e = dt();
   return fu = new e("tag:yaml.org,2002:seq", {
     kind: "sequence",
     construct: function(t) {
@@ -14909,7 +14909,7 @@ var du, yp;
 function Qm() {
   if (yp) return du;
   yp = 1;
-  var e = ft();
+  var e = dt();
   return du = new e("tag:yaml.org,2002:map", {
     kind: "mapping",
     construct: function(t) {
@@ -14934,7 +14934,7 @@ var pu, vp;
 function ey() {
   if (vp) return pu;
   vp = 1;
-  var e = ft();
+  var e = dt();
   function t(d) {
     if (d === null) return !0;
     var r = d.length;
@@ -14975,7 +14975,7 @@ var mu, _p;
 function ty() {
   if (_p) return mu;
   _p = 1;
-  var e = ft();
+  var e = dt();
   function t(d) {
     if (d === null) return !1;
     var r = d.length;
@@ -15010,7 +15010,7 @@ var yu, $p;
 function ry() {
   if ($p) return yu;
   $p = 1;
-  var e = Nn(), t = ft();
+  var e = Nn(), t = dt();
   function u(i) {
     return 48 <= i && i <= 57 || 65 <= i && i <= 70 || 97 <= i && i <= 102;
   }
@@ -15106,7 +15106,7 @@ var gu, wp;
 function ny() {
   if (wp) return gu;
   wp = 1;
-  var e = Nn(), t = ft(), u = new RegExp(
+  var e = Nn(), t = dt(), u = new RegExp(
     // 2.5e4, 2.5 and integers
     "^(?:[-+]?(?:[0-9][0-9_]*)(?:\\.[0-9_]*)?(?:[eE][-+]?[0-9]+)?|\\.[0-9_]+(?:[eE][-+]?[0-9]+)?|[-+]?\\.(?:inf|Inf|INF)|\\.(?:nan|NaN|NAN))$"
   );
@@ -15184,7 +15184,7 @@ var $u, Sp;
 function oy() {
   if (Sp) return $u;
   Sp = 1;
-  var e = ft(), t = new RegExp(
+  var e = dt(), t = new RegExp(
     "^([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-9][0-9])$"
   ), u = new RegExp(
     "^([0-9][0-9][0-9][0-9])-([0-9][0-9]?)-([0-9][0-9]?)(?:[Tt]|[ \\t]+)([0-9][0-9]?):([0-9][0-9]):([0-9][0-9])(?:\\.([0-9]*))?(?:[ \\t]*(Z|([-+])([0-9][0-9]?)(?::([0-9][0-9]))?))?$"
@@ -15219,7 +15219,7 @@ var wu, Pp;
 function sy() {
   if (Pp) return wu;
   Pp = 1;
-  var e = ft();
+  var e = dt();
   function t(u) {
     return u === "<<" || u === null;
   }
@@ -15232,7 +15232,7 @@ var Eu, Rp;
 function uy() {
   if (Rp) return Eu;
   Rp = 1;
-  var e = ft(), t = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=
+  var e = dt(), t = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=
 \r`;
   function u(n) {
     if (n === null) return !1;
@@ -15271,7 +15271,7 @@ var bu, Tp;
 function cy() {
   if (Tp) return bu;
   Tp = 1;
-  var e = ft(), t = Object.prototype.hasOwnProperty, u = Object.prototype.toString;
+  var e = dt(), t = Object.prototype.hasOwnProperty, u = Object.prototype.toString;
   function a(r) {
     if (r === null) return !0;
     var n = [], s, i, c, o, p, h = r;
@@ -15300,7 +15300,7 @@ var Su, Op;
 function ly() {
   if (Op) return Su;
   Op = 1;
-  var e = ft(), t = Object.prototype.toString;
+  var e = dt(), t = Object.prototype.toString;
   function u(d) {
     if (d === null) return !0;
     var r, n, s, i, c, o = d;
@@ -15327,7 +15327,7 @@ var Pu, Ap;
 function fy() {
   if (Ap) return Pu;
   Ap = 1;
-  var e = ft(), t = Object.prototype.hasOwnProperty;
+  var e = dt(), t = Object.prototype.hasOwnProperty;
   function u(d) {
     if (d === null) return !0;
     var r, n = d;
@@ -15890,7 +15890,7 @@ function rE() {
   }
   var H = 1, Y = 2, Z = 3, le = 4, ve = 5;
   function Te(q, ie, ue, oe, fe, he, _e, ye) {
-    var Ee, Se = 0, xe = null, ze = !1, Ue = !1, Or = oe !== -1, bt = -1, ur = J(C(q, 0)) && B(C(q, q.length - 1));
+    var Ee, Se = 0, xe = null, ze = !1, Ue = !1, Or = oe !== -1, St = -1, ur = J(C(q, 0)) && B(C(q, q.length - 1));
     if (ie || _e)
       for (Ee = 0; Ee < q.length; Se >= 65536 ? Ee += 2 : Ee++) {
         if (Se = C(q, Ee), !L(Se))
@@ -15901,12 +15901,12 @@ function rE() {
       for (Ee = 0; Ee < q.length; Se >= 65536 ? Ee += 2 : Ee++) {
         if (Se = C(q, Ee), Se === s)
           ze = !0, Or && (Ue = Ue || // Foldable line = too long, and not more-indented.
-          Ee - bt - 1 > oe && q[bt + 1] !== " ", bt = Ee);
+          Ee - St - 1 > oe && q[St + 1] !== " ", St = Ee);
         else if (!L(Se))
           return ve;
         ur = ur && A(Se, xe, ye), xe = Se;
       }
-      Ue = Ue || Or && Ee - bt - 1 > oe && q[bt + 1] !== " ";
+      Ue = Ue || Or && Ee - St - 1 > oe && q[St + 1] !== " ";
     }
     return !ze && !Ue ? ur && !_e && !fe(q) ? H : he === K ? ve : Y : ue > 9 && k(q) ? ve : _e ? he === K ? ve : Y : Ue ? le : Z;
   }
@@ -16095,7 +16095,7 @@ function ic() {
       throw new Error("Function yaml." + a + " is removed in js-yaml 4. Use yaml." + d + " instead, which is now safe by default.");
     };
   }
-  return at.Type = ft(), at.Schema = Ym(), at.FAILSAFE_SCHEMA = Zm(), at.JSON_SCHEMA = iy(), at.CORE_SCHEMA = ay(), at.DEFAULT_SCHEMA = nc(), at.load = e.load, at.loadAll = e.loadAll, at.dump = t.dump, at.YAMLException = Cn(), at.types = {
+  return at.Type = dt(), at.Schema = Ym(), at.FAILSAFE_SCHEMA = Zm(), at.JSON_SCHEMA = iy(), at.CORE_SCHEMA = ay(), at.DEFAULT_SCHEMA = nc(), at.load = e.load, at.loadAll = e.loadAll, at.dump = t.dump, at.YAMLException = Cn(), at.types = {
     binary: uy(),
     float: ny(),
     map: Qm(),
@@ -16203,7 +16203,7 @@ function iE() {
       return x ? "Symbol(src)_1." + x : "";
     }(), $e = ce.toString, We = RegExp(
       "^" + we.call(be).replace(G, "\\$&").replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?") + "$"
-    ), q = C ? A.Buffer : void 0, ie = A.Symbol, ue = A.Uint8Array, oe = ce.propertyIsEnumerable, fe = ae.splice, he = ie ? ie.toStringTag : void 0, _e = Object.getOwnPropertySymbols, ye = q ? q.isBuffer : void 0, Ee = re(Object.keys, Object), Se = Ar(A, "DataView"), xe = Ar(A, "Map"), ze = Ar(A, "Promise"), Ue = Ar(A, "Set"), Or = Ar(A, "WeakMap"), bt = Ar(Object, "create"), ur = fr(Se), $y = fr(xe), wy = fr(ze), Ey = fr(Ue), by = fr(Or), cc = ie ? ie.prototype : void 0, ao = cc ? cc.valueOf : void 0;
+    ), q = C ? A.Buffer : void 0, ie = A.Symbol, ue = A.Uint8Array, oe = ce.propertyIsEnumerable, fe = ae.splice, he = ie ? ie.toStringTag : void 0, _e = Object.getOwnPropertySymbols, ye = q ? q.isBuffer : void 0, Ee = re(Object.keys, Object), Se = Ar(A, "DataView"), xe = Ar(A, "Map"), ze = Ar(A, "Promise"), Ue = Ar(A, "Set"), Or = Ar(A, "WeakMap"), St = Ar(Object, "create"), ur = fr(Se), $y = fr(xe), wy = fr(ze), Ey = fr(Ue), by = fr(Or), cc = ie ? ie.prototype : void 0, ao = cc ? cc.valueOf : void 0;
     function cr(x) {
       var X = -1, se = x == null ? 0 : x.length;
       for (this.clear(); ++X < se; ) {
@@ -16212,7 +16212,7 @@ function iE() {
       }
     }
     function Sy() {
-      this.__data__ = bt ? bt(null) : {}, this.size = 0;
+      this.__data__ = St ? St(null) : {}, this.size = 0;
     }
     function Py(x) {
       var X = this.has(x) && delete this.__data__[x];
@@ -16220,7 +16220,7 @@ function iE() {
     }
     function Ry(x) {
       var X = this.__data__;
-      if (bt) {
+      if (St) {
         var se = X[x];
         return se === a ? void 0 : se;
       }
@@ -16228,11 +16228,11 @@ function iE() {
     }
     function Ty(x) {
       var X = this.__data__;
-      return bt ? X[x] !== void 0 : be.call(X, x);
+      return St ? X[x] !== void 0 : be.call(X, x);
     }
     function Oy(x, X) {
       var se = this.__data__;
-      return this.size += this.has(x) ? 0 : 1, se[x] = bt && X === void 0 ? a : X, this;
+      return this.size += this.has(x) ? 0 : 1, se[x] = St && X === void 0 ? a : X, this;
     }
     cr.prototype.clear = Sy, cr.prototype.delete = Py, cr.prototype.get = Ry, cr.prototype.has = Ty, cr.prototype.set = Oy;
     function jt(x) {
@@ -16365,7 +16365,7 @@ function iE() {
     function Wy(x, X, se, ge, Ve, Pe) {
       var Ke = qn(x), Xe = qn(X), Qe = Ke ? i : Yt(x), He = Xe ? i : Yt(X);
       Qe = Qe == s ? l : Qe, He = He == s ? l : He;
-      var pt = Qe == l, St = He == l, rt = Qe == He;
+      var pt = Qe == l, Pt = He == l, rt = Qe == He;
       if (rt && oo(x)) {
         if (!oo(X))
           return !1;
@@ -16374,7 +16374,7 @@ function iE() {
       if (rt && !pt)
         return Pe || (Pe = new Wt()), Ke || vc(x) ? dc(x, X, se, ge, Ve, Pe) : Qy(x, X, Qe, se, ge, Ve, Pe);
       if (!(se & d)) {
-        var _t = pt && be.call(x, "__wrapped__"), $t = St && be.call(X, "__wrapped__");
+        var _t = pt && be.call(x, "__wrapped__"), $t = Pt && be.call(X, "__wrapped__");
         if (_t || $t) {
           var Jt = _t ? x.value() : x, Ut = $t ? X.value() : X;
           return Pe || (Pe = new Wt()), Ve(Jt, Ut, se, ge, Pe);
@@ -16406,7 +16406,7 @@ function iE() {
       var He = Pe.get(x);
       if (He && Pe.get(X))
         return He == X;
-      var pt = -1, St = !0, rt = se & r ? new In() : void 0;
+      var pt = -1, Pt = !0, rt = se & r ? new In() : void 0;
       for (Pe.set(x, X), Pe.set(X, x); ++pt < Xe; ) {
         var _t = x[pt], $t = X[pt];
         if (ge)
@@ -16414,7 +16414,7 @@ function iE() {
         if (Jt !== void 0) {
           if (Jt)
             continue;
-          St = !1;
+          Pt = !1;
           break;
         }
         if (rt) {
@@ -16422,15 +16422,15 @@ function iE() {
             if (!Ae(rt, dr) && (_t === Ut || Ve(_t, Ut, se, ge, Pe)))
               return rt.push(dr);
           })) {
-            St = !1;
+            Pt = !1;
             break;
           }
         } else if (!(_t === $t || Ve(_t, $t, se, ge, Pe))) {
-          St = !1;
+          Pt = !1;
           break;
         }
       }
-      return Pe.delete(x), Pe.delete(X), St;
+      return Pe.delete(x), Pe.delete(X), Pt;
     }
     function Qy(x, X, se, ge, Ve, Pe, Ke) {
       switch (se) {
@@ -16471,8 +16471,8 @@ function iE() {
       var Ke = se & d, Xe = hc(x), Qe = Xe.length, He = hc(X), pt = He.length;
       if (Qe != pt && !Ke)
         return !1;
-      for (var St = Qe; St--; ) {
-        var rt = Xe[St];
+      for (var Pt = Qe; Pt--; ) {
+        var rt = Xe[Pt];
         if (!(Ke ? rt in X : be.call(X, rt)))
           return !1;
       }
@@ -16481,8 +16481,8 @@ function iE() {
         return _t == X;
       var $t = !0;
       Pe.set(x, X), Pe.set(X, x);
-      for (var Jt = Ke; ++St < Qe; ) {
-        rt = Xe[St];
+      for (var Jt = Ke; ++Pt < Qe; ) {
+        rt = Xe[Pt];
         var Ut = x[rt], dr = X[rt];
         if (ge)
           var _c = Ke ? ge(dr, Ut, rt, X, x, Pe) : ge(Ut, dr, rt, x, X, Pe);
@@ -16868,7 +16868,7 @@ function Rr() {
   return br;
 }
 var zt = {}, Vp;
-function Et() {
+function bt() {
   if (Vp) return zt;
   Vp = 1, Object.defineProperty(zt, "__esModule", { value: !0 }), zt.Provider = void 0, zt.findFile = d, zt.parseUpdateInfo = r, zt.getFileList = n, zt.resolveFiles = s;
   const e = tt(), t = ic(), u = Rr();
@@ -16962,7 +16962,7 @@ var Bp;
 function dy() {
   if (Bp) return cn;
   Bp = 1, Object.defineProperty(cn, "__esModule", { value: !0 }), cn.GenericProvider = void 0;
-  const e = tt(), t = Rr(), u = Et();
+  const e = tt(), t = Rr(), u = bt();
   let a = class extends u.Provider {
     constructor(r, n, s) {
       super(s), this.configuration = r, this.updater = n, this.baseUrl = (0, t.newBaseUrl)(this.configuration.url);
@@ -17002,7 +17002,7 @@ var ln = {}, fn = {}, Hp;
 function lE() {
   if (Hp) return fn;
   Hp = 1, Object.defineProperty(fn, "__esModule", { value: !0 }), fn.BitbucketProvider = void 0;
-  const e = tt(), t = Rr(), u = Et();
+  const e = tt(), t = Rr(), u = bt();
   let a = class extends u.Provider {
     constructor(r, n, s) {
       super({
@@ -17038,7 +17038,7 @@ var nr = {}, Gp;
 function hy() {
   if (Gp) return nr;
   Gp = 1, Object.defineProperty(nr, "__esModule", { value: !0 }), nr.GitHubProvider = nr.BaseGitHubProvider = void 0, nr.computeReleaseNotes = c;
-  const e = tt(), t = Qu(), u = Br, a = Rr(), d = Et(), r = /\/tag\/([^/]+)$/;
+  const e = tt(), t = Qu(), u = Br, a = Rr(), d = bt(), r = /\/tag\/([^/]+)$/;
   class n extends d.Provider {
     constructor(p, h, y) {
       super({
@@ -17172,7 +17172,7 @@ var dn = {}, zp;
 function fE() {
   if (zp) return dn;
   zp = 1, Object.defineProperty(dn, "__esModule", { value: !0 }), dn.KeygenProvider = void 0;
-  const e = tt(), t = Rr(), u = Et();
+  const e = tt(), t = Rr(), u = bt();
   let a = class extends u.Provider {
     constructor(r, n, s) {
       super({
@@ -17211,7 +17211,7 @@ var hn = {}, Kp;
 function dE() {
   if (Kp) return hn;
   Kp = 1, Object.defineProperty(hn, "__esModule", { value: !0 }), hn.PrivateGitHubProvider = void 0;
-  const e = tt(), t = ic(), u = Ge, a = Br, d = Rr(), r = hy(), n = Et();
+  const e = tt(), t = ic(), u = Ge, a = Br, d = Rr(), r = hy(), n = bt();
   let s = class extends r.BaseGitHubProvider {
     constructor(c, o, p, h) {
       super(c, "api.github.com", h), this.updater = o, this.token = p;
@@ -18390,7 +18390,7 @@ var am;
 function om() {
   if (am) return vn;
   am = 1, Object.defineProperty(vn, "__esModule", { value: !0 }), vn.AppImageUpdater = void 0;
-  const e = tt(), t = Tn, u = /* @__PURE__ */ sr(), a = ar, d = Ge, r = Kr(), n = gy(), s = Et(), i = Tr();
+  const e = tt(), t = Tn, u = /* @__PURE__ */ sr(), a = ar, d = Ge, r = Kr(), n = gy(), s = bt(), i = Tr();
   let c = class extends r.BaseUpdater {
     constructor(p, h) {
       super(p, h);
@@ -18452,7 +18452,7 @@ var $n = {}, sm;
 function um() {
   if (sm) return $n;
   sm = 1, Object.defineProperty($n, "__esModule", { value: !0 }), $n.DebUpdater = void 0;
-  const e = Kr(), t = Et(), u = Tr();
+  const e = Kr(), t = bt(), u = Tr();
   let a = class extends e.BaseUpdater {
     constructor(r, n) {
       super(r, n);
@@ -18487,7 +18487,7 @@ var wn = {}, cm;
 function lm() {
   if (cm) return wn;
   cm = 1, Object.defineProperty(wn, "__esModule", { value: !0 }), wn.PacmanUpdater = void 0;
-  const e = Kr(), t = Tr(), u = Et();
+  const e = Kr(), t = Tr(), u = bt();
   let a = class extends e.BaseUpdater {
     constructor(r, n) {
       super(r, n);
@@ -18522,7 +18522,7 @@ var En = {}, fm;
 function dm() {
   if (fm) return En;
   fm = 1, Object.defineProperty(En, "__esModule", { value: !0 }), En.RpmUpdater = void 0;
-  const e = Kr(), t = Tr(), u = Et();
+  const e = Kr(), t = Tr(), u = bt();
   let a = class extends e.BaseUpdater {
     constructor(r, n) {
       super(r, n);
@@ -18557,7 +18557,7 @@ var bn = {}, hm;
 function pm() {
   if (hm) return bn;
   hm = 1, Object.defineProperty(bn, "__esModule", { value: !0 }), bn.MacUpdater = void 0;
-  const e = tt(), t = /* @__PURE__ */ sr(), u = ar, a = Ge, d = _g, r = oc(), n = Et(), s = Tn, i = On;
+  const e = tt(), t = /* @__PURE__ */ sr(), u = ar, a = Ge, d = _g, r = oc(), n = bt(), s = Tn, i = On;
   let c = class extends r.AppUpdater {
     constructor(p, h) {
       super(p, h), this.nativeUpdater = Kt.autoUpdater, this.squirrelDownloadedUpdate = !1, this.nativeUpdater.on("error", (y) => {
@@ -18768,7 +18768,7 @@ var ym;
 function gm() {
   if (ym) return Sn;
   ym = 1, Object.defineProperty(Sn, "__esModule", { value: !0 }), Sn.NsisUpdater = void 0;
-  const e = tt(), t = Ge, u = Kr(), a = gy(), d = Tr(), r = Et(), n = /* @__PURE__ */ sr(), s = gE(), i = Br;
+  const e = tt(), t = Ge, u = Kr(), a = gy(), d = Tr(), r = bt(), n = /* @__PURE__ */ sr(), s = gE(), i = Br;
   let c = class extends u.BaseUpdater {
     constructor(p, h) {
       super(p, h), this._verifyUpdateCodeSignature = (y, $) => (0, s.verifySignature)(y, $, this._logger);
@@ -18894,7 +18894,7 @@ function vE() {
     } }), Object.defineProperty(e, "NoOpLogger", { enumerable: !0, get: function() {
       return n.NoOpLogger;
     } });
-    var s = Et();
+    var s = bt();
     Object.defineProperty(e, "Provider", { enumerable: !0, get: function() {
       return s.Provider;
     } });
@@ -19041,9 +19041,9 @@ function _E() {
   return Cu;
 }
 var $E = _E();
-const wE = /* @__PURE__ */ Uu($E), EE = dt.requestSingleInstanceLock();
+const wE = /* @__PURE__ */ Uu($E), EE = lt.requestSingleInstanceLock();
 let Ot = null;
-const bE = () => dt.isPackaged ? Ie.join(process.resourcesPath, "backend", "backend.exe") : Ie.join(uc, "..", "backend", "backend.exe");
+const bE = () => lt.isPackaged ? Ie.join(process.resourcesPath, "backend", "backend-mrpack-installer.exe") : Ie.join(uc, "..", "backend", "backend-mrpack-installer.exe");
 function SE() {
   if (Ot)
     return;
@@ -19051,7 +19051,7 @@ function SE() {
   console.log(`Iniciando backend desde: ${e}`);
   try {
     if (Ot = gg(e), !Ot) {
-      console.error("Error: No se pudo iniciar el proceso de backend."), dt.quit();
+      console.error("Error: No se pudo iniciar el proceso de backend."), lt.quit();
       return;
     }
     Ot.stdout?.on("data", (t) => {
@@ -19062,7 +19062,7 @@ function SE() {
       console.log(`Proceso de backend cerrado con código ${t}`), Ot = null;
     });
   } catch (t) {
-    console.error("Error fatal al intentar ejecutar spawn:", t), dt.quit();
+    console.error("Error fatal al intentar ejecutar spawn:", t), lt.quit();
   }
 }
 function sc() {
@@ -19078,11 +19078,11 @@ function sc() {
 }
 const uc = Ie.dirname($g(import.meta.url));
 process.env.APP_ROOT = Ie.join(uc, "..");
-const wt = new yw(), Ua = process.env.VITE_DEV_SERVER_URL, _1 = Ie.join(process.env.APP_ROOT, "dist-electron"), vy = Ie.join(process.env.APP_ROOT, "dist");
+const Et = new yw(), Ua = process.env.VITE_DEV_SERVER_URL, _1 = Ie.join(process.env.APP_ROOT, "dist-electron"), vy = Ie.join(process.env.APP_ROOT, "dist");
 process.env.VITE_PUBLIC = Ua ? Ie.join(process.env.APP_ROOT, "public") : vy;
 let Je;
 function _y() {
-  const e = wt.get("windowBounds", { width: 1100, height: 700 }), t = wt.get("isFullscreen", !1);
+  const e = Et.get("windowBounds", { width: 1100, height: 700 }), t = Et.get("isFullscreen", !1);
   if (Je = new Du({
     title: "Modpack Installer",
     icon: Ie.join(process.env.VITE_PUBLIC ?? "", "app-icon.png"),
@@ -19108,20 +19108,20 @@ function _y() {
     console.log("Cargando archivo:", u), Je.loadFile(u);
   }
 }
-dt.on("window-all-closed", () => {
+lt.on("window-all-closed", () => {
   if (sc(), Je) {
     const e = Je.getBounds();
-    wt.set("windowBounds", { width: e.width, height: e.height }), wt.set("isFullscreen", Je.isFullScreen());
+    Et.set("windowBounds", { width: e.width, height: e.height }), Et.set("isFullscreen", Je.isFullScreen());
   }
-  process.platform !== "darwin" && dt.quit();
+  process.platform !== "darwin" && lt.quit();
 });
-dt.on("will-quit", () => {
+lt.on("will-quit", () => {
   sc();
 });
-dt.on("before-quit", () => {
+lt.on("before-quit", () => {
   sc();
 });
-dt.on("activate", () => {
+lt.on("activate", () => {
   Du.getAllWindows().length === 0 && _y();
 });
 Nt.autoUpdater.autoDownload = !1;
@@ -19146,49 +19146,49 @@ Nt.autoUpdater.on("update-downloaded", (e) => {
   console.log("Update downloaded:", e);
 });
 function PE() {
-  Tt.handle("set-fullscreen", (e, t) => {
-    Je && (Je.setFullScreen(t), wt.set("isFullscreen", t));
-  }), Tt.handle("get-fullscreen", () => Je ? Je.isFullScreen() : !1), Tt.handle("set-theme", (e, t) => {
+  wt.handle("set-fullscreen", (e, t) => {
+    Je && (Je.setFullScreen(t), Et.set("isFullscreen", t));
+  }), wt.handle("get-fullscreen", () => Je ? Je.isFullScreen() : !1), wt.handle("set-theme", (e, t) => {
     try {
-      wt.set("theme", t), console.log(`Theme saved to: ${t}`);
+      Et.set("theme", t), console.log(`Theme saved to: ${t}`);
     } catch (u) {
       console.error("Error saving theme:", u);
     }
-  }), Tt.handle("get-theme", () => wt.has("theme") ? wt.get("theme") : Un.shouldUseDarkColors ? "dark" : "light"), Tt.handle("get-system-theme", () => Un.shouldUseDarkColors ? "dark" : "light"), Un.on("updated", () => {
+  }), wt.handle("get-theme", () => Et.has("theme") ? Et.get("theme") : Un.shouldUseDarkColors ? "dark" : "light"), wt.handle("get-system-theme", () => Un.shouldUseDarkColors ? "dark" : "light"), Un.on("updated", () => {
     try {
-      if (!wt.has("theme") && Je) {
+      if (!Et.has("theme") && Je) {
         const e = Un.shouldUseDarkColors ? "dark" : "light";
         Je.webContents.send("system-theme-changed", e);
       }
     } catch (e) {
       console.error("Error al notificar cambio de tema del sistema:", e);
     }
-  }), Tt.handle("get-version", () => dt.getVersion()), Tt.handle("update-app", async () => {
+  }), wt.handle("get-version", () => lt.getVersion()), wt.handle("update-app", async () => {
     try {
       console.log("Updating app..."), await Nt.autoUpdater.downloadUpdate();
     } catch (e) {
       throw console.error("Error downloading update:", e), e;
     }
-  }), Tt.handle("check-update", async () => {
+  }), wt.handle("check-update", async () => {
     try {
       return console.log("Checking for updates..."), (await Nt.autoUpdater.checkForUpdates())?.isUpdateAvailable || !1;
     } catch (e) {
       throw console.error("Error checking for updates:", e), e;
     }
-  }), Tt.handle("get-language", () => {
-    if (wt.has("language"))
-      return wt.get("language", "en");
-    const e = dt.getLocale() || "en";
+  }), wt.handle("get-language", () => {
+    if (Et.has("language"))
+      return Et.get("language", "en");
+    const e = lt.getLocale() || "en";
     return String(e).split(/[-_]/)[0];
-  }), Tt.handle("set-language", (e, t) => {
+  }), wt.handle("get-system-language", () => String(lt.getLocale() || "en").split(/[-_]/)[0]), wt.handle("set-language", (e, t) => {
     try {
-      wt.set("language", t), console.log(`Language saved to: ${t}`);
+      Et.set("language", t), console.log(`Language saved to: ${t}`);
     } catch (u) {
       console.error("Error saving language:", u);
     }
   });
 }
-Tt.handle("dialog:showOpenDialog", async (e, t) => {
+wt.handle("dialog:showOpenDialog", async (e, t) => {
   try {
     const u = Du.getAllWindows().find((d) => !d.isDestroyed()) ?? void 0;
     let a;
@@ -19197,11 +19197,11 @@ Tt.handle("dialog:showOpenDialog", async (e, t) => {
     throw console.error("Error mostrando diálogo de selección:", u), u;
   }
 });
-EE ? (dt.on("second-instance", () => {
+EE ? (lt.on("second-instance", () => {
   Je && (Je.isMinimized() && Je.restore(), Je.focus());
-}), dt.whenReady().then(() => {
+}), lt.whenReady().then(() => {
   SE(), _y(), process.platform !== "darwin" && !Ua && hg.setApplicationMenu(null), PE(), Nt.autoUpdater.checkForUpdates(), console.log("Last version:", Nt.autoUpdater.currentVersion);
-})) : dt.quit();
+})) : lt.quit();
 export {
   _1 as MAIN_DIST,
   vy as RENDERER_DIST,

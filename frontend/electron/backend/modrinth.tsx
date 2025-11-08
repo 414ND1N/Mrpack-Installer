@@ -1,8 +1,66 @@
 import { Project } from '@/interfaces/modrinth/Projects';
 import { SearchHit } from '@/interfaces/modrinth/Hit';
 import { MrpackInfo, MrpackMetadata } from '@/interfaces/modrinth/MrPack'
+import { InstallationModpackProps } from "@/hooks/minecraft/minecraft"
+import { CollectionInfo } from '@/interfaces/modrinth/Collection'
 
-const modrinthFetchRandomProjects = async (count: number = 10): Promise<Project[]> => {
+const StartMrpackInstallation = async (
+    props: InstallationModpackProps,
+    cbStatus?: (status: string) => void,
+    cbMax?: (max: number) => void,
+    cbProgress?: (progress: number) => void,
+    cbFinish?: (status: string) => void,
+    cbError?: (error: string) => void,
+) => {
+    try {
+        const url = 'http://127.0.0.1:8001/mrpack/install/start/'
+
+        const resp = await fetch(url, {
+            method: 'POST',
+            cache: 'no-store',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                installation_type: props.type,
+                mrpack_directory: props.mrpack_path,
+                profile_directory: props.installation_directory,
+            }),
+        })
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
+        const { install_id } = await resp.json()
+
+        const es = new EventSource(`http://127.0.0.1:8001/install/stream/${install_id}`);
+        es.onmessage = (ev) => {
+            const data = JSON.parse(ev.data);
+            if (data.type === 'status' && cbStatus) {
+                cbStatus(data.message)
+            } else if (data.type === 'max' && cbMax) {
+                cbMax(data.message)
+            } else if (data.type === 'progress' && cbProgress) {
+                cbProgress(data.message)
+            } else if (data.type === 'error' && cbError) {
+                es.close();
+                cbError(data.message)
+            } else if (data.type === 'done') {
+                es.close();
+                if (cbFinish) cbFinish(data.message)
+                else if (cbStatus) cbStatus('Installation completed!')
+            }
+            // console.log('SSE', data);
+        };
+        es.onerror = (err) => {
+            console.error('SSE error', err);
+            if (cbError) cbError(err.toString())
+            else if (cbStatus) cbStatus(err.toString())
+        };
+
+    } catch (error) {
+        console.error('Error fetching random projects:', error)
+        throw error
+    }
+    
+}
+
+const FetchRandomProjects = async (count: number = 10): Promise<Project[]> => {
     try {
         const url = new URL('http://127.0.0.1:8001/modrinth/projects_random/')
         url.searchParams.set('count', count.toString())
@@ -17,7 +75,7 @@ const modrinthFetchRandomProjects = async (count: number = 10): Promise<Project[
     }
 }
 
-const modrinthSearchProjects = async (count: number = 10, type?: string, querry?: string, offset?: number): Promise<SearchHit> => {
+const SearchProjects = async (count: number = 10, type?: string, querry?: string, offset?: number): Promise<SearchHit> => {
     try {
         const url = new URL('http://127.0.0.1:8001/modrinth/search/')
         url.searchParams.set('limit', count.toString())
@@ -59,10 +117,33 @@ const GetMrpackInfo = async (filePath: string): Promise<MrpackInfo> => {
     }
 }
 
+const DownloadCollection = async (collectionId: string, version: string, loader: string, directory: string, updateExisting: boolean, log: boolean = true): Promise<CollectionInfo> => {
+    try {
+        const payload = { collection_id: collectionId.trim(), version, loader, directory, update: updateExisting, log}
+        const res = await fetch('http://127.0.0.1:8001/modrinth/collection/download', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        })
+        if (!res.ok) {
+            const body = await res.text().catch(() => res.statusText)
+            throw new Error(`Request failed (${res.status}): ${body}`)
+        }
+        const result = await res.json()
+        return result as CollectionInfo
+    } catch (error) {
+        console.error('downloadCollection error', error)
+        throw error
+    }
+}
+
+
 
 export {
-    modrinthFetchRandomProjects,
-    modrinthSearchProjects,
+    FetchRandomProjects,
+    SearchProjects,
     GetMrpackMedatadaInfo,
-    GetMrpackInfo
+    GetMrpackInfo,
+    DownloadCollection,
+    StartMrpackInstallation
 }

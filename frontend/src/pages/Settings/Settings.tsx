@@ -5,7 +5,6 @@ import { useState, useEffect } from "react"
 import { useGlobalMessage } from "@/context/GlobalMessageContext"
 
 // Componentes
-import Sidebar from "@/pages/Sidebar"
 import SectionsMinecraftComponent from "@/components/SectionsMinecraft/SectionsMinecraft"
 import i18n from '@/hooks/localsConfig'
 import { useTranslation } from 'react-i18next'
@@ -19,7 +18,7 @@ function Settings() {
     const [fullscreen, setFullscreen] = useState<boolean>(false)
     const [newUpdateAvailable, setNewUpdateAvailable] = useState<boolean>(false)
     const [language, setLanguage] = useState<string>('en')
-    const [sysTheme, setSysTheme ] = useState<string>("classic")
+    const [sysTheme, setSysTheme] = useState<string>("classic")
     const { showMessage } = useGlobalMessage()
     const { t } = useTranslation(['settings', 'commons'])
 
@@ -61,9 +60,16 @@ function Settings() {
     }
 
     const updateLanguage = async (lang: string) => {
-        i18n.changeLanguage(lang)
-        setLanguage(lang)
-        await (window as any).winConfig.setLanguage(lang)
+        if (lang === 'system') {
+            const systemLang = await (window as any).winConfig.getSystemLanguage()
+            i18n.changeLanguage(systemLang)
+            setLanguage(lang)
+            await (window as any).winConfig.setLanguage(lang)
+        } else {
+            i18n.changeLanguage(lang)
+            setLanguage(lang)
+            await (window as any).winConfig.setLanguage(lang)
+        }
     }
 
     useEffect(() => {
@@ -104,7 +110,7 @@ function Settings() {
             <section className="header">
                 <p>{t('sections.general.subtitle')}</p>
             </section>
-            <Separator/>
+            <Separator />
             <section className="content">
 
                 <section className="theme">
@@ -198,6 +204,7 @@ function Settings() {
                             updateLanguage(event.target.value)
                         }
                     >
+                        <option value="system">{t('sections.general.language.list.system')}</option>
                         <option value="en">{t('sections.general.language.list.en')}</option>
                         <option value="es">{t('sections.general.language.list.es')}</option>
                     </MCSelect>
@@ -225,7 +232,7 @@ function Settings() {
             <section className="header">
                 <p>{t('sections.about.subtitle')}</p>
             </section>
-            <Separator/>
+            <Separator />
             <section className="content">
                 <div className="about">
                     <p>
@@ -262,10 +269,10 @@ function Settings() {
             <section className="header">
                 <p>{t('sections.update.subtitle')}</p>
             </section>
-            <Separator/>
+            <Separator />
             <section className="content">
                 <div className={`update-status`}>
-                    <h3>{newUpdateAvailable ? t('sections.update.update_available'): t('sections.update.no_update_available')}</h3>
+                    <h3>{newUpdateAvailable ? t('sections.update.update_available') : t('sections.update.no_update_available')}</h3>
                     {
                         newUpdateAvailable &&
                         (
@@ -284,34 +291,30 @@ function Settings() {
 
 
     return (
-
-        <main className="main-container">
-            <Sidebar current_path="/Settings" />
-            <section className="settings-container">
-                <SectionsMinecraftComponent
-                    title="CONFIGURACIÓN"
-                    sections={
-                        [
-                            {
-                                id: "appearance",
-                                title: t('sections.general.title'),
-                                content: sectionGeneral
-                            },
-                            {
-                                id: "about",
-                                title: t('sections.about.title'),
-                                content: sectionAcercaDe
-                            },
-                            {
-                                id: "updates",
-                                title: t('sections.update.title'),
-                                content: SectionUpdates
-                            }
-                        ]
-                    }
-                />
-            </section>
-        </main>
+        <section className="settings-container">
+            <SectionsMinecraftComponent
+                title={t('header.title')}
+                sections={
+                    [
+                        {
+                            id: "appearance",
+                            title: t('sections.general.title'),
+                            content: sectionGeneral
+                        },
+                        {
+                            id: "about",
+                            title: t('sections.about.title'),
+                            content: sectionAcercaDe
+                        },
+                        {
+                            id: "updates",
+                            title: t('sections.update.title'),
+                            content: SectionUpdates
+                        }
+                    ]
+                }
+            />
+        </section>
     )
 
 }

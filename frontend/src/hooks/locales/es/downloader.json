@@ -1,0 +1,42 @@
+{
+    "header": {
+        "title": "Descargar",
+        "subtitle": "Descarga Paquetes de Mods"
+    },
+    "sections": {
+        "collection": {
+            "title": "Colecciones",
+            "subtitle": "Descarga una colección de Modrinth por su ID y configura cómo instalarla.",
+            "process": {
+                "starting": "Iniciando descarga de la colección...",
+                "finished": "Descarga de la colección finalizada",
+                "error": "Error al descargar la colección",
+                "downloading": "Descargando...",
+                "download_completed_with_errors": "Descarga completada con errores",
+                "download_successful": "Descarga exitosa",
+                "mods_downloaded": "Mods descargados",
+                "mods_not_found": "Mods no encontrados",
+                "downloaded": "descargados"
+            },
+            "download_button": "Descargar colección",
+            "fields": {
+                "collectionId": "ID de la colección",
+                "collectionIdPlaceholder": "ej. y3Aq8bK",
+                "version": "Versión de Minecraft",
+                "versionPlaceholder": "ej. 1.20.4",
+                "loader": "Loader",
+                "directory": "Directorio destino",
+                "directoryPlaceholder": "ej. mods",
+                "update": "Actualizar mods existentes",
+                "browse_title": "Seleccionar directorio destino",
+                "browse_description": "Elige la carpeta donde quieres descargar los mods de la colección",
+                "incomplete_fields": "Por favor, completa todos los campos antes de descargar la colección."
+            },
+            "messages": {
+                "invalid_collection_id": "ID de colección inválido.",
+                "invalid_version": "Versión de Minecraft inválida.",
+                "invalid_directory": "Directorio destino inválido."
+            }
+        }
+    }
+}

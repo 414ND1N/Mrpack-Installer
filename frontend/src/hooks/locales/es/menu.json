@@ -16,11 +16,15 @@
             },
             "install": {
                 "title": "INSTALAR",
-                "subtitle": "Mrpacks"
+                "subtitle": "Modpacks"
             },
             "settings": {
                 "title": "CONFIGURACIÓN",
                 "subtitle": ""
+            },
+            "download": {
+                "title": "DESCARGAR",
+                "subtitle": "Modpacks"
             }
         }
     },

@@ -7,7 +7,13 @@
         "open": "Abrir",
         "accept": "Aceptar",
         "reject": "Rechazar",
-        "update": "Actualizar"
+        "update": "Actualizar",
+        "browse": "Examinar"
+    },
+    "errors": {
+        "header": "Ha ocurrido un error",
+        "unknown": "Ha ocurrido un error desconocido.",
+        "network": "Ha ocurrido un error de red. Por favor, verifica tu conexión a internet e inténtalo de nuevo."
     },
     "file": {
         "placeholder": "Importar archivo",

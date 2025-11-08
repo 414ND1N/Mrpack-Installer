@@ -10,6 +10,8 @@ import Home from '@/pages/Home/Home.tsx'
 import Discover from '@/pages/Discover/Discover.tsx'
 import Install from '@/pages/Install/Install.tsx'
 import Settings from '@/pages/Settings/Settings'
+import Downloader from '@/pages/Downloader/Downloader'
+import MainLayout from '@/layouts/MainLayout'
 import { useGlobalMessage } from "@/context/GlobalMessageContext"
 import { useTranslation } from 'react-i18next'
 
@@ -25,7 +27,6 @@ function App() {
         // const savedTheme = await ipcRenderer.invoke('get-theme')
         const savedTheme = await (window as any).winConfig?.getTheme()
         if (savedTheme) {
-
           if (savedTheme === 'system') {
             const systemTheme = await (window as any).winConfig?.getSystemTheme()
             document.body.setAttribute('data-theme', systemTheme)
@@ -34,9 +35,13 @@ function App() {
           }
         }
         const savedLanguage = await (window as any).winConfig?.getLanguage()
-        const language = savedLanguage || navigator.language.split('-')[0]; // Usar el idioma del navegador si no hay uno guardado
-        if (language) {
-          i18n.changeLanguage(language)
+        if (savedLanguage) {
+          if (savedLanguage === 'system') {
+            const systemLanguage = await (window as any).winConfig.getSystemLanguage()
+            i18n.changeLanguage(systemLanguage)
+          } else {
+            i18n.changeLanguage(savedLanguage)
+          }
         }
 
         // const updateAvaliable = await ipcRenderer.invoke('check-update')
@@ -55,12 +60,15 @@ function App() {
   }, [])
 
   return (
-    <HashRouter >
+    <HashRouter>
       <Routes>
-        <Route path={`/`} element={<Home />} />
-        <Route path={`/Discover`} element={<Discover />} />
-        <Route path={`/Install`} element={<Install />} />
-        <Route path={`/Settings`} element={<Settings />} />
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Home />} />
+          <Route path="Discover" element={<Discover />} />
+          <Route path="Install" element={<Install />} />
+          <Route path="Download" element={<Downloader />} />
+          <Route path="Settings" element={<Settings />} />
+        </Route>
       </Routes>
     </HashRouter>
   )
