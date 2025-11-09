@@ -15,11 +15,20 @@
                 "download_completed_with_errors": "Download completed with errors",
                 "download_successful": "Download successful",
                 "mods_downloaded": "Mods downloaded",
-                "mods_not_found": "Mods not found",
+                "mods_not_found": "Mods not found"
+            },
+            "verify": {
+                "button": "Verify mods in collection",
+                "header": "Mods in the collection",
+                "description": "List of compatible and incompatible mods with the specified version and loader",
+                "compatible_mods": "Compatible mods",
+                "incompatible_mods": "Incompatible mods",
+                "no_mods": "No mods to display",
+                "listing": "Listing mods...",
                 "downloaded": "downloaded"
             },
-            "download_button": "Download collection",
             "fields": {
+                "download_button": "Download collection",
                 "collectionId": "Collection ID",
                 "collectionIdPlaceholder": "ej. y3Aq8bK",
                 "version": "Minecraft version",

@@ -61,7 +61,7 @@
             "button_no_update": "Check for Updates",
             "downloading": "Downloading update...",
             "downloaded": "Update downloaded. Please restart the application to apply changes.",
-            "download_error": "An error occurred while checking for updates."
+            "download_error": "An error occurred while downloading update."
         }
     }
 }

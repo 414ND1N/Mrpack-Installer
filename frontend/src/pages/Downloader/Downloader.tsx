@@ -3,18 +3,21 @@ import { useTranslation } from 'react-i18next'
 import { MCButton, MCInput, MCSelect, MCCheckbox } from '@/components/MC/MC'
 import SectionsMinecraftComponent from '@/components/SectionsMinecraft/SectionsMinecraft'
 import { useGlobalMessage } from '@/context/GlobalMessageContext'
-import { CollectionInfo } from '@/interfaces/modrinth/Collection'
+import { CollectionDownloadInfo, ModsInCollectionInfo } from '@/interfaces/modrinth/Collection'
+import { Dialog, DialogContent, DialogClose, DialogFooter, DialogHeader, DialogDescription } from "@/components/Dialog/Dialog"
+import { Separator } from "@/components/Separator/separator"
 import './Downloader.css'
 
 function Downloader() {
     const { t } = useTranslation(['downloader', 'commons'])
-    const { showMessage } = useGlobalMessage()
+    const { showMessage, hideMessage } = useGlobalMessage()
 
     const [collectionId, setCollectionId] = useState<string>('')
     const [version, setVersion] = useState<string>('')
     const [loader, setLoader] = useState<string>('fabric')
     const [directory, setDirectory] = useState<string>('')
     const [updateExisting, setUpdateExisting] = useState<boolean>(false)
+    const [modsInCollection, setModsInCollection] = useState<ModsInCollectionInfo | null>(null)
 
     const OpenFolder = async () => {
         try {
@@ -33,7 +36,7 @@ function Downloader() {
         }
     }
 
-    const downloadCollection = async () => {
+    const DownloadCollection = async () => {
         if (!collectionId || collectionId.trim().length === 0) {
             showMessage(t('sections.collection.messages.invalid_collection_id'), { showClose: true })
             return
@@ -47,7 +50,7 @@ function Downloader() {
         showMessage(t('sections.collection.process.starting'), { showClose: false })
         try {
             showMessage(t('sections.collection.process.downloading'), { showClose: false })
-            const result = await (window as any).backend.DownloadCollection(collectionId.trim(), version, loader, directory, updateExisting) as CollectionInfo
+            const result = await (window as any).backend.DownloadCollection(collectionId.trim(), version, loader, directory, updateExisting) as CollectionDownloadInfo
             showMessage(
                 t('sections.collection.process.finished') +
                 ` ${!result.ok ? t('sections.collection.process.download_completed_with_errors') :
@@ -59,6 +62,31 @@ function Downloader() {
         } catch (error) {
             console.error('downloadCollection error', error)
             showMessage(t('errors.header', { ns: 'commons' }) + `: ${(error as Error).message}`, { showClose: true })
+        }
+    }
+
+    const GetModsInCollection = async () => {
+        try {
+            
+            setModsInCollection(null)
+            if (!collectionId || collectionId.trim().length === 0) {
+                showMessage(t('sections.collection.messages.invalid_collection_id'), { showClose: true })
+                return
+            }
+
+            if (!version || version.trim().length === 0 || !loader || loader.trim().length === 0) {
+                showMessage(t('sections.collection.fields.incomplete_fields'), { showClose: true })
+                return
+            }
+
+            showMessage(t('sections.collection.verify.listing'), { showClose: false })
+            const result = await (window as any).backend.GetModsInCollectionInfo(collectionId, version, loader) as ModsInCollectionInfo
+            setModsInCollection(result)
+            hideMessage()
+        } catch (error) {
+            console.error('getModsInCollection error', error)
+            showMessage(t('errors.header', { ns: 'commons' }) + `: ${(error as Error).message}`, { showClose: true })
+            setModsInCollection(null)
         }
     }
 
@@ -87,7 +115,7 @@ function Downloader() {
                         >
                             <option value="fabric">Fabric</option>
                             <option value="forge">Forge</option>
-                            <option value="neoforge ">Neoforge </option>
+                            <option value="neoforge">Neoforge</option>
                             <option value="quilt">Quilt</option>
                         </MCSelect>
                     </div>
@@ -116,11 +144,71 @@ function Downloader() {
                 </div>
 
                 <div>
-                    <MCButton onClick={downloadCollection}>
-                        {t('sections.collection.download_button')}
-                    </MCButton>
+                    <div className="row">
+                        <MCButton
+                            onClick={GetModsInCollection}
+                        >
+                            {t('sections.collection.verify.button')}
+                        </MCButton>
+                        <MCButton
+                            onClick={DownloadCollection}
+                        >
+                            {t('sections.collection.fields.download_button')}
+                        </MCButton>
+                    </div>
                 </div>
             </section>
+            <Dialog open={modsInCollection !== null} onOpenChange={(open) => { if (!open) setModsInCollection(null) }}>
+                <DialogContent>
+                    <DialogHeader>
+                        {t('sections.collection.verify.header')}
+                    </DialogHeader>
+                    <DialogDescription>
+                        {t('sections.collection.verify.description')} ( {loader} - {version} )
+                    </DialogDescription>
+                    <Separator />
+                    {modsInCollection ? (
+                        <>
+                            <h1>{t('sections.collection.verify.compatible_mods')} - {modsInCollection.available_mods.length}</h1>
+                            <ul>
+                                {modsInCollection.available_mods.length > 0 ? (
+                                    modsInCollection.available_mods.map((mod: string) => (
+                                        <li key={mod}>
+                                            {mod}
+                                        </li>
+                                    ))
+                                ) : (
+                                    <li>{t('sections.collection.verify.no_mods')}</li>
+                                )}
+                            </ul>
+                            <Separator borderless={true} />
+                            <h1>{t('sections.collection.verify.incompatible_mods')} - {modsInCollection.unavailable_mods.length}</h1>
+                            <ul>
+                                {modsInCollection.unavailable_mods.length > 0 ? (
+                                    modsInCollection.unavailable_mods.map((mod: string) => (
+                                        <li key={mod}>
+                                            {mod}
+                                        </li>
+                                    ))
+                                ) : (
+                                    <li>{t('sections.collection.verify.no_mods')}</li>
+                                )}
+                            </ul>
+                        </>
+                    ) : (
+                        <h2>{t('sections.collection.verify.no_mods')}</h2>
+                    )}
+                    <DialogFooter>
+                        <DialogClose>
+                            <MCButton
+                                onClick={() => setModsInCollection(null)}
+                            >
+                                {t('actions.close', { ns: 'commons' })}
+                            </MCButton>
+                        </DialogClose>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </>
     )
 

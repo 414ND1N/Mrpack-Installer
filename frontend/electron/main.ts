@@ -1,4 +1,4 @@
-import { app, BrowserWindow, nativeTheme, dialog, ipcMain} from 'electron'
+import { app, BrowserWindow, nativeTheme, dialog, ipcMain } from 'electron'
 import { Menu } from 'electron'
 import Store from 'electron-store'
 import { autoUpdater } from 'electron-updater'
@@ -25,10 +25,10 @@ function startBackend() {
 
   const backendPath = getBackendPath();
   console.log(`Iniciando backend desde: ${backendPath}`);
-  
+
   try {
     backendProcess = spawn(backendPath); // Ejecutar el backend
-    
+
     if (!backendProcess) {
       console.error('Error: No se pudo iniciar el proceso de backend.');
       app.quit(); // Salir si el backend no puede iniciar
@@ -157,7 +157,6 @@ app.on('activate', () => {
 })
 
 
-
 // --------- Auto Updater ---------
 
 autoUpdater.autoDownload = false
@@ -188,7 +187,11 @@ autoUpdater.on('update-downloaded', (info) => {
 })
 
 // --------- App Events ---------
+
+
 function setupIpcEvents() {
+
+  // Fulscreen
   ipcMain.handle('set-fullscreen', (_, isFullscreen: boolean) => {
     if (win) {
       win.setFullScreen(isFullscreen)
@@ -205,6 +208,7 @@ function setupIpcEvents() {
     }
   })
 
+  // Theme handling
   ipcMain.handle('set-theme', (_, theme: string) => {
     try {
       store.set('theme', theme)
@@ -225,6 +229,7 @@ function setupIpcEvents() {
     return nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
   })
 
+  // Update handling
   nativeTheme.on('updated', () => {
     try {
       if (!store.has('theme') && win) {
@@ -244,6 +249,7 @@ function setupIpcEvents() {
     try {
       console.log('Updating app...')
       await autoUpdater.downloadUpdate()
+      autoUpdater.quitAndInstall()
     } catch (error) {
       console.error('Error downloading update:', error)
       throw error
@@ -261,6 +267,7 @@ function setupIpcEvents() {
     }
   })
 
+  // Language handling
   ipcMain.handle('get-language', () => {
     if (store.has('language')) {
       return store.get('language', 'en')
@@ -270,7 +277,7 @@ function setupIpcEvents() {
   })
 
   ipcMain.handle('get-system-language', () => {
-    return String( app.getLocale() || 'en').split(/[-_]/)[0]
+    return String(app.getLocale() || 'en').split(/[-_]/)[0]
   })
 
   ipcMain.handle('set-language', (_, lang: string) => {
@@ -283,6 +290,7 @@ function setupIpcEvents() {
   })
 }
 
+// Dialog handling
 ipcMain.handle('dialog:showOpenDialog', async (_event, options: Electron.OpenDialogOptions) => {
   try {
     const parent = BrowserWindow.getAllWindows().find(w => !w.isDestroyed()) ?? undefined
@@ -295,7 +303,6 @@ ipcMain.handle('dialog:showOpenDialog', async (_event, options: Electron.OpenDia
     return res
   } catch (err) {
     console.error('Error mostrando diálogo de selección:', err)
-    // propagar error al renderer
     throw err
   }
 })
@@ -304,7 +311,6 @@ if (!gotTheLock) {
   app.quit();
 } else {
   app.on('second-instance', () => {
-    // Si se intenta abrir otra instancia, enfoca la ventana actual
     if (win) {
       if (win.isMinimized()) win.restore();
       win.focus();
@@ -312,14 +318,14 @@ if (!gotTheLock) {
   });
 
   app.whenReady().then(() => {
-    startBackend();
-    createWindow();
+    startBackend()
+    createWindow()
     if (!(process.platform === 'darwin') && !VITE_DEV_SERVER_URL) {
       Menu.setApplicationMenu(null)
     }
     setupIpcEvents();
-    autoUpdater.checkForUpdates();
     console.log('Last version:', autoUpdater.currentVersion);
+    autoUpdater.checkForUpdates();
   });
 }
 

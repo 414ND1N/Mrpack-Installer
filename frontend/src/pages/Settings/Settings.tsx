@@ -23,11 +23,10 @@ function Settings() {
     const { t } = useTranslation(['settings', 'commons'])
 
     useEffect(() => {
-        const fetchSysTheme = async () => {
+        (async () => {
             const currentSysTheme = await (window as any).winConfig.getSystemTheme()
             setSysTheme(currentSysTheme)
-        }
-        fetchSysTheme()
+        })()
     }, [])
 
     const updateTheme = async (newTheme: string) => {
@@ -55,7 +54,8 @@ function Settings() {
             await (window as any).winConfig.updateApp()
             showMessage(t('sections.update.downloaded'))
         } catch (error) {
-            console.error(t('sections.update.downlodownload_erroraded'), error)
+            showMessage(t('sections.update.download_error'), { showClose: true })
+            // console.error(t('sections.update.download_error'), error)
         }
     }
 
@@ -73,22 +73,19 @@ function Settings() {
     }
 
     useEffect(() => {
-        const getInitialConfig = async () => {
+        (async () => {
 
             // Aplicar el tema al estado
-            // const savedTheme = await ipcRenderer.invoke('get-theme')
             const savedTheme = await (window as any).winConfig.getTheme()
             if (savedTheme) {
                 setThemeState(savedTheme)
             }
             // Aplicar el estado de pantalla completa
-            // const isFullscreen = await ipcRenderer.invoke('get-fullscreen')
             const isFullscreen = await (window as any).winConfig.getFullscreen()
             if (isFullscreen !== undefined) {
                 setFullscreen(isFullscreen)
             }
             // Obtener el estado de actualización
-            // const updateAvaliable = await ipcRenderer.invoke('check-update')
             const updateAvaliable = await (window as any).winConfig.checkUpdate()
             if (updateAvaliable !== undefined) {
                 setNewUpdateAvailable(updateAvaliable)
@@ -98,10 +95,7 @@ function Settings() {
             if (savedLanguage) {
                 setLanguage(savedLanguage)
             }
-        }
-
-        getInitialConfig()
-
+        })()
     }, [])
 
     // Contenidos de las secciones

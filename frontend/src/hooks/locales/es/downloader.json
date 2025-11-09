@@ -18,8 +18,17 @@
                 "mods_not_found": "Mods no encontrados",
                 "downloaded": "descargados"
             },
-            "download_button": "Descargar colección",
+            "verify": {
+                "button": "Verificar mods en la colección",
+                "header": "Mods en la colección",
+                "description": "Listado de mods compatibles e incompatibles con la versión y loader indicados",
+                "compatible_mods": "Mods compatibles",
+                "incompatible_mods": "Mods no compatibles",
+                "no_mods": "No hay mods para mostrar",
+                "listing": "Listando mods..."
+            },
             "fields": {
+                "download_button": "Descargar colección",
                 "collectionId": "ID de la colección",
                 "collectionIdPlaceholder": "ej. y3Aq8bK",
                 "version": "Versión de Minecraft",

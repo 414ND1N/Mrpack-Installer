@@ -202,6 +202,9 @@ class ModrinthCollectionClient:
 
     def get_collection(self, collection_id):
         return self.get(f"/v3/collection/{collection_id}")
+
+    def get_mod_info(self, mod_id):
+        return self.get(f"/v2/project/{mod_id}")
     
 collection_client = ModrinthCollectionClient()
 
@@ -281,6 +284,106 @@ def download_mod(mod_id: str, update: bool, version: str, loader: str, download_
     except Exception as e:
         print(f"Failed to download {mod_id}: {e}")
 
+def VerifyModsInCollection(collection_id: str, version: str, loader: str) -> Any:
+    try:
+        # reset state from previous runs
+        collection_client.mods_downloaded.clear()
+        collection_client.mods_not_found.clear()
+        collection_details = collection_client.get_collection(collection_id)
+        if not collection_details:
+            raise Exception("Collection not found")
+
+        mods: list[str] = collection_details.get("projects", [])
+        available_mods: list[str] = []
+        unavailable_mods: list[str] = []
+
+        # Caches to avoid duplicate network calls
+        versions_cache: dict[str, Any] = {}
+        info_cache: dict[str, str] = {}
+
+        def process_mod(mod_id: str):
+            try:
+                # fetch versions (cached)
+                mod_versions = versions_cache.get(mod_id)
+                if mod_versions is None:
+                    mod_versions = collection_client.get_mod_version(mod_id)
+                    versions_cache[mod_id] = mod_versions
+
+                # determine if a compatible version exists
+                has_compatible = False
+                if mod_versions:
+                    for mv in mod_versions:
+                        game_versions = mv.get("game_versions", [])
+                        loaders = mv.get("loaders", [])
+                        if version in game_versions and loader in loaders:
+                            has_compatible = True
+                            break
+
+                # fetch mod info (cached)
+                title = info_cache.get(mod_id)
+                if title is None:
+                    try:
+                        info = collection_client.get_mod_info(mod_id)
+                        if isinstance(info, dict):
+                            title = info.get("title") or info.get("name") or "Unknown"
+                        else:
+                            title = "Unknown"
+                    except Exception:
+                        title = "Unknown"
+                    info_cache[mod_id] = title
+
+                return (mod_id, has_compatible, title)
+            except Exception:
+                return (mod_id, False, "Unknown")
+
+        # Parallelize network calls for large collections
+        with ThreadPoolExecutor(max_workers=min(20, max(4, len(mods)))) as executor:
+            futures = [executor.submit(process_mod, m) for m in mods]
+            for f in futures:
+                try:
+                    _, ok, title = f.result()
+                    if ok:
+                        available_mods.append(title)
+                    else:
+                        unavailable_mods.append(title)
+                except Exception:
+                    # best-effort: mark as unavailable
+                    unavailable_mods.append("Unknown")
+
+        return {
+            "collection_id": collection_id,
+            "mc_version": version,
+            "loader": loader,
+            "available_mods": available_mods,
+            "unavailable_mods": unavailable_mods,
+            "ok": True
+        }
+
+    except Exception as e:
+        raise e
+
+def GetCollectionInfo(collection_id: str) -> Any:
+    try:
+        collection_details = collection_client.get_collection(collection_id)
+        if not collection_details:
+            raise Exception("Collection not found")
+        
+        return {
+            "collection_id": collection_id,
+            "user": collection_details.get("user"),
+            "name": collection_details.get("name"),
+            "description": collection_details.get("description"),
+            "projects": collection_details.get("projects", []),
+            "status": collection_details.get("status"),
+            "created": collection_details.get("created"),
+            "updated": collection_details.get("updated"),
+            "icon_url": collection_details.get("icon_url"),
+            "ok": True
+        }
+
+    except Exception as e:
+        raise e
+
 def DownloadCollectionMods(collection_id: str, version: str, loader: str, download_directory: str, update_existing: bool = False, log: bool = True) -> Any:
     try:
         # reset state from previous runs
@@ -341,12 +444,14 @@ def DownloadCollectionMods(collection_id: str, version: str, loader: str, downlo
                 with log_path.open("a", encoding="utf-8") as log_file:
                     log_file.write(f"Version: {version}\n")
                     log_file.write(f"Loader: {loader}\n")
-                    log_file.write("Mods downloaded:\n")
+                    log_file.write(f"Mods downloaded {len(collection_client.mods_downloaded)}:\n")
                     for mod_id in collection_client.mods_downloaded:
-                        log_file.write(f"https://modrinth.com/mod/{mod_id}\n")
-                    log_file.write("Mods not found:\n")
+                        name = collection_client.get_mod_info(mod_id)
+                        log_file.write(f"{name} - https://modrinth.com/mod/{mod_id}\n")
+                    log_file.write(f"Mods not found {len(collection_client.mods_not_found)}:\n")
                     for mod_id in collection_client.mods_not_found:
-                        log_file.write(f"https://modrinth.com/mod/{mod_id}\n")
+                        name = collection_client.get_mod_info(mod_id)
+                        log_file.write(f"{name} - https://modrinth.com/mod/{mod_id}\n")
             except Exception as e:
                 print(f"Failed to write log file {log_path}: {e}")
 

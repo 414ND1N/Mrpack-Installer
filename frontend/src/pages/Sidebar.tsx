@@ -21,11 +21,10 @@ function Sidebar({ current_path = "/" }: { current_path?: string }) {
     
     useEffect(() => {
         // Obtener la versión de la aplicación al cargar el componente
-        const getVersion = async () => {
+        (async () => {
             const appVersion = await (window as any).winConfig?.getVersion()
             setVersion(appVersion)
-        }
-        getVersion()
+        })()
     }, [])
 
     // Definicion de los enlaces del sidebar
