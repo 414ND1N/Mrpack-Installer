@@ -1,7 +1,7 @@
 /// <reference types="vite-plugin-electron/electron-env" />
 
 import { ipcRenderer, contextBridge } from 'electron'
-import { CollectionInfo } from '@/interfaces/modrinth/Collection'
+import { CollectionInfo, CollectionDownloadInfo, ModsInCollectionInfo } from '@/interfaces/modrinth/Collection'
 
 declare namespace NodeJS {
   interface ProcessEnv {
@@ -53,6 +53,8 @@ interface Window {
       loader: string,
       directory: string,
       updateExisting: boolean
-    ) => Promise<CollectionInfo>;
+    ) => Promise<CollectionDownloadInfo>;
+    GetCollectionInfo: (collectionId:string) => Promise<CollectionInfo>;
+    GetModsInCollectionInfo: (collectionId:string, version:string, loader: string) => Promise<ModsInCollectionInfo>;
   }
 }

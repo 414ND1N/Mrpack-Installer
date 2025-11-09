@@ -2,7 +2,7 @@ import { Project } from '@/interfaces/modrinth/Projects';
 import { SearchHit } from '@/interfaces/modrinth/Hit';
 import { MrpackInfo, MrpackMetadata } from '@/interfaces/modrinth/MrPack'
 import { InstallationModpackProps } from "@/hooks/minecraft/minecraft"
-import { CollectionInfo } from '@/interfaces/modrinth/Collection'
+import { CollectionInfo, CollectionDownloadInfo, ModsInCollectionInfo } from '@/interfaces/modrinth/Collection'
 
 const StartMrpackInstallation = async (
     props: InstallationModpackProps,
@@ -117,7 +117,7 @@ const GetMrpackInfo = async (filePath: string): Promise<MrpackInfo> => {
     }
 }
 
-const DownloadCollection = async (collectionId: string, version: string, loader: string, directory: string, updateExisting: boolean, log: boolean = true): Promise<CollectionInfo> => {
+const DownloadCollection = async (collectionId: string, version: string, loader: string, directory: string, updateExisting: boolean, log: boolean = true): Promise<CollectionDownloadInfo> => {
     try {
         const payload = { collection_id: collectionId.trim(), version, loader, directory, update: updateExisting, log}
         const res = await fetch('http://127.0.0.1:8001/modrinth/collection/download', {
@@ -130,14 +130,44 @@ const DownloadCollection = async (collectionId: string, version: string, loader:
             throw new Error(`Request failed (${res.status}): ${body}`)
         }
         const result = await res.json()
-        return result as CollectionInfo
+        return result as CollectionDownloadInfo
     } catch (error) {
         console.error('downloadCollection error', error)
         throw error
     }
 }
 
+const GetCollectionInfo = async (collectionId:string): Promise<CollectionInfo> => {
+    try {
+        const url = new URL('http://127.0.0.1:8001/modrinth/collection/info/')
+        url.searchParams.set('collection_id', collectionId)
+        const res = await fetch(url, { method: 'GET', cache: 'no-store' })
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const data = await res.json()
+        return data as CollectionInfo
+    } catch (error) {
+        console.error('Error fetching collection info:', error)
+        throw error
+    }
+}
 
+const GetModsInCollectionInfo = async (collectionId:string, version: string, loader: string): Promise<ModsInCollectionInfo> => {
+    try {
+        const url = new URL('http://127.0.0.1:8001/modrinth/collection/mods/verify')
+        url.searchParams.set('collection_id', collectionId)
+        url.searchParams.set('version', version)
+        url.searchParams.set('loader', loader)
+        const res = await fetch(url, { method: 'GET', cache: 'no-store' })
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const data = await res.json()
+        return data as ModsInCollectionInfo
+
+    } catch (error) {
+        console.error('Error fetching mods in collection info:', error)
+        throw error
+    }
+}
 
 export {
     FetchRandomProjects,
@@ -145,5 +175,7 @@ export {
     GetMrpackMedatadaInfo,
     GetMrpackInfo,
     DownloadCollection,
-    StartMrpackInstallation
+    StartMrpackInstallation,
+    GetCollectionInfo,
+    GetModsInCollectionInfo
 }

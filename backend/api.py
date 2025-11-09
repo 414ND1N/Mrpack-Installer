@@ -241,6 +241,24 @@ async def download_modrinth_collection(payload: CollectionDownloadRequest) -> An
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error downloading Modrinth collection: {e}")
 
+@app.get("/modrinth/collection/info/", summary="Get Modrinth collection info")
+async def get_modrinth_collection_info(collection_id: str = Query(..., description="Modrinth collection ID")) -> Any:
+    try:
+        return Mr.GetCollectionInfo(collection_id)
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Error fetching from Modrinth: {e}")
+
+@app.get("/modrinth/collection/mods/verify", summary="Get mods in Modrinth collection")
+async def get_modrinth_collection_mods(
+    collection_id: str = Query(..., description="Modrinth collection ID"),
+    version: str  = Query(None, description="Minecraft version filter"),
+    loader: str  = Query(None, description="Loader filter")
+) -> Any:
+    try:
+        return Mr.VerifyModsInCollection(collection_id, version, loader)
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Error fetching from Modrinth: {e}")
+
 if __name__ == "__main__":
     # Guard for local development. Use uvicorn from command line as recommended in README.
     print("Starting API on http://localhost:8001")

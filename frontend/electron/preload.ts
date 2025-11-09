@@ -5,7 +5,9 @@ import {
   SearchProjects,
   GetMrpackMedatadaInfo,
   StartMrpackInstallation,
-  DownloadCollection
+  DownloadCollection,
+  GetCollectionInfo,
+  GetModsInCollectionInfo
 } from './backend/modrinth'
 
 import {
@@ -64,6 +66,8 @@ contextBridge.exposeInMainWorld('backend', {
     directory: string,
     updateExisting: boolean
   ) => DownloadCollection(collectionId, version, loader, directory, updateExisting),
+  GetCollectionInfo: (collectionId:string) => GetCollectionInfo(collectionId),
+  GetModsInCollectionInfo: (collectionId:string, version:string, loader: string) => GetModsInCollectionInfo(collectionId, version, loader),
 })
 
 console.log("Preload script loaded successfully.")

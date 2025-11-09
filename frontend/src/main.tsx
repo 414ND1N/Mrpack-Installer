@@ -12,7 +12,7 @@ import LoadingScreen from "@/components/loadingScreen/loadingScreen.tsx"
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <GlobalMessageProvider>
     <GlobalMessageModal />
-    <Suspense fallback={<LoadingScreen />}>
+    <Suspense fallback={<LoadingScreen/>}>
       <App />
     </Suspense>
   </GlobalMessageProvider>

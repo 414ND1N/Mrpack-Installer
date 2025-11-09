@@ -17,61 +17,57 @@ import { useTranslation } from 'react-i18next'
 
 function App() {
 
-  const { showMessage } = useGlobalMessage();
-  const { t, i18n } = useTranslation(['commons'])
+    const { showMessage } = useGlobalMessage();
+    const { t, i18n } = useTranslation(['commons'])
 
-  useEffect(() => {
-    // Aplicar el tema al cargar la aplicación
-    const getInitialConfig = async () => {
-      try {
-        // const savedTheme = await ipcRenderer.invoke('get-theme')
-        const savedTheme = await (window as any).winConfig?.getTheme()
-        if (savedTheme) {
-          if (savedTheme === 'system') {
-            const systemTheme = await (window as any).winConfig?.getSystemTheme()
-            document.body.setAttribute('data-theme', systemTheme)
-          } else {
-            document.body.setAttribute('data-theme', savedTheme)
-          }
-        }
-        const savedLanguage = await (window as any).winConfig?.getLanguage()
-        if (savedLanguage) {
-          if (savedLanguage === 'system') {
-            const systemLanguage = await (window as any).winConfig.getSystemLanguage()
-            i18n.changeLanguage(systemLanguage)
-          } else {
-            i18n.changeLanguage(savedLanguage)
-          }
-        }
+    useEffect(() => {
+        (async () => {
+            try {
+                // Cargar temas
+                const savedTheme = await (window as any).winConfig?.getTheme()
+                if (savedTheme) {
+                    if (savedTheme === 'system') {
+                        const systemTheme = await (window as any).winConfig?.getSystemTheme()
+                        document.body.setAttribute('data-theme', systemTheme)
+                    } else {
+                        document.body.setAttribute('data-theme', savedTheme)
+                    }
+                }
+                // Cargar idioma
+                const savedLanguage = await (window as any).winConfig?.getLanguage()
+                if (savedLanguage) {
+                    if (savedLanguage === 'system') {
+                        const systemLanguage = await (window as any).winConfig.getSystemLanguage()
+                        i18n.changeLanguage(systemLanguage)
+                    } else {
+                        i18n.changeLanguage(savedLanguage)
+                    }
+                }
 
-        // const updateAvaliable = await ipcRenderer.invoke('check-update')
-        const updateAvaliable = await (window as any).winConfig?.checkUpdate()
-        if (updateAvaliable === true) {
-          showMessage(`${t('update.avaliable', { ns: "commons" })} ${t('update.instructions', { ns: "commons" })}`);
-        }
+                // Comprobar actualizaciones
+                const updateAvaliable = await (window as any).winConfig?.checkUpdate()
+                if (updateAvaliable === true) {
+                    showMessage(`${t('update.avaliable', { ns: "commons" })} ${t('update.instructions', { ns: "commons" })}`);
+                }
+            } catch (error) {
+                console.error("Error al cargar la app:", error)
+            }
+        })()
+    }, [])
 
-
-      } catch (error) {
-        console.error("Error al cargar la app:", error)
-      }
-    }
-
-    getInitialConfig();
-  }, [])
-
-  return (
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<Home />} />
-          <Route path="Discover" element={<Discover />} />
-          <Route path="Install" element={<Install />} />
-          <Route path="Download" element={<Downloader />} />
-          <Route path="Settings" element={<Settings />} />
-        </Route>
-      </Routes>
-    </HashRouter>
-  )
+    return (
+        <HashRouter>
+            <Routes>
+                <Route path="/" element={<MainLayout />}>
+                    <Route index element={<Home />} />
+                    <Route path="Discover" element={<Discover />} />
+                    <Route path="Install" element={<Install />} />
+                    <Route path="Download" element={<Downloader />} />
+                    <Route path="Settings" element={<Settings />} />
+                </Route>
+            </Routes>
+        </HashRouter>
+    )
 }
 
 export default App
