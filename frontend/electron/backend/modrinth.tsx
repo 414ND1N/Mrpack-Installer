@@ -117,7 +117,7 @@ const GetMrpackInfo = async (filePath: string): Promise<MrpackInfo> => {
     }
 }
 
-const DownloadCollection = async (collectionId: string, version: string, loader: string, directory: string, updateExisting: boolean, log: boolean = true): Promise<CollectionDownloadInfo> => {
+const DownloadCollection = async (collectionId: string, version: string, loader: string, directory: string, updateExisting: boolean, log: boolean = false): Promise<CollectionDownloadInfo> => {
     try {
         const payload = { collection_id: collectionId.trim(), version, loader, directory, update: updateExisting, log}
         const res = await fetch('http://127.0.0.1:8001/modrinth/collection/download', {

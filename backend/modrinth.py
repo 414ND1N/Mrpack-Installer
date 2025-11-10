@@ -384,7 +384,7 @@ def GetCollectionInfo(collection_id: str) -> Any:
     except Exception as e:
         raise e
 
-def DownloadCollectionMods(collection_id: str, version: str, loader: str, download_directory: str, update_existing: bool = False, log: bool = True) -> Any:
+def DownloadCollectionMods(collection_id: str, version: str, loader: str, download_directory: str, update_existing: bool = False, log: bool = False) -> Any:
     try:
         # reset state from previous runs
         collection_client.mods_downloaded.clear()
@@ -446,12 +446,12 @@ def DownloadCollectionMods(collection_id: str, version: str, loader: str, downlo
                     log_file.write(f"Loader: {loader}\n")
                     log_file.write(f"Mods downloaded {len(collection_client.mods_downloaded)}:\n")
                     for mod_id in collection_client.mods_downloaded:
-                        name = collection_client.get_mod_info(mod_id)
-                        log_file.write(f"{name} - https://modrinth.com/mod/{mod_id}\n")
+                        info = collection_client.get_mod_info(mod_id)
+                        log_file.write(f"{info['title']} - https://modrinth.com/mod/{mod_id}\n")
                     log_file.write(f"Mods not found {len(collection_client.mods_not_found)}:\n")
                     for mod_id in collection_client.mods_not_found:
-                        name = collection_client.get_mod_info(mod_id)
-                        log_file.write(f"{name} - https://modrinth.com/mod/{mod_id}\n")
+                        info = collection_client.get_mod_info(mod_id)
+                        log_file.write(f"{info['title']} - https://modrinth.com/mod/{mod_id}\n")
             except Exception as e:
                 print(f"Failed to write log file {log_path}: {e}")
 
