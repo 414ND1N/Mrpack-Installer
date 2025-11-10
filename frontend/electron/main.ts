@@ -143,12 +143,14 @@ function createWindow() {
   }
 }
 
-app.on('window-all-closed', () => {
+app.on('window-all-closed', async () => {
   if (win) {
     const bounds = win.getBounds()
     store.set('windowBounds', { width: bounds.width, height: bounds.height })
     store.set('isFullscreen', win.isFullScreen())
   }
+
+  await stopBackend();
 
   // On macOS it is common for applications and their menu bar to stay active
   if (process.platform !== 'darwin') {
@@ -158,6 +160,10 @@ app.on('window-all-closed', () => {
 
 
 app.on('before-quit', async () => {
+  await stopBackend();
+});
+
+app.on('will-quit', async () => {
   await stopBackend();
 });
 
