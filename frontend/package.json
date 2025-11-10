@@ -3,10 +3,10 @@
   "private": true,
   "description": "Instalador de modpacks (modrinth) para Minecraft",
   "author": "ALANDLN",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "type": "module",
   "scripts": {
-    "predev": "taskkill /F /IM backend-mrpack-installer.exe || echo 'No backend process to kill'",
+    "predev": "taskkill /F /IM mrpack-installer.exe || echo 'No backend process to kill'",
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
     "build_notsc": "vite build && electron-builder",

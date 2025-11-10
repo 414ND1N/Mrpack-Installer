@@ -19065,20 +19065,28 @@ function SE() {
     console.error("Error fatal al intentar ejecutar spawn:", t), lt.quit();
   }
 }
-function sc() {
+async function sc() {
   if (At && At.pid) {
     console.log("Cerrando el proceso del backend...");
-    try {
-      wE(At.pid);
-    } catch (e) {
-      console.error("Error cerrando backend:", e);
-    }
+    const e = At.pid;
     At = null;
+    try {
+      await PE(e);
+    } catch (t) {
+      console.error("Error durante treeKill:", t);
+    }
   }
+}
+function PE(e) {
+  return new Promise((t) => {
+    wE(e, (u) => {
+      u ? console.error(`Error al intentar matar el PID ${e}:`, u) : console.log(`Proceso ${e} y sus hijos matados con éxito.`), t();
+    });
+  });
 }
 const uc = Ie.dirname($g(import.meta.url));
 process.env.APP_ROOT = Ie.join(uc, "..");
-const Et = new yw(), Ua = process.env.VITE_DEV_SERVER_URL, _1 = Ie.join(process.env.APP_ROOT, "dist-electron"), vy = Ie.join(process.env.APP_ROOT, "dist");
+const Et = new yw(), Ua = process.env.VITE_DEV_SERVER_URL, $1 = Ie.join(process.env.APP_ROOT, "dist-electron"), vy = Ie.join(process.env.APP_ROOT, "dist");
 process.env.VITE_PUBLIC = Ua ? Ie.join(process.env.APP_ROOT, "public") : vy;
 let Je;
 function _y() {
@@ -19108,18 +19116,18 @@ function _y() {
     console.log("Cargando archivo:", u), Je.loadFile(u);
   }
 }
-lt.on("window-all-closed", () => {
-  if (sc(), Je) {
+lt.on("window-all-closed", async () => {
+  if (Je) {
     const e = Je.getBounds();
     Et.set("windowBounds", { width: e.width, height: e.height }), Et.set("isFullscreen", Je.isFullScreen());
   }
-  process.platform !== "darwin" && lt.quit();
+  await sc(), process.platform !== "darwin" && lt.quit();
 });
-lt.on("will-quit", () => {
-  sc();
+lt.on("before-quit", async () => {
+  await sc();
 });
-lt.on("before-quit", () => {
-  sc();
+lt.on("will-quit", async () => {
+  await sc();
 });
 lt.on("activate", () => {
   Du.getAllWindows().length === 0 && _y();
@@ -19145,7 +19153,7 @@ bt.autoUpdater.on("error", (e) => {
 bt.autoUpdater.on("update-downloaded", (e) => {
   console.log("Update downloaded:", e);
 });
-function PE() {
+function RE() {
   wt.handle("set-fullscreen", (e, t) => {
     Je && (Je.setFullScreen(t), Et.set("isFullscreen", t));
   }), wt.handle("get-fullscreen", () => Je ? Je.isFullScreen() : !1), wt.handle("set-theme", (e, t) => {
@@ -19200,10 +19208,10 @@ wt.handle("dialog:showOpenDialog", async (e, t) => {
 EE ? (lt.on("second-instance", () => {
   Je && (Je.isMinimized() && Je.restore(), Je.focus());
 }), lt.whenReady().then(() => {
-  SE(), _y(), process.platform !== "darwin" && !Ua && hg.setApplicationMenu(null), PE(), console.log("Last version:", bt.autoUpdater.currentVersion), bt.autoUpdater.checkForUpdates();
+  SE(), _y(), process.platform !== "darwin" && !Ua && hg.setApplicationMenu(null), RE(), console.log("Last version:", bt.autoUpdater.currentVersion), bt.autoUpdater.checkForUpdates();
 })) : lt.quit();
 export {
-  _1 as MAIN_DIST,
+  $1 as MAIN_DIST,
   vy as RENDERER_DIST,
   Ua as VITE_DEV_SERVER_URL
 };
