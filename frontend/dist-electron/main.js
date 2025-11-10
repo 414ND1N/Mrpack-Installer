@@ -19043,7 +19043,7 @@ function _E() {
 var $E = _E();
 const wE = /* @__PURE__ */ Uu($E), EE = lt.requestSingleInstanceLock();
 let At = null;
-const bE = () => lt.isPackaged ? Ie.join(process.resourcesPath, "backend", "backend-mrpack-installer.exe") : Ie.join(uc, "..", "backend", "backend-mrpack-installer.exe");
+const bE = () => lt.isPackaged ? Ie.join(process.resourcesPath, "backend", "mrpack-installer.exe") : Ie.join(uc, "..", "backend", "mrpack-installer.exe");
 function SE() {
   if (At)
     return;
