@@ -54,16 +54,31 @@ function startBackend() {
   }
 }
 
-function stopBackend() {
+async function stopBackend(): Promise<void> {
   if (backendProcess && backendProcess.pid) {
     console.log('Cerrando el proceso del backend...');
+    
+    const pidToKill = backendProcess.pid;
+    backendProcess = null; 
+
     try {
-      treeKill(backendProcess.pid);
+      await killBackendProcess(pidToKill);
     } catch (e) {
-      console.error('Error cerrando backend:', e);
+      console.error('Error durante treeKill:', e);
     }
-    backendProcess = null;
   }
+}
+function killBackendProcess(pid: number): Promise<void> {
+  return new Promise((resolve) => {
+    treeKill(pid, (err) => {
+      if (err) {
+        console.error(`Error al intentar matar el PID ${pid}:`, err);
+      } else {
+        console.log(`Proceso ${pid} y sus hijos matados con éxito.`);
+      }
+      resolve();
+    });
+  });
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -129,7 +144,6 @@ function createWindow() {
 }
 
 app.on('window-all-closed', () => {
-  stopBackend();
   if (win) {
     const bounds = win.getBounds()
     store.set('windowBounds', { width: bounds.width, height: bounds.height })
@@ -142,12 +156,9 @@ app.on('window-all-closed', () => {
   }
 })
 
-app.on('will-quit', () => {
-  stopBackend();
-});
 
-app.on('before-quit', () => {
-  stopBackend();
+app.on('before-quit', async () => {
+  await stopBackend();
 });
 
 app.on('activate', () => {
