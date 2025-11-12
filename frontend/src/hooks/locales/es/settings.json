@@ -55,6 +55,7 @@
         "update": {
             "title": "Actualizaciones",
             "subtitle": "Mantén la aplicación actualizada",
+            "description": "Busca las últimas actualizaciones y descárgalas para asegurarte de tener las funciones y mejoras más recientes.",
             "update_available": "Nueva Actualización Disponible",
             "no_update_available": "No Hay Actualizaciones Disponibles",
             "button": "Descargar Actualización",

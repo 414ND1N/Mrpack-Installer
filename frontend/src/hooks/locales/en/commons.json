@@ -8,7 +8,10 @@
         "accept": "Accept",
         "reject": "Reject",
         "update": "Update",
-        "browse": "Browse"
+        "browse": "Browse",
+        "watch": "Watch",
+        "save": "Save",
+        "apply": "Apply"
     },
     "errors": {
         "header": "An error has occurred",
