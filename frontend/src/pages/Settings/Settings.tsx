@@ -55,7 +55,20 @@ function Settings() {
             showMessage(t('sections.update.downloaded'))
         } catch (error) {
             showMessage(t('sections.update.download_error'), { showClose: true })
-            // console.error(t('sections.update.download_error'), error)
+        }
+    }
+
+    const VerifyUpdate = async () => {
+        try {
+            const updateAvaliable = await (window as any).winConfig.checkUpdate()
+            if (updateAvaliable === true) {
+                setNewUpdateAvailable(updateAvaliable)
+                showMessage(t('sections.update.update_available'), { showClose: true })
+            }else{
+                showMessage(t('sections.update.no_update_available'), { showClose: true })
+            }
+        } catch (error) {
+            showMessage(t('sections.update.check_error'), { showClose: true })
         }
     }
 
@@ -84,11 +97,6 @@ function Settings() {
             const isFullscreen = await (window as any).winConfig.getFullscreen()
             if (isFullscreen !== undefined) {
                 setFullscreen(isFullscreen)
-            }
-            // Obtener el estado de actualización
-            const updateAvaliable = await (window as any).winConfig.checkUpdate()
-            if (updateAvaliable !== undefined) {
-                setNewUpdateAvailable(updateAvaliable)
             }
             // Obtener el idioma
             const savedLanguage = await (window as any).winConfig.getLanguage()
@@ -265,16 +273,22 @@ function Settings() {
             </section>
             <Separator />
             <section className="content">
+                <p>{t('sections.update.description')}</p>
                 <div className={`update-status`}>
-                    <h3>{newUpdateAvailable ? t('sections.update.update_available') : t('sections.update.no_update_available')}</h3>
                     {
-                        newUpdateAvailable &&
+                        newUpdateAvailable ?
                         (
                             <MCButton
-                                disabled={!newUpdateAvailable}
                                 onClick={HandleUpdate}
                             >
-                                {!newUpdateAvailable ? t('sections.update.button_no_update') : t('sections.update.button')}
+                                {t('sections.update.button')}
+                            </MCButton>
+                        ):
+                        (
+                            <MCButton
+                                onClick={VerifyUpdate}
+                            >
+                                {t('sections.update.button_no_update')}
                             </MCButton>
                         )
                     }

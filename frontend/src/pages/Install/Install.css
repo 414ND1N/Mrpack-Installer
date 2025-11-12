@@ -46,7 +46,20 @@
   grid-area: summary;
   font-family: var(--secondary-font);
   font-size: var(--step-0);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .mrpack-summary > div {
+  flex-grow: 1;
+}
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .mrpack-summary .actions {
+  display: flex;
+  justify-content: flex-end;
+  height: 100%;
+  padding: 0.5rem 0;
+}
+
 .install-container .sections-minecraft .section-from-file .content .installation-configuration .mrpack-summary p {
   font-family: inherit;
   font-size: inherit;

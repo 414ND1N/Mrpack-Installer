@@ -4,7 +4,7 @@
         "subtitle": "Manage your installations"
     },
     "sections": {
-        "file": {
+        "mrpack_file": {
             "title": "Mrpack File",
             "subtitle": "Select the mrpack file you want to install",
             "information": {
@@ -20,6 +20,10 @@
                 }
             },
             "configuration": {
+                "information": {
+                    "title": "Installation configuration",
+                    "description": "Configure the installation settings before proceeding"
+                },
                 "profile": {
                     "label": "Profile icon",
                     "description": "Select the icon you want to use for the Minecraft launcher profile"
@@ -29,11 +33,11 @@
                     "description": "Select the installation type",
                     "list": {
                         "singleplayer": "Singleplayer",
-                        "singleplayer_description": "Install the modpack for singleplayer and server use (includes all mods)",
+                        "singleplayer_description": "Install the modpack for singleplayer use (includes all mods), you can also use it on servers",
                         "client": "Client",
-                        "client_description": "Install the modpack for client use only (connect to multiplayer servers, doesn't include all mods)",
+                        "client_description": "Install the modpack for client use only (connect to modded multiplayer servers, doesn't include all mods to play singleplayer)",
                         "server": "Server",
-                        "server_description": "Download the server files for hosting a multiplayer server"
+                        "server_description": "Download the server files for hosting your modded multiplayer server"
                     }
                 },
                 "install": {
@@ -56,7 +60,8 @@
                         "label": "Memory allocation",
                         "min_placeholder": "Min (GB)",
                         "max_placeholder": "Max (GB)",
-                        "description": "Set the amount of RAM allocated to run the modpack in GB, leave blank to use the default settings"
+                        "description": "Set the amount of RAM allocated to run the modpack in GB, leave blank to use the default settings",
+                        "recommendation": "Recommended 2GB and 4GB for better performance in large modpacks"
                     }
                 }
             },

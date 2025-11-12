@@ -55,6 +55,7 @@
         "update": {
             "title": "Updates",
             "subtitle": "Keep the application up to date",
+            "description": "Check for the latest updates and download them to ensure you have the newest features and improvements.",
             "update_available": "New Update Available",
             "no_update_available": "No Updates Available",
             "button": "Download Update",

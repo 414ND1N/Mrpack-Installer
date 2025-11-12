@@ -23,7 +23,6 @@ function Install() {
 
     const { showMessage } = useGlobalMessage()
     const { t } = useTranslation(["installation", "commons"])
-    // let _MINECRAFT_DIR = "instances"
     const [minecraft_dir, setMinecraftDir] = useState<string>("")
     const [mrpackInfo, setMrpackInfo] = useState<MrpackMetadata | null>(null)
     const [personalizedConfig, setPersonalizedConfig] = useState<boolean>(false)
@@ -33,11 +32,11 @@ function Install() {
         installation_directory: "instances",
         minecraft_version: "latest", // Versión de Minecraft por defecto
         memory: {
-            max: "", // Memoria máxima por defecto
-            min: "" // Memoria mínima por defecto
+            min: "2", // Memoria mínima por defecto
+            max: "5"  // Memoria máxima por defecto
         },
         mrpack_path: "", // Ruta del archivo mrpack, inicialmente vacío
-        profile_icon: ProfileIcons.Bedrock // Icono del perfil, inicialmente vacío
+        profile_icon: ProfileIcons.Furnace // Icono del perfil, inicialmente vacío
     })
 
     useEffect(() => {
@@ -58,11 +57,11 @@ function Install() {
                 installation_directory: "instances",
                 minecraft_version: "latest", // Versión de Minecraft por defecto
                 memory: {
-                    max: "", // Memoria máxima por defecto
-                    min: "" // Memoria mínima por defecto
+                    min: "2", // Memoria mínima por defecto
+                    max: "4"  // Memoria máxima por defecto
                 },
                 mrpack_path: "", // Ruta del archivo mrpack, inicialmente vacío
-                profile_icon: ProfileIcons.Bedrock // Icono del perfil, inicialmente vacío
+                profile_icon: ProfileIcons.Furnace // Icono del perfil, inicialmente vacío
             })
         }
     }, [mrpackInfo])
@@ -175,7 +174,7 @@ function Install() {
     const sectionFromFile = (
         <>
             <section className="header">
-                <p>{t('sections.file.subtitle')}</p>
+                <p>{t('sections.mrpack_file.subtitle')}</p>
             </section>
             <section className='content'>
 
@@ -184,9 +183,51 @@ function Install() {
                 <section className={`installation-configuration ${installationConfig.mrpack_path != "" ? "active" : ""}`}>
 
                     <section className="mrpack-summary">
-                        {mrpackInfo ? <p>{t('sections.file.information.summary.name')}: {mrpackInfo?.name || "NA"} </p> : null}
-                        {mrpackInfo?.summary ? <p>{t('sections.file.information.summary.description')}: {mrpackInfo?.summary || "NA"} </p> : null}
-                        {installationConfig.minecraft_version ? <p>{t('sections.file.information.summary.version')}: {installationConfig.minecraft_version || "NA"}</p> : null}
+
+                        <div className="information">
+                            {mrpackInfo ? <p>{t('sections.mrpack_file.information.summary.name')}: {mrpackInfo?.name || "NA"} </p> : null}
+                            {mrpackInfo?.summary ? <p>{t('sections.mrpack_file.information.summary.description')}: {mrpackInfo?.summary || "NA"} </p> : null}
+                            {installationConfig.minecraft_version ? <p>{t('sections.mrpack_file.information.summary.version')}: {installationConfig.minecraft_version || "NA"}</p> : null}
+                        </div>
+                        <div className="actions">
+                            <Dialog>
+                                <DialogTrigger>
+                                    <MCButton>
+                                        {t('actions.watch', { ns: 'commons' })} {t('sections.mrpack_file.information.list.label')}
+                                    </MCButton>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        {t('sections.mrpack_file.information.list.label')}
+                                    </DialogHeader>
+                                    <DialogDescription>
+                                        {t('sections.mrpack_file.information.list.description')}
+                                    </DialogDescription>
+                                    <Separator />
+                                    {mrpackInfo?.files && mrpackInfo.files.length > 0 ? (
+                                        <ul>
+                                            {mrpackInfo.files
+                                                ?.sort((a, b) => a.path.localeCompare(b.path)) // Order
+                                                .map((file) => {
+                                                    if (file.path) {
+                                                        return <li key={file.path}>{file.path.split(".")[0].replace("/", " > ") || "unknown"}</li>
+                                                    }
+                                                })}
+                                        </ul>
+                                    ) : (
+                                        <h2>{t('sections.mrpack_file.information.list.empty')}</h2>
+                                    )}
+                                    <DialogFooter>
+                                        <DialogClose>
+                                            <MCButton>
+                                                {t('actions.close', { ns: 'commons' })}
+                                            </MCButton>
+                                        </DialogClose>
+                                    </DialogFooter>
+
+                                </DialogContent>
+                            </Dialog>
+                        </div>
                     </section>
 
                     <section className="configuration">
@@ -201,32 +242,51 @@ function Install() {
                                         setPersonalizedConfig(checked)
                                     }}
                                 />
-                                <p>{t('sections.file.configuration.advanced.activate')}</p>
+                                <p>{t('sections.mrpack_file.configuration.advanced.activate')}</p>
                                 <Dialog>
                                     <DialogTrigger>
                                         <MCAskButton />
                                     </DialogTrigger>
                                     <DialogContent>
                                         <DialogHeader>
-                                            {t('sections.file.information.list.label')}
+                                            {t('sections.mrpack_file.configuration.information.title')}
                                         </DialogHeader>
                                         <DialogDescription>
-                                            {t('sections.file.information.list.description')}
+                                            {t('sections.mrpack_file.configuration.information.description')}
                                         </DialogDescription>
                                         <Separator />
-                                        {mrpackInfo?.files && mrpackInfo.files.length > 0 ? (
+                                        {t('sections.mrpack_file.configuration.advanced.path.label')}
+                                        <DialogDescription>
+                                            {t('sections.mrpack_file.configuration.advanced.path.description')}
+                                        </DialogDescription>
+                                        <Separator borderless={true}/>
+                                        
+                                        {t('sections.mrpack_file.configuration.advanced.memory.label')}
+                                        <DialogDescription>
+                                            {t('sections.mrpack_file.configuration.advanced.memory.description')}
+                                        </DialogDescription>
+                                        <DialogDescription>
+                                            {t('sections.mrpack_file.configuration.advanced.memory.recommendation')}
+                                        </DialogDescription>
+                                        <Separator borderless={true}/>
+
+                                        {t('sections.mrpack_file.configuration.profile.label')}
+                                        <DialogDescription>
+                                            {t('sections.mrpack_file.configuration.profile.description')}
+                                        </DialogDescription>
+                                        <Separator borderless={true}/>
+
+
+                                        {t('sections.mrpack_file.configuration.type.label')}
+                                        <DialogDescription>
+                                            {t('sections.mrpack_file.configuration.type.description')}:
                                             <ul>
-                                                {mrpackInfo.files
-                                                    ?.sort((a, b) => a.path.localeCompare(b.path)) // Order
-                                                    .map((file) => {
-                                                        if (file.path) {
-                                                            return <li key={file.path}>{file.path.split(".")[0].replace("/", " > ") || "unknown"}</li>
-                                                        }
-                                                    })}
+                                                <li><strong>{t('sections.mrpack_file.configuration.type.list.singleplayer')}:</strong> {t('sections.mrpack_file.configuration.type.list.singleplayer_description')}</li>
+                                                <li><strong>{t('sections.mrpack_file.configuration.type.list.client')}:</strong> {t('sections.mrpack_file.configuration.type.list.client_description')}</li>
+                                                <li><strong>{t('sections.mrpack_file.configuration.type.list.server')}:</strong> {t('sections.mrpack_file.configuration.type.list.server_description')}</li>
                                             </ul>
-                                        ) : (
-                                            <h2>{t('sections.file.information.list.empty')}</h2>
-                                        )}
+                                        </DialogDescription>
+
                                         <DialogFooter>
                                             <DialogClose>
                                                 <MCButton>
@@ -242,10 +302,10 @@ function Install() {
                             <Dialog open={openDialogConfig}>
                                 <DialogContent>
                                     <DialogHeader>
-                                        <h2>{t('sections.file.configuration.advanced.title')}</h2>
+                                        <h2>{t('sections.mrpack_file.configuration.advanced.title')}</h2>
                                     </DialogHeader>
-                                    <p>{t('sections.file.configuration.advanced.ask')}</p>
-                                    <p>{t('sections.file.configuration.advanced.activation_warning')}</p>
+                                    <p>{t('sections.mrpack_file.configuration.advanced.ask')}</p>
+                                    <p>{t('sections.mrpack_file.configuration.advanced.activation_warning')}</p>
 
                                     <DialogFooter>
                                         <MCButton onClick={() => {
@@ -269,30 +329,11 @@ function Install() {
                         <div className={`advanced-configuration ${personalizedConfig ? "active" : ""}`}>
 
                             <div className="path">
-                                <Dialog>
-                                    <DialogTrigger>
-                                        <a className="information-toggle">{t('sections.file.configuration.advanced.path.label')}</a>
-                                    </DialogTrigger>
-                                    <DialogContent>
-                                        <DialogHeader>
-                                            {t('sections.file.configuration.advanced.path.label')}
-                                        </DialogHeader>
-                                        <DialogDescription>
-                                            {t('sections.file.configuration.advanced.path.description')}
-                                        </DialogDescription>
-                                        <DialogFooter>
-                                            <DialogClose>
-                                                <MCButton>
-                                                    {t('actions.close', { ns: 'commons' })}
-                                                </MCButton>
-                                            </DialogClose>
-                                        </DialogFooter>
-                                    </DialogContent>
-                                </Dialog>
+                                <h2 className="information-toggle">{t('sections.mrpack_file.configuration.advanced.path.label')}</h2>
                                 <MCInput
                                     variant="default"
                                     className="path_input"
-                                    placeholder={t('sections.file.configuration.advanced.path.placeholder')}
+                                    placeholder={t('sections.mrpack_file.configuration.advanced.path.placeholder')}
                                     value={installationConfig.installation_directory} // Ruta de instalación del modpack
                                     onChange={(event) => {
                                         const newPath = event.target.value.trim()
@@ -311,37 +352,16 @@ function Install() {
                                     className="path_search"
                                     onClick={OpenFolder}
                                 >
-                                    {t('actions.browse', {ns: 'commons'})}
+                                    {t('actions.browse', { ns: 'commons' })}
                                 </MCButton>
                             </div>
 
                             <div className={`memory ${installationConfig.type === "serverside" ? "inactive-component" : ""}`}>
-                                <Dialog>
-                                    <DialogTrigger>
-                                        <a className="information-toggle">
-                                            {t('sections.file.configuration.advanced.memory.label')}
-                                        </a>
-                                    </DialogTrigger>
-                                    <DialogContent>
-                                        <DialogHeader>
-                                            {t('sections.file.configuration.advanced.memory.label')}
-                                        </DialogHeader>
-                                        <DialogDescription>
-                                            {t('sections.file.configuration.advanced.memory.description')}
-                                        </DialogDescription>
-                                        <DialogFooter>
-                                            <DialogClose>
-                                                <MCButton>
-                                                    {t('actions.close', { ns: 'commons' })}
-                                                </MCButton>
-                                            </DialogClose>
-                                        </DialogFooter>
-                                    </DialogContent>
-                                </Dialog>
+                                <h2>{t('sections.mrpack_file.configuration.advanced.memory.label')}</h2>
                                 <div className="memory-inputs">
                                     <MCInput
                                         className={`${installationConfig.type === "serverside" ? "inactive-component" : ""}`}
-                                        placeholder={t('sections.file.configuration.advanced.memory.min_placeholder')}
+                                        placeholder={t('sections.mrpack_file.configuration.advanced.memory.min_placeholder')}
                                         value={installationConfig.memory.min}
                                         onChange={(event) =>
                                             setInstallationConfig((prevInfo) => ({
@@ -355,7 +375,7 @@ function Install() {
                                     />
                                     <MCInput
                                         className={`${installationConfig.type === "serverside" ? "inactive-component" : ""}`}
-                                        placeholder={t('sections.file.configuration.advanced.memory.max_placeholder')}
+                                        placeholder={t('sections.mrpack_file.configuration.advanced.memory.max_placeholder')}
                                         value={installationConfig.memory.max}
                                         onChange={(event) =>
                                             setInstallationConfig((prevInfo) => ({
@@ -375,26 +395,7 @@ function Install() {
                     <section className="inputs">
                         <div className={`icon-selector ${installationConfig.type === "serverside" ? "inactive-component" : ""}`}
                         >
-                            <Dialog>
-                                <DialogTrigger>
-                                    <a className="information-toggle">{t('sections.file.configuration.profile.label')}</a>
-                                </DialogTrigger>
-                                <DialogContent>
-                                    <DialogHeader>
-                                        {t('sections.file.configuration.profile.label')}
-                                    </DialogHeader>
-                                    <DialogDescription>
-                                        {t('sections.file.configuration.profile.description')}
-                                    </DialogDescription>
-                                    <DialogFooter>
-                                        <DialogClose>
-                                            <MCButton>
-                                                {t('actions.close', { ns: 'commons' })}
-                                            </MCButton>
-                                        </DialogClose>
-                                    </DialogFooter>
-                                </DialogContent>
-                            </Dialog>
+                            <h2>{t('sections.mrpack_file.configuration.profile.label')}</h2>
                             <MCSelect
                                 value={installationConfig.profile_icon}
                                 onChange={(event) =>
@@ -404,40 +405,22 @@ function Install() {
                                     }))
                                 }
                             >
-                                {Object.entries(ProfileIcons).map(([key, value]) => (
-                                    <option key={key} value={value}>
-                                        {t(`minecraft.launcher.profile.icons.${key}`, { ns: "commons" })}
-                                    </option>
-                                ))}
+                                {Object.entries(ProfileIcons)
+                                    .map(([key, value]) => ({
+                                        key,
+                                        value,
+                                        label: t(`minecraft.launcher.profile.icons.${key}`, { ns: "commons" })
+                                    }))
+                                    .sort((a, b) => a.label.localeCompare(b.label))
+                                    .map(({ key, value, label }) => (
+                                        <option key={key} value={value}>
+                                            {label}
+                                        </option>
+                                    ))}
                             </MCSelect>
                         </div>
                         <div className="type-selector">
-                            <Dialog>
-                                <DialogTrigger>
-                                    <a className="information-toggle">{t('sections.file.configuration.type.label')}</a>
-                                </DialogTrigger>
-                                <DialogContent>
-                                    <DialogHeader>
-                                        {t('sections.file.configuration.type.label')}
-                                    </DialogHeader>
-                                    <DialogDescription>
-                                        {t('sections.file.configuration.type.description')}:
-                                    </DialogDescription>
-                                    <Separator borderless={true} />
-                                    <ul>
-                                        <li><strong>{t('sections.file.configuration.type.list.singleplayer')}:</strong> {t('sections.file.configuration.type.list.singleplayer_description')}</li>
-                                        <li><strong>{t('sections.file.configuration.type.list.client')}:</strong> {t('sections.file.configuration.type.list.client_description')}</li>
-                                        <li><strong>{t('sections.file.configuration.type.list.server')}:</strong> {t('sections.file.configuration.type.list.server_description')}</li>
-                                    </ul>
-                                    <DialogFooter>
-                                        <DialogClose>
-                                            <MCButton>
-                                                {t('actions.close', { ns: 'commons' })}
-                                            </MCButton>
-                                        </DialogClose>
-                                    </DialogFooter>
-                                </DialogContent>
-                            </Dialog>
+                            <h2>{t('sections.mrpack_file.configuration.type.label')}</h2>
                             <MCSelect
                                 value={installationConfig.type}
                                 onChange={(event) =>
@@ -447,24 +430,24 @@ function Install() {
                                     }))
                                 }
                             >
-                                <option value="singleplayer">{t('sections.file.configuration.type.list.singleplayer')}</option>
-                                <option value="clientside">{t('sections.file.configuration.type.list.client')}</option>
-                                <option value="serverside">{t('sections.file.configuration.type.list.server')}</option>
+                                <option value="singleplayer">{t('sections.mrpack_file.configuration.type.list.singleplayer')}</option>
+                                <option value="clientside">{t('sections.mrpack_file.configuration.type.list.client')}</option>
+                                <option value="serverside">{t('sections.mrpack_file.configuration.type.list.server')}</option>
                             </MCSelect>
                         </div>
                         <div className="installation-button">
                             <Dialog>
                                 <DialogTrigger>
                                     <MCButton disabled={installationConfig.mrpack_path == ""} className="install">
-                                        {t('sections.file.configuration.install.button')}
+                                        {t('sections.mrpack_file.configuration.install.button')}
                                     </MCButton>
                                 </DialogTrigger>
                                 <DialogContent>
                                     <DialogHeader>
-                                        <h2>{t('sections.file.messages.installation.need_launcher_closed')}</h2>
+                                        <h2>{t('sections.mrpack_file.messages.installation.need_launcher_closed')}</h2>
                                     </DialogHeader>
                                     <Separator />
-                                    <p>{t('sections.file.messages.installation.need_launcher_closed_desc')}</p>
+                                    <p>{t('sections.mrpack_file.messages.installation.need_launcher_closed_desc')}</p>
 
                                     <DialogFooter>
                                         <DialogClose>
@@ -500,7 +483,7 @@ function Install() {
                     [
                         {
                             id: "from-file",
-                            title: t('sections.file.title'),
+                            title: t('sections.mrpack_file.title'),
                             content: sectionFromFile
                         }
                     ]

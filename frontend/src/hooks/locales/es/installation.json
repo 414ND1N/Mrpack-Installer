@@ -4,7 +4,7 @@
         "subtitle": "Administra tus instalaciones"
     },
     "sections": {
-        "file": {
+        "mrpack_file": {
             "title": "Archivo Mrpack",
             "subtitle": "Selecciona el archivo mrpack que deseas instalar",
             "information": {
@@ -20,6 +20,10 @@
                 }
             },
             "configuration": {
+                "information": {
+                    "title": "Configuración de la instalación",
+                    "description": "Configura los ajustes de instalación antes de proceder"
+                },
                 "profile": {
                     "label": "Icono del perfil",
                     "description": "Selecciona el icono que deseas usar para el perfil del lanzador de Minecraft"
@@ -29,11 +33,11 @@
                     "description": "Selecciona el tipo de instalación",
                     "list": {
                         "singleplayer": "Un jugador",
-                        "singleplayer_description": "Instala el paquete de mods para un jugador y uso en servidores (incluye todos los mods)",
+                        "singleplayer_description": "Instala el paquete de mods para uso en un solo jugador (incluye todos los mods), también puedes usarlo en servidores",
                         "client": "Cliente",
-                        "client_description": "Instala el paquete de mods para uso en cliente unicamente (conéctate a servidores multijugador, no incluye todos los mods)",
+                        "client_description": "Instala el paquete de mods solo para uso en cliente (conéctate a servidores multijugador con mods, no incluye todos los mods para jugar en un solo jugador)",
                         "server": "Servidor",
-                        "server_description": "Descarga los archivos del servidor para alojar un servidor"
+                        "server_description": "Descarga los archivos del servidor para alojar tu servidor multijugador con mods"
                     }
                 },
                 "install": {
@@ -56,7 +60,8 @@
                         "label": "Asignación de memoria",
                         "description": "Configura la cantidad de memoria RAM asignada para ejecutar el paquete de mods en GB, deja en blanco para usar la configuración predeterminada",
                         "min_placeholder": "Mínima (GB)",
-                        "max_placeholder": "Máxima (GB)"
+                        "max_placeholder": "Máxima (GB)",
+                        "recommendation": "Recomendado entre 2GB y 4GB para un mejor rendimiento en paquetes de mods grandes"
                     }
                 }
             },
