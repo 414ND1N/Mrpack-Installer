@@ -73,7 +73,7 @@ function Install() {
 
         // Verificar si el archivo es un modpack válido
         if (!file?.name.endsWith(".mrpack")) {
-            alert(t('sections.file.messages.error.invalid_mrpack_file'))
+            alert(t('sections.mrpack_file.messages.error.invalid_mrpack_file'))
         }
 
         try {
@@ -100,7 +100,7 @@ function Install() {
 
         } catch (error) {
             console.error("Error al obtener los metadatos del modpack:", error)
-            // alert(t('sections.file.messages.error.invalid_modpack'))
+            // alert(t('sections.mrpack_file.messages.error.invalid_modpack'))
             setInstallationConfig((prevInfo) => ({
                 ...prevInfo,
                 installation_directory: "instances", // Reiniciar la ruta de instalación del modpack
@@ -114,11 +114,11 @@ function Install() {
         try {
             const result = await (window as any).winConfig.ShowOpenDialog({
                 defaultPath: minecraft_dir,
-                title: t('sections.file.configuration.advanced.path.browse_title'),
+                title: t('sections.mrpack_file.configuration.advanced.path.browse_title'),
                 properties: ['openDirectory'],
                 createDirectory: true,
                 promptToCreate: true,
-                message: t('sections.file.configuration.advanced.path.browse_description')
+                message: t('sections.mrpack_file.configuration.advanced.path.browse_description')
             })
             if (!result || result.canceled) return
             const selected = result.filePaths && result.filePaths[0]
@@ -132,37 +132,37 @@ function Install() {
 
     const StartInstallation = async () => {
         if (!mrpackInfo) {
-            showMessage(t('sections.file.messages.error.no_file_selected'), { showClose: true })
+            showMessage(t('sections.mrpack_file.messages.error.no_file_selected'), { showClose: true })
             return
         }
 
         try {
             // Mostrar mensaje inicial y ocultar botón de cerrar durante la instalación
-            showMessage(t('sections.file.messages.installation.starting'), { showClose: false })
+            showMessage(t('sections.mrpack_file.messages.installation.starting'), { showClose: false })
 
             // Iniciar la instalación modpack y dependencias
-            showMessage(t('sections.file.messages.installation.dependencies.installing'), { showClose: false })
+            showMessage(t('sections.mrpack_file.messages.installation.dependencies.installing'), { showClose: false })
 
             await (window as any).backend.StartMrpackInstallation(
                 installationConfig,
                 (status: string) => { showMessage(status, { showClose: false }) },
                 undefined,  // cbMax               
                 undefined,  // cbProgress
-                (_: string) => { showMessage(t('sections.file.messages.installation.dependencies.finish'), { showClose: true }) },
-                (status: string) => { showMessage(t('sections.file.messages.installation.error') + `: ${status}`, { showClose: true }) },
+                (_: string) => { showMessage(t('sections.mrpack_file.messages.installation.dependencies.finish'), { showClose: true }) },
+                (status: string) => { showMessage(t('sections.mrpack_file.messages.installation.error') + `: ${status}`, { showClose: true }) },
             )
 
             // Añadir el lanzador si es necesario
             if (installationConfig.type !== "serverside") {
-                showMessage(t('sections.file.messages.installation.vanilla_launcher.adding'), { showClose: false })
+                showMessage(t('sections.mrpack_file.messages.installation.vanilla_launcher.adding'), { showClose: false })
                 await (window as any).backend.AddVanillaLauncher(installationConfig)
-                showMessage(t('sections.file.messages.installation.vanilla_launcher.finish'), { showClose: true })
+                showMessage(t('sections.mrpack_file.messages.installation.vanilla_launcher.finish'), { showClose: true })
             }
 
-            showMessage(t('sections.file.messages.installation.finish'), { showClose: true })
+            showMessage(t('sections.mrpack_file.messages.installation.finish'), { showClose: true })
         } catch (error) {
             showMessage(
-                t('sections.file.messages.installation.error') +
+                t('sections.mrpack_file.messages.installation.error') +
                 `: ${(error as Error).message}`,
                 { showClose: true }
             )
@@ -338,7 +338,7 @@ function Install() {
                                     onChange={(event) => {
                                         const newPath = event.target.value.trim()
                                         if (!newPath || newPath.length === 0) {
-                                            alert(t('sections.file.messages.error.invalid_path'))
+                                            alert(t('sections.mrpack_file.messages.error.invalid_path'))
                                             return
                                         }
                                         setInstallationConfig((prevInfo) => ({
