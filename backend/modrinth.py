@@ -219,7 +219,7 @@ def get_existing_mods(directory: str) -> list[dict]:
         for file_name in file_names
     ]
 
-def get_latest_version(mod_id: str, vers: str, loader: str):
+def get_latest_version(mod_id: str, vers: str, loaders: list[str]):
     mod_versions_data = collection_client.get_mod_version(mod_id)
     if not mod_versions_data:
         print(f"{mod_id} versions not found!")
@@ -230,13 +230,15 @@ def get_latest_version(mod_id: str, vers: str, loader: str):
             mod_version
             for mod_version in mod_versions_data
             if vers in mod_version["game_versions"]
-            and loader in mod_version["loaders"]
+            and (
+                any(loader in mod_version["loaders"] for loader in loaders)
+            )
         ),
         None,
     )
     return mod_version_to_download
 
-def download_mod(mod_id: str, update: bool, version: str, loader: str, download_directory: str, existing_mods: list[dict]):
+def download_mod(mod_id: str, update: bool, version: str, loaders: list[str], download_directory: str, existing_mods: list[dict]):
     try:
         existing_mod = next((mod for mod in existing_mods if mod["id"] == mod_id), None)
 
@@ -244,10 +246,10 @@ def download_mod(mod_id: str, update: bool, version: str, loader: str, download_
             print(f"{mod_id} already exists, skipping...")
             return
 
-        latest_mod = get_latest_version(mod_id, version, loader)
+        latest_mod = get_latest_version(mod_id, version, loaders)
         if not latest_mod:
             collection_client.mods_not_found.add(mod_id)
-            raise Exception(f"No version found for {mod_id} with MC_VERSION={version} and LOADER={loader}")
+            raise Exception(f"No version found for {mod_id} with MC_VERSION={version} and LOADER={', '.join(map(str, loaders))}")
 
         file_to_download: dict | None = next(
             (file for file in latest_mod["files"] if file["primary"] == True), None
@@ -284,7 +286,7 @@ def download_mod(mod_id: str, update: bool, version: str, loader: str, download_
     except Exception as e:
         print(f"Failed to download {mod_id}: {e}")
 
-def VerifyModsInCollection(collection_id: str, version: str, loader: str) -> Any:
+def VerifyModsInCollection(collection_id: str, version: str, loaders: list[str]) -> Any:
     try:
         # reset state from previous runs
         collection_client.mods_downloaded.clear()
@@ -314,8 +316,10 @@ def VerifyModsInCollection(collection_id: str, version: str, loader: str) -> Any
                 if mod_versions:
                     for mv in mod_versions:
                         game_versions = mv.get("game_versions", [])
-                        loaders = mv.get("loaders", [])
-                        if version in game_versions and loader in loaders:
+                        loaders_list = mv.get("loaders", [])
+                        if version in game_versions and (
+                            any(loader in loaders_list for loader in loaders)
+                        ):
                             has_compatible = True
                             break
 
@@ -353,7 +357,7 @@ def VerifyModsInCollection(collection_id: str, version: str, loader: str) -> Any
         return {
             "collection_id": collection_id,
             "mc_version": version,
-            "loader": loader,
+            "loader": ', '.join(map(str, loaders)) if loaders else "",
             "available_mods": available_mods,
             "unavailable_mods": unavailable_mods,
             "ok": True
@@ -384,7 +388,7 @@ def GetCollectionInfo(collection_id: str) -> Any:
     except Exception as e:
         raise e
 
-def DownloadCollectionMods(collection_id: str, version: str, loader: str, download_directory: str, update_existing: bool = False, log: bool = False) -> Any:
+def DownloadCollectionMods(collection_id: str, version: str, loaders: list[str], download_directory: str, update_existing: bool = False, log: bool = False) -> Any:
     try:
         # reset state from previous runs
         collection_client.mods_downloaded.clear()
@@ -412,7 +416,7 @@ def DownloadCollectionMods(collection_id: str, version: str, loader: str, downlo
                         mod,
                         update_existing,
                         version,
-                        loader,
+                        loaders,
                         download_directory,
                         existing_mods,
                     )
@@ -443,7 +447,7 @@ def DownloadCollectionMods(collection_id: str, version: str, loader: str, downlo
             try:
                 with log_path.open("a", encoding="utf-8") as log_file:
                     log_file.write(f"Version: {version}\n")
-                    log_file.write(f"Loader: {loader}\n")
+                    log_file.write(f"Loader: {', '.join(map(str, loaders))}\n")
                     log_file.write(f"Mods downloaded {len(collection_client.mods_downloaded)}:\n")
                     for mod_id in collection_client.mods_downloaded:
                         info = collection_client.get_mod_info(mod_id)
@@ -462,7 +466,7 @@ def DownloadCollectionMods(collection_id: str, version: str, loader: str, downlo
         return {
             "collection_id": collection_id,
             "mc_version": version,
-            "loader": loader,
+            "loader": ', '.join(map(str, loaders)),
             "ok": True,
             "mods_downloaded": list(collection_client.mods_downloaded),
             "mods_not_found": list(collection_client.mods_not_found),

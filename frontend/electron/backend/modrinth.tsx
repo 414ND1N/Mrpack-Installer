@@ -117,9 +117,9 @@ const GetMrpackInfo = async (filePath: string): Promise<MrpackInfo> => {
     }
 }
 
-const DownloadCollection = async (collectionId: string, version: string, loader: string, directory: string, updateExisting: boolean, log: boolean = false): Promise<CollectionDownloadInfo> => {
+const DownloadCollection = async (collectionId: string, version: string, loaders: string[], directory: string, updateExisting: boolean, log: boolean = false): Promise<CollectionDownloadInfo> => {
     try {
-        const payload = { collection_id: collectionId.trim(), version, loader, directory, update: updateExisting, log}
+        const payload = { collection_id: collectionId.trim(), version, loaders, directory, update: updateExisting, log}
         const res = await fetch('http://127.0.0.1:8001/modrinth/collection/download', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -151,12 +151,12 @@ const GetCollectionInfo = async (collectionId:string): Promise<CollectionInfo> =
     }
 }
 
-const GetModsInCollectionInfo = async (collectionId:string, version: string, loader: string): Promise<ModsInCollectionInfo> => {
+const GetModsInCollectionInfo = async (collectionId:string, version: string, loaders: string): Promise<ModsInCollectionInfo> => {
     try {
         const url = new URL('http://127.0.0.1:8001/modrinth/collection/mods/verify')
         url.searchParams.set('collection_id', collectionId)
         url.searchParams.set('version', version)
-        url.searchParams.set('loader', loader)
+        url.searchParams.set('loaders', loaders)
         const res = await fetch(url, { method: 'GET', cache: 'no-store' })
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`)

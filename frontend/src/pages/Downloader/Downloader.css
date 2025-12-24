@@ -13,6 +13,26 @@
   margin: 0 0 1em 0;
 }
 
+.loader-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin: 0.5em 0;
+}
+
+.loader-chips .loader-chip {
+  background-color: var(--mc-darken-green-1, --mc-green-1, --mc-accent-color-light);
+  padding-left: 0.75em;
+  border-radius: 0.5em;
+  font-size: 0.9em;
+}
+.loader-chips .loader-chip > button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+
 .collection-container .content{
   display: flex;
   flex-direction: column;
