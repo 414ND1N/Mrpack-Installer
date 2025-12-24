@@ -9,7 +9,6 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: Size
   asChild?: boolean
 }
-
 function MCButton({ variant = "default", size = "default", asChild = false, className, children, ...props }: ButtonProps) {
   const classes = ["btn", "mc-style", `variant-${variant}`, `size-${size}`, className].filter(Boolean).join(" ")
 
@@ -80,7 +79,7 @@ interface SliderProps extends React.HTMLAttributes<HTMLDivElement> {
   checked?: boolean
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
-function MCSlider({ variant = "default", checked, onChange, className, ...props  }: SliderProps) {
+function MCSlider({ variant = "default", checked, onChange, className, ...props }: SliderProps) {
   const classes = ["mc-slider", "mc-style", `variant-${variant}`, className].filter(Boolean).join(" ")
   return (
     <div className={classes} {...props}>
@@ -124,7 +123,7 @@ interface AskButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: Variant
   icon?: React.ReactNode
 }
-function MCAskButton({ variant = "default", icon="?", className,...props }: AskButtonProps) {
+function MCAskButton({ variant = "default", icon = "?", className, ...props }: AskButtonProps) {
   const classes = ["mc-ask-button", "mc-style", `variant-${variant} ${className}`].filter(Boolean).join(" ")
   return (
     <div className={classes} {...props}>

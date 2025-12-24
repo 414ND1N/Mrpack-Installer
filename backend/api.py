@@ -209,7 +209,7 @@ async def get_minecraft_directory() -> str:
 class CollectionDownloadRequest(BaseModel):
     collection_id: str
     version: str | None = None
-    loader: str | None = None
+    loaders: list[str] | None = None
     directory: str | None = "mods"
     update: bool | None = False
     log: bool | None = True
@@ -217,7 +217,7 @@ class CollectionDownloadRequest(BaseModel):
 async def download_modrinth_collection(payload: CollectionDownloadRequest) -> Any:
     collection_id = payload.collection_id
     version = payload.version or ""
-    loader = payload.loader or ""
+    loaders = payload.loaders or ""
     directory = payload.directory or "mods"
     update_existing = bool(payload.update)
     log = bool(payload.log)
@@ -231,7 +231,7 @@ async def download_modrinth_collection(payload: CollectionDownloadRequest) -> An
             Mr.DownloadCollectionMods,
             collection_id,
             version,
-            loader,
+            loaders,
             directory,
             update_existing,
             log
@@ -252,10 +252,11 @@ async def get_modrinth_collection_info(collection_id: str = Query(..., descripti
 async def get_modrinth_collection_mods(
     collection_id: str = Query(..., description="Modrinth collection ID"),
     version: str  = Query(None, description="Minecraft version filter"),
-    loader: str  = Query(None, description="Loader filter")
+    loaders: str  = Query(None, description="Loader filter separated by commas")
 ) -> Any:
     try:
-        return Mr.VerifyModsInCollection(collection_id, version, loader)
+        loaders_list = [l.strip() for l in loaders.split(",") if l.strip()] if loaders else []
+        return Mr.VerifyModsInCollection(collection_id, version, loaders_list)
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"Error fetching from Modrinth: {e}")
 

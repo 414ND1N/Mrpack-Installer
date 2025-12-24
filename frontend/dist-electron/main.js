@@ -19208,7 +19208,7 @@ wt.handle("dialog:showOpenDialog", async (e, t) => {
 EE ? (lt.on("second-instance", () => {
   Je && (Je.isMinimized() && Je.restore(), Je.focus());
 }), lt.whenReady().then(() => {
-  SE(), _y(), process.platform !== "darwin" && !Ua && hg.setApplicationMenu(null), RE(), console.log("Last version:", bt.autoUpdater.currentVersion), bt.autoUpdater.checkForUpdates();
+  _y(), process.platform !== "darwin" && !Ua && hg.setApplicationMenu(null), SE(), RE(), console.log("Last version:", bt.autoUpdater.currentVersion), bt.autoUpdater.checkForUpdates();
 })) : lt.quit();
 export {
   $1 as MAIN_DIST,

@@ -15,7 +15,8 @@
                 "download_completed_with_errors": "Download completed with errors",
                 "download_successful": "Download successful",
                 "mods_downloaded": "Mods downloaded",
-                "mods_not_found": "Mods not found"
+                "mods_not_found": "Mods not found",
+                "downloaded": "downloaded"
             },
             "verify": {
                 "button": "Verify mods in collection",

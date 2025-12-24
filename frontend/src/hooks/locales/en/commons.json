@@ -1,4 +1,17 @@
 {
+    "projects": {
+        "modpack": "Modpack",
+        "resourcepack": "Resourcepack",
+        "shaderpack": "Shaderpack",
+        "world": "World"
+    },
+    "texts": {
+        "loading": "Loading...",
+        "no_data": "No data available",
+        "yes": "Yes",
+        "no": "No",
+        "all": "All"
+    },
     "actions": {
         "import": "Import",
         "cancel": "Cancel",
@@ -11,7 +24,8 @@
         "browse": "Browse",
         "watch": "Watch",
         "save": "Save",
-        "apply": "Apply"
+        "apply": "Apply",
+        "add": "Add"
     },
     "errors": {
         "header": "An error has occurred",
