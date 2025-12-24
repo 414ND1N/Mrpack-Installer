@@ -1,4 +1,17 @@
 {
+    "projects": {
+        "modpack": "Modpack",
+        "resourcepack": "Paquete de recursos",
+        "shaderpack": "Shaderpack",
+        "world": "Mundo"
+    },
+    "texts": {
+        "loading": "Cargando...",
+        "no_data": "No hay datos disponibles",
+        "yes": "Sí",
+        "no": "No",
+        "all": "Todos"
+    },
     "actions": {
         "import": "Importar",
         "cancel": "Cancelar",
@@ -11,7 +24,8 @@
         "browse": "Examinar",
         "watch": "Ver",
         "save": "Guardar",
-        "apply": "Aplicar"
+        "apply": "Aplicar",
+        "add": "Agregar"
     },
     "errors": {
         "header": "Ha ocurrido un error",

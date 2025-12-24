@@ -4,67 +4,67 @@ import Store from 'electron-store'
 import { autoUpdater } from 'electron-updater'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-import { spawn, ChildProcess } from 'child_process';
-import treeKill from 'tree-kill';
+import { spawn, ChildProcess } from 'child_process'
+import treeKill from 'tree-kill'
 
-const gotTheLock = app.requestSingleInstanceLock();
-let backendProcess: ChildProcess | null = null;
+const gotTheLock = app.requestSingleInstanceLock()
+let backendProcess: ChildProcess | null = null
 
 const getBackendPath = (): string => {
   if (app.isPackaged) {
-    return path.join(process.resourcesPath, 'backend', 'mrpack-installer.exe');
+    return path.join(process.resourcesPath, 'backend', 'mrpack-installer.exe')
   }
-  return path.join(__dirname, '..', 'backend', 'mrpack-installer.exe');
-};
+  return path.join(__dirname, '..', 'backend', 'mrpack-installer.exe')
+}
 
 function startBackend() {
   // Prevenir que se inicie si ya está (por si acaso)
   if (backendProcess) {
-    return;
+    return
   }
 
-  const backendPath = getBackendPath();
-  console.log(`Iniciando backend desde: ${backendPath}`);
+  const backendPath = getBackendPath()
+  console.log(`Iniciando backend desde: ${backendPath}`)
 
   try {
-    backendProcess = spawn(backendPath); // Ejecutar el backend
+    backendProcess = spawn(backendPath) // Ejecutar el backend
 
     if (!backendProcess) {
-      console.error('Error: No se pudo iniciar el proceso de backend.');
-      app.quit(); // Salir si el backend no puede iniciar
-      return;
+      console.error('Error: No se pudo iniciar el proceso de backend.')
+      app.quit() // Salir si el backend no puede iniciar
+      return
     }
 
     backendProcess.stdout?.on('data', (data) => {
-      console.log(`[Backend STDOUT]: ${data.toString()}`);
-    });
+      console.log(`[Backend STDOUT]: ${data.toString()}`)
+    })
 
     backendProcess.stderr?.on('data', (data) => {
-      console.error(`[Backend STDERR]: ${data.toString()}`);
-    });
+      console.error(`[Backend STDERR]: ${data.toString()}`)
+    })
 
     backendProcess.on('close', (code) => {
-      console.log(`Proceso de backend cerrado con código ${code}`);
-      backendProcess = null; // ¡Importante limpiar la variable!
-    });
+      console.log(`Proceso de backend cerrado con código ${code}`)
+      backendProcess = null // ¡Importante limpiar la variable!
+    })
 
   } catch (error) {
-    console.error('Error fatal al intentar ejecutar spawn:', error);
-    app.quit(); // Salir si hay un error al spawnear
+    console.error('Error fatal al intentar ejecutar spawn:', error)
+    app.quit() // Salir si hay un error al spawnear
   }
 }
 
 async function stopBackend(): Promise<void> {
   if (backendProcess && backendProcess.pid) {
-    console.log('Cerrando el proceso del backend...');
+    console.log('Cerrando el proceso del backend...')
     
-    const pidToKill = backendProcess.pid;
-    backendProcess = null; 
+    const pidToKill = backendProcess.pid
+    backendProcess = null 
 
     try {
-      await killBackendProcess(pidToKill);
+      await killBackendProcess(pidToKill)
     } catch (e) {
-      console.error('Error durante treeKill:', e);
+      console.error('Error durante treeKill:', e)
     }
   }
 }
@@ -72,13 +72,13 @@ function killBackendProcess(pid: number): Promise<void> {
   return new Promise((resolve) => {
     treeKill(pid, (err) => {
       if (err) {
-        console.error(`Error al intentar matar el PID ${pid}:`, err);
+        console.error(`Error al intentar matar el PID ${pid}:`, err)
       } else {
-        console.log(`Proceso ${pid} y sus hijos matados con éxito.`);
+        console.log(`Proceso ${pid} y sus hijos matados con éxito.`)
       }
-      resolve();
-    });
-  });
+      resolve()
+    })
+  })
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -150,7 +150,7 @@ app.on('window-all-closed', async () => {
     store.set('isFullscreen', win.isFullScreen())
   }
 
-  await stopBackend();
+  await stopBackend()
 
   // On macOS it is common for applications and their menu bar to stay active
   if (process.platform !== 'darwin') {
@@ -160,12 +160,12 @@ app.on('window-all-closed', async () => {
 
 
 app.on('before-quit', async () => {
-  await stopBackend();
-});
+  await stopBackend()
+})
 
 app.on('will-quit', async () => {
-  await stopBackend();
-});
+  await stopBackend()
+})
 
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
@@ -325,24 +325,24 @@ ipcMain.handle('dialog:showOpenDialog', async (_event, options: Electron.OpenDia
 })
 
 if (!gotTheLock) {
-  app.quit();
+  app.quit()
 } else {
   app.on('second-instance', () => {
     if (win) {
-      if (win.isMinimized()) win.restore();
-      win.focus();
+      if (win.isMinimized()) win.restore()
+      win.focus()
     }
-  });
+  })
 
   app.whenReady().then(() => {
-    startBackend()
     createWindow()
     if (!(process.platform === 'darwin') && !VITE_DEV_SERVER_URL) {
       Menu.setApplicationMenu(null)
     }
-    setupIpcEvents();
-    console.log('Last version:', autoUpdater.currentVersion);
-    autoUpdater.checkForUpdates();
-  });
+    startBackend()
+    setupIpcEvents()
+    console.log('Last version:', autoUpdater.currentVersion)
+    autoUpdater.checkForUpdates()
+  })
 }
 

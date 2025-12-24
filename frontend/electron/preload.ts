@@ -62,12 +62,12 @@ contextBridge.exposeInMainWorld('backend', {
   DownloadCollection: (
     collectionId: string,
     version: string,
-    loader: string,
+    loaders: string[],
     directory: string,
     updateExisting: boolean
-  ) => DownloadCollection(collectionId, version, loader, directory, updateExisting),
+  ) => DownloadCollection(collectionId, version, loaders, directory, updateExisting),
   GetCollectionInfo: (collectionId:string) => GetCollectionInfo(collectionId),
-  GetModsInCollectionInfo: (collectionId:string, version:string, loader: string) => GetModsInCollectionInfo(collectionId, version, loader),
+  GetModsInCollectionInfo: (collectionId:string, version:string, loaders: string) => GetModsInCollectionInfo(collectionId, version, loaders),
 })
 
 console.log("Preload script loaded successfully.")
