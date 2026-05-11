@@ -11,20 +11,20 @@
                 "subtitle": "Minecraft"
             },
             "discover": {
-                "title": "DISCOVER",
-                "subtitle": "Proyects"
+                "title": "DISCOVERY",
+                "subtitle": ""
             },
             "install": {
-                "title": "INSTALL",
-                "subtitle": "Modpacks"
+                "title": "INSTALLER",
+                "subtitle": ""
             },
             "settings": {
                 "title": "SETTINGS",
                 "subtitle": ""
             },
             "download": {
-                "title": "DOWNLOAD",
-                "subtitle": "Modpacks"
+                "title": "DOWNLOADER",
+                "subtitle": ""
             }
         }
     },

@@ -8,9 +8,9 @@ import '@/styles/variables.css'
 // Paginas
 import Home from '@/pages/Home/Home.tsx'
 import Discover from '@/pages/Discover/Discover.tsx'
-import Install from '@/pages/Install/Install.tsx'
-import Settings from '@/pages/Settings/Settings'
-import Downloader from '@/pages/Downloader/Downloader'
+import Install from '@/pages/Install/MrpackFile/page'
+import Settings from '@/pages/Settings/page'
+import Downloader from '@/pages/Downloader/page'
 import MainLayout from '@/layouts/MainLayout'
 import { useGlobalMessage } from "@/context/GlobalMessageContext"
 import { useTranslation } from 'react-i18next'

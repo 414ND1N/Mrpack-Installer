@@ -19,12 +19,11 @@ main {
     z-index: 100;
     font-family: var(--secondary-font, sans-serif);
     display: grid;
-    grid-template-areas: 
-        "header"
+    grid-template-areas:
         "list"
         "version"
     ;
-    grid-template-rows: 10% 1fr min-content ;
+    grid-template-rows:1fr min-content ;
 }
 
 .sidebar-component span.tittle {
