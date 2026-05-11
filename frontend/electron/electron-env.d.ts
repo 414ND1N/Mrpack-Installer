@@ -32,29 +32,25 @@ interface Window {
     getVersion: () => Promise<string>;
   },
   backend?: {
-    fetchRandomProjects: (count: number) => Promise<unknown>;
-    searchProjects: (count: number, type?: string, querry?: string, offset?: number) => Promise<unknown>;
+    FetchRandomProjects: (count: number) => Promise<unknown>;
+    SearchProjects: (count: number, type?: string, querry?: string, offset?: number) => Promise<unknown>;
     GetMrpackMedatadaInfo: (filePath: string) => Promise<unknown>;
     PathJoin: (...paths: string[]) => Promise<string>;
     ShowOpenDialog: (options: Electron.OpenDialogOptions) => Promise<Electron.OpenDialogReturnValue>;
     GetMinecraftDirectory: () => Promise<string>;
     AddVanillaLauncher: (props: any) => Promise<string>;
     StartMrpackInstallation: (
-      props: any,
+      installationType: string,
+      mrpackDirectory: string,
+      profileDirectory: string,
       cbStatus?: (status: string) => void,
       cbMax?: (max: number) => void,
       cbProgress?: (progress: number) => void,
       cbFinish?: (status: string) => void,
-      cbError?: (status: string) => void
+      cbError?: (error: string) => void
     ) => Promise<void>;
-    DownloadCollection: (
-      collectionId: string,
-      version: string,
-      loader: string,
-      directory: string,
-      updateExisting: boolean
-    ) => Promise<CollectionDownloadInfo>;
-    GetCollectionInfo: (collectionId:string) => Promise<CollectionInfo>;
-    GetModsInCollectionInfo: (collectionId:string, version:string, loader: string) => Promise<ModsInCollectionInfo>;
+    DownloadCollection: (collectionId: string, version: string, loaders: string[], directory: string, updateExisting: boolean, log?: boolean) => Promise<CollectionDownloadInfo>;
+    GetCollectionInfo: (collectionId: string) => Promise<CollectionInfo>;
+    GetModsInCollectionInfo: (collectionId: string, version: string, loaders: string) => Promise<ModsInCollectionInfo>;
   }
 }

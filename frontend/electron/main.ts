@@ -12,9 +12,9 @@ let backendProcess: ChildProcess | null = null
 
 const getBackendPath = (): string => {
   if (app.isPackaged) {
-    return path.join(process.resourcesPath, 'backend', 'mrpack-installer.exe')
+    return path.join(process.resourcesPath, 'api', 'mrpack-installer.exe')
   }
-  return path.join(__dirname, '..', 'backend', 'mrpack-installer.exe')
+  return path.join(__dirname, '..', 'api', 'mrpack-installer.exe')
 }
 
 function startBackend() {

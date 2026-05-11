@@ -1,16 +1,11 @@
 import React from "react";
 import "./SidebarMinecraft.css";
 import { Link } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
 
 // Types
 import { SidebarProps } from "../../interfaces/Sidebar";
 
-// Imagenes
-import UserIconPeepo from "./peepo.png"
-
 const SidebarMinecraftComponent: React.FC<SidebarProps> = ({ Links, Version }) => {
-    const { t } = useTranslation(['menu']);
 
     const renderLinks = (): JSX.Element[] => {
         return Object.keys(Links).map((key, index) => {
@@ -36,29 +31,11 @@ const SidebarMinecraftComponent: React.FC<SidebarProps> = ({ Links, Version }) =
                 </li>
             );
         });
-    };
-
-    const renderHeader = (): JSX.Element => {
-        return (
-            <li className="header">
-                <a className="multiline">
-                    <img src={UserIconPeepo} alt="Header" />
-                    <p> 
-                        <span>{t('sidebar.header.title')}</span>
-                        <br/>
-                        <span>{t('sidebar.header.subtitle')}</span>
-                    </p>
-                </a>
-            </li>
-        );
-    };
+    }
 
     return (
         <section className="sidebar-component">
             <nav className={`sidebar`}>
-                <ul className="sidebar-header">
-                    {renderHeader()}
-                </ul>
                 <ul className="sidebar-list">
                     {renderLinks()}
                 </ul>

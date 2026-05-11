@@ -12,11 +12,11 @@
             },
             "discover": {
                 "title": "DESCUBRIR",
-                "subtitle": "Proyectos"
+                "subtitle": ""
             },
             "install": {
                 "title": "INSTALAR",
-                "subtitle": "Modpacks"
+                "subtitle": ""
             },
             "settings": {
                 "title": "CONFIGURACIÓN",
@@ -24,7 +24,7 @@
             },
             "download": {
                 "title": "DESCARGAR",
-                "subtitle": "Modpacks"
+                "subtitle": ""
             }
         }
     },

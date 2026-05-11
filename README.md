@@ -94,17 +94,17 @@ Para crear el instalador .exe final:
 * Ve a la carpeta del backend y ejecuta:
 
 ```bash
-pyinstaller --onefile --name backend api.py
+pyinstaller --onefile --name api api.py
 ```
 
-* Mueve el backend.exe resultante (de la carpeta dist/) a la carpeta backend/ en la raíz del proyecto.
+* Mueve el backend.exe resultante (de la carpeta dist/) a la carpeta api/ en la raíz del proyecto.
 
 2.  Compilar y Empaquetar Electron:
 
 Desde la raíz del proyecto, corre:
 
 ```bash
-npm run build
+npx run build
 ```
 
 Esto generará el instalador en la carpeta dist/.

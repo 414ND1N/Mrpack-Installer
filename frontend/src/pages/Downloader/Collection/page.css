@@ -1,0 +1,166 @@
+.collection-container p, 
+.collection-container h1,
+.collection-container h2,
+.collection-container h3,
+.collection-container {
+  font-family: var(--secondary-font);
+  font-size: var(--step-0);
+  letter-spacing: 0.02em;
+  cursor: default;
+}
+
+.collection-container .header p{
+  margin: 0 0 1em 0;
+}
+
+.loader-chips {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5em;
+  margin: 0.5em 0;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
+  scrollbar-width: none;
+}
+
+.loader-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.loader-chips .loader-chip {
+  background-color: var(--mc-darken-green-1, --mc-green-1, --mc-accent-color-light);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.35rem 0.3rem 0.75rem;
+  border-radius: 0.5em;
+  font-size: 0.9em;
+  line-height: 1;
+  white-space: nowrap;
+}
+.loader-chips .loader-chip > button {
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  color: inherit;
+  border-radius: 999px;
+  width: 1.4rem;
+  height: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 0.8em;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.loader-chips .loader-chip > span {
+  white-space: nowrap;
+}
+
+
+.collection-container .content{
+  display: flex;
+  flex-direction: column;
+  gap: 2rem !important;
+}
+
+.collection-container .field{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+
+.collection-container .row.second-row{
+  display: grid;
+  gap: 1em;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.5fr);
+}
+
+.collection-container .row.second-row .field{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  width: 100%;
+}
+.collection-container .row.second-row .field.version .buttons{
+  display: flex;
+  gap: 0.5em;
+  width: 100%;
+}
+
+.collection-container .row{
+  display: flex;
+  gap: 1em;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.collection-container .field .mc-button{
+  align-self: flex-start;
+}
+
+/* Responsive */
+@media (max-width: 860px){
+  .collection-container .row{
+    flex-direction: column;
+  }
+}
+
+/* Small tweaks for the Ask button spacing */
+.collection-container .field > div{
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.collection-container .field > div .mc-select{
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.collection-container .version-selectors {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+}
+
+.collection-container .version-selectors .mc-input {
+  flex: 0 0 3.5rem;
+  min-width: 0;
+  width: 3.5rem;
+}
+
+.collection-container .version-selectors .mc-select {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+
+.collection-container .version-separator {
+  font-size: 2em;
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0.8;
+  user-select: none;
+}
+
+.collection-container .field.destination .row {
+  width: 100%;
+}
+
+.collection-container .field.destination .row .mc-input {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
