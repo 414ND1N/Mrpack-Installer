@@ -91,6 +91,11 @@ Para crear el instalador .exe final:
 1. Compilar el Backend:
 
 * Activa tu entorno virtual de Python.
+```bash
+python -m venv venv
+.\venv\Scripts\activate
+```
+
 * Ve a la carpeta del backend y ejecuta:
 
 ```bash

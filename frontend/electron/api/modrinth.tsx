@@ -11,7 +11,7 @@ const StartMrpackInstallation = async (
     cbError?: (error: string) => void
 ) => {
     try {
-        const url = 'http://127.0.0.1:8001/mrpack/install/start/'
+        const url = 'http://127.0.0.1:8002/mrpack/install/start/'
 
         const resp = await fetch(url, {
             method: 'POST',
@@ -26,7 +26,7 @@ const StartMrpackInstallation = async (
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
         const { install_id } = await resp.json()
 
-        const es = new EventSource(`http://127.0.0.1:8001/mrpack/install/stream/${install_id}`);
+        const es = new EventSource(`http://127.0.0.1:8002/mrpack/install/stream/${install_id}`);
         es.onmessage = (ev) => {
             const data = JSON.parse(ev.data);
             if (data.type === 'status' && cbStatus) {
@@ -60,7 +60,7 @@ const StartMrpackInstallation = async (
 
 const GetMrpackMedatadaInfo = async (filePath: string): Promise<MrpackMetadata> => {
     try {
-        const resp = await fetch(`http://127.0.0.1:8001/mrpack/metadata/?file_path=${encodeURIComponent(filePath)}`, { method: 'GET', cache: 'no-store' })
+        const resp = await fetch(`http://127.0.0.1:8002/mrpack/metadata/?file_path=${encodeURIComponent(filePath)}`, { method: 'GET', cache: 'no-store' })
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
         const data = await resp.json()
         return data as MrpackMetadata
@@ -72,7 +72,7 @@ const GetMrpackMedatadaInfo = async (filePath: string): Promise<MrpackMetadata> 
 
 const GetMrpackInfo = async (filePath: string): Promise<MrpackInfo> => {
     try {
-        const resp = await fetch(`http://127.0.0.1:8001/mrpack/info/?file_path=${encodeURIComponent(filePath)}`, { method: 'GET', cache: 'no-store' })
+        const resp = await fetch(`http://127.0.0.1:8002/mrpack/info/?file_path=${encodeURIComponent(filePath)}`, { method: 'GET', cache: 'no-store' })
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
         const data = await resp.json()
         return data as MrpackInfo
@@ -99,7 +99,7 @@ const DownloadCollection = async (
             update: updateExisting,
             log 
         }
-        const res = await fetch('http://127.0.0.1:8001/modrinth/collection/download', {
+        const res = await fetch('http://127.0.0.1:8002/modrinth/collection/download', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
@@ -118,7 +118,7 @@ const DownloadCollection = async (
 
 const GetCollectionInfo = async (collectionId: string): Promise<CollectionInfo> => {
     try {
-        const url = new URL('http://127.0.0.1:8001/modrinth/collection/info/')
+        const url = new URL('http://127.0.0.1:8002/modrinth/collection/info/')
         url.searchParams.set('collection_id', collectionId)
         const res = await fetch(url, { method: 'GET', cache: 'no-store' })
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -132,7 +132,7 @@ const GetCollectionInfo = async (collectionId: string): Promise<CollectionInfo> 
 
 const GetModsInCollectionInfo = async (collectionId: string, version: string, loaders: string): Promise<ModsInCollectionInfo> => {
     try {
-        const url = new URL('http://127.0.0.1:8001/modrinth/collection/mods/verify')
+        const url = new URL('http://127.0.0.1:8002/modrinth/collection/mods/verify')
         url.searchParams.set('collection_id', collectionId)
         url.searchParams.set('version', version)
         url.searchParams.set('loaders', loaders)

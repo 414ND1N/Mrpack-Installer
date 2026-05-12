@@ -36,6 +36,6 @@ app.include_router(utils_router, prefix="/utils", tags=["utils", "utilities"])
 
 
 if __name__ == "__main__":
-    print("Starting API on http://localhost:8001")
+    print("Starting API on http://localhost:8002")
 
-    uvicorn.run(app, host="127.0.0.1", port=8001, log_level="info")
+    uvicorn.run(app, host="127.0.0.1", port=8002, log_level="info")

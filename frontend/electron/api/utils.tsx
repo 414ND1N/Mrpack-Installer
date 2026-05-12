@@ -1,6 +1,6 @@
 const PathJoin = async (...paths: string[]): Promise<string> => {
     try {
-        const url = new URL('http://127.0.0.1:8001/utils/path_join/')
+        const url = new URL('http://127.0.0.1:8002/utils/path_join/')
         // Enviar cada path como parámetro repeated para que FastAPI lo reciba como lista
         paths.forEach(p => url.searchParams.append('paths', p))
 
