@@ -1,4 +1,6 @@
 import minecraft_launcher_lib as McLib
+from minecraft_launcher_lib.mrpack import install_mrpack
+from .minecraft_lib import install_mrpack_clientside, install_mrpack_serverside, add_vanilla_launcher_profile
 from os.path import abspath, expanduser, normpath, isfile, join
 import traceback
 import shutil
@@ -82,7 +84,7 @@ async def AddLauncherProfile(
             "icon": req.icon,
         }
 
-        McLib.vanilla_launcher.add_vanilla_launcher_profile(req.minecraft_directory, profile)
+        add_vanilla_launcher_profile(req.minecraft_directory, profile)
 
         return {"ok": True}
     
@@ -110,17 +112,14 @@ def InstallMrpack(
         err = ""
 
         # Permitir llamadas tanto con un objeto InstallMrpackRequest como con los 5 argumentos posicionales
-        if isinstance(req_or_profile_directory, InstallMrpackRequest):
-            req = req_or_profile_directory
-        else:
-            req = InstallMrpackRequest(
-                profile_directory=req_or_profile_directory,
-                mrpack_directory=mrpack_directory or "",
-                installation_type=installation_type,
-                minecraft_directory=minecraft_directory or "",
-                install_optfional_files=True,
-                callbacks=callbacks,
-            )
+        req = InstallMrpackRequest(
+            profile_directory=req_or_profile_directory,
+            mrpack_directory=mrpack_directory or "",
+            installation_type=installation_type,
+            minecraft_directory=minecraft_directory or "",
+            install_optfional_files=True,
+            callbacks=callbacks,
+        )
 
         # Verificar que el ejecutable 'java' esté disponible
         java_exec = shutil.which("java")
@@ -163,7 +162,7 @@ def InstallMrpack(
         cb = req.callbacks if req.callbacks is not None else {"setStatus": print}
 
         if req.installation_type == "serverside":
-            McLib.mrpack.install_mrpack_serverside(
+            install_mrpack_serverside(
                 path=req.mrpack_directory,
                 minecraft_directory=req.minecraft_directory,
                 modpack_directory=_modpack_directory,
@@ -171,7 +170,7 @@ def InstallMrpack(
                 callback=cb,
             )
         elif req.installation_type == "clientside":
-            McLib.mrpack.install_mrpack_clientside(
+            install_mrpack_clientside(
                 path=req.mrpack_directory,
                 minecraft_directory=req.minecraft_directory,
                 modpack_directory=_modpack_directory,
@@ -179,7 +178,7 @@ def InstallMrpack(
                 callback=cb,
             )
         else:
-            McLib.mrpack.install_mrpack(
+            install_mrpack(
                 path=req.mrpack_directory,
                 minecraft_directory=req.minecraft_directory,
                 modpack_directory=_modpack_directory,

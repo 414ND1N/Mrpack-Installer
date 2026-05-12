@@ -2,7 +2,7 @@ import { InstallationModpackProps } from "@/hooks/minecraft/minecraft"
 
 const GetMinecraftDirectory = async (): Promise<string> => {
     try {
-        const url = new URL('http://127.0.0.1:8001/minecraft/minecraft_directory/')
+        const url = new URL('http://127.0.0.1:8002/minecraft/minecraft_directory/')
 
         const resp = await fetch(url.toString(), { method: 'GET', cache: 'no-store' })
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
@@ -18,7 +18,7 @@ const AddVanillaLauncher = async (
     props: InstallationModpackProps
 ) => {
     try {
-        const url = new URL('http://127.0.0.1:8001/minecraft/add_vanilla_launcher/')
+        const url = new URL('http://127.0.0.1:8002/minecraft/add_vanilla_launcher/')
 
         url.searchParams.set('mrpack_directory', props.mrpack_path)
         url.searchParams.set('profile_directory', props.installation_directory)
