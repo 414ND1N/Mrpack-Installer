@@ -18,8 +18,24 @@ class AddVanillaLauncherRequest(BaseModel):
     jargs: list[str] | str | None = None
     icon: str | None = None
 
-async def AddLauncherProfile(req: AddVanillaLauncherRequest):
+async def AddLauncherProfile(
+    req: AddVanillaLauncherRequest | None = None,
+    mrpack_directory: str | None = None,
+    profile_directory: str | None = None,
+    minecraft_directory: str = "",
+    jargs: list[str] | str | None = None,
+    icon: str | None = None,
+):
     try:
+        if req is None:
+            req = AddVanillaLauncherRequest(
+                mrpack_directory=mrpack_directory or "",
+                profile_directory=profile_directory or "",
+                minecraft_directory=minecraft_directory or "",
+                jargs=jargs,
+                icon=icon,
+            )
+
         req.mrpack_directory = abspath(expanduser(req.mrpack_directory))
 
         if not req.minecraft_directory:
@@ -83,9 +99,28 @@ class InstallMrpackRequest(BaseModel):
     install_optfional_files: bool = True
     callbacks: dict | None = None
 
-def InstallMrpack(req: InstallMrpackRequest):
+def InstallMrpack(
+    req_or_profile_directory: InstallMrpackRequest | str,
+    mrpack_directory: str | None = None,
+    installation_type: str = "singleplayer",
+    minecraft_directory: str = "",
+    callbacks: dict | None = None,
+):
     try:
         err = ""
+
+        # Permitir llamadas tanto con un objeto InstallMrpackRequest como con los 5 argumentos posicionales
+        if isinstance(req_or_profile_directory, InstallMrpackRequest):
+            req = req_or_profile_directory
+        else:
+            req = InstallMrpackRequest(
+                profile_directory=req_or_profile_directory,
+                mrpack_directory=mrpack_directory or "",
+                installation_type=installation_type,
+                minecraft_directory=minecraft_directory or "",
+                install_optfional_files=True,
+                callbacks=callbacks,
+            )
 
         # Verificar que el ejecutable 'java' esté disponible
         java_exec = shutil.which("java")
@@ -97,7 +132,7 @@ def InstallMrpack(req: InstallMrpackRequest):
             err = f"{req.mrpack_directory} was not found"
             print(err)
             raise FileNotFoundError(err)
-        
+
         # Verificar que el archivo .mrpack sea válido
         _mrpack_information = McLib.mrpack.get_mrpack_information(req.mrpack_directory)
         if not _mrpack_information:
@@ -110,7 +145,7 @@ def InstallMrpack(req: InstallMrpackRequest):
             err = f"Invalid installation_type: {req.installation_type}"
             print(err)
             raise ValueError(err)
-        
+
         if not req.minecraft_directory:
             # use sync utils to get minecraft directory
             req.minecraft_directory = McLib.utils.get_minecraft_directory()
@@ -133,7 +168,7 @@ def InstallMrpack(req: InstallMrpackRequest):
                 minecraft_directory=req.minecraft_directory,
                 modpack_directory=_modpack_directory,
                 mrpack_install_options=_mrpack_install_options,
-                callback=cb
+                callback=cb,
             )
         elif req.installation_type == "clientside":
             McLib.mrpack.install_mrpack_clientside(
@@ -141,7 +176,7 @@ def InstallMrpack(req: InstallMrpackRequest):
                 minecraft_directory=req.minecraft_directory,
                 modpack_directory=_modpack_directory,
                 mrpack_install_options=_mrpack_install_options,
-                callback=cb
+                callback=cb,
             )
         else:
             McLib.mrpack.install_mrpack(
@@ -149,7 +184,7 @@ def InstallMrpack(req: InstallMrpackRequest):
                 minecraft_directory=req.minecraft_directory,
                 modpack_directory=_modpack_directory,
                 mrpack_install_options=_mrpack_install_options,
-                callback=cb
+                callback=cb,
             )
 
         return {"ok": True}
