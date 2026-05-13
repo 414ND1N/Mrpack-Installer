@@ -35,3 +35,4 @@ __pycache__/
 env/
 backend/dist/
 backend/build/
+*.exe

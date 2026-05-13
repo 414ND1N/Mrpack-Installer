@@ -19,7 +19,8 @@ async def AddVanillaLauncher(
             if java_min < 1 or java_max < 1 or java_min > java_max:
                 raise HTTPException(status_code=400, detail="Invalid java_min or java_max values")
             
-            jargs = [java_min, java_max]
+            # El servicio espera strings; convertir los valores enteros a strings
+            jargs = [str(java_min), str(java_max)]
 
         await Mc.AddLauncherProfile(
             mrpack_directory=mrpack_directory,
