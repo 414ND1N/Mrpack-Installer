@@ -1,10 +1,9 @@
 # This file is an extension of minecraft-launcher-lib (https://codeberg.org/JakobDev/minecraft-launcher-lib) to add some features that are not available in the library
 from minecraft_launcher_lib._helper import download_file, empty, check_path_inside_minecraft_directory
 from minecraft_launcher_lib.types import MrpackInstallOptions, CallbackDict, VanillaLauncherProfile
-from minecraft_launcher_lib._internal_types.mrpack_types import MrpackIndex
+from minecraft_launcher_lib._internal_types.mrpack_types import MrpackIndex, MrpackFile
 from minecraft_launcher_lib.install import install_minecraft_version
 from minecraft_launcher_lib.mod_loader import get_mod_loader
-from minecraft_launcher_lib.mrpack import _filter_mrpack_files
 
 import minecraft_launcher_lib.vanilla_launcher as vanilla_launcher
 from minecraft_launcher_lib.exceptions import InvalidVanillaLauncherProfile
@@ -13,11 +12,39 @@ from minecraft_launcher_lib._internal_types.vanilla_launcher_types import Vanill
 import zipfile
 import json
 import datetime
-import os
 from uuid import uuid4
-from os.path import abspath, join, dirname
-from os import PathLike, makedirs
-from services.utils import NormalizedModName
+from os.path import abspath, join, dirname, exists, basename
+from os import PathLike, makedirs, listdir, remove
+from services.utils import NormalizedModName, FileSha1
+
+def FilterMrpackFiles(
+    file_list: list[MrpackFile],
+    mrpack_install_options: MrpackInstallOptions,
+    installation_side: str = "both"
+) -> list[MrpackFile]:
+    """
+    Gets all Mrpack Files that should be installed
+    """
+    filtered_list: list[MrpackFile] = []
+    if installation_side not in ["client", "server", "both"]:
+        raise ValueError("installation_side must be either 'client' or 'server'")
+    
+    for file in file_list:
+        if "env" not in file:
+            filtered_list.append(file)
+            continue
+
+        if installation_side == "both":
+            if file["env"]["client"] == "required" or file["env"]["server"] == "required":
+                filtered_list.append(file)
+            elif (file["env"]["client"] == "optional" or file["env"]["server"] == "optional") and file["path"] in mrpack_install_options.get("optionalFiles", []):
+                filtered_list.append(file)
+        elif file["env"][installation_side] == "required":
+            filtered_list.append(file)
+        elif file["env"][installation_side] == "optional" and file["path"] in mrpack_install_options.get("optionalFiles", []):
+            filtered_list.append(file)
+
+    return filtered_list
 
 
 def VerifyFileExists(file: dict, modpack_directory: str | PathLike) -> tuple[bool, str]:
@@ -33,8 +60,8 @@ def VerifyFileExists(file: dict, modpack_directory: str | PathLike) -> tuple[boo
         True si existe un archivo del mismo mod, False en caso contrario
     """
     file_path = file["path"]
-    file_name = os.path.basename(file_path)
-    directory = os.path.dirname(file_path)
+    file_name = basename(file_path)
+    directory = dirname(file_path)
 
     mod_name = NormalizedModName(file_name)
     if not mod_name:
@@ -44,12 +71,12 @@ def VerifyFileExists(file: dict, modpack_directory: str | PathLike) -> tuple[boo
     search_directory = abspath(join(modpack_directory, directory))
     
     # Si el directorio no existe, el archivo no existe
-    if not os.path.exists(search_directory):
+    if not exists(search_directory):
         return False, ""
     
     # Buscar archivos que coincidan con el nombre del mod normalizado
     try:
-        for filename in os.listdir(search_directory):
+        for filename in listdir(search_directory):
             if NormalizedModName(filename) == mod_name:
                 return True, filename
     except (OSError, PermissionError):
@@ -58,9 +85,9 @@ def VerifyFileExists(file: dict, modpack_directory: str | PathLike) -> tuple[boo
     return False, ""
 
 def install_mrpack(
-    path: str | os.PathLike,
-    minecraft_directory: str | os.PathLike,
-    modpack_directory: str | os.PathLike | None = None,
+    path: str | PathLike,
+    minecraft_directory: str | PathLike,
+    modpack_directory: str | PathLike | None = None,
     callback: CallbackDict | None = None,
     mrpack_install_options: MrpackInstallOptions | None = None,
     update_files: bool = True,
@@ -92,13 +119,13 @@ def install_mrpack(
     :param mrpack_install_options: Some Options to install the Pack (see below)
     :raises FileOutsideMinecraftDirectory: A File should be placed outside the given Minecraft directory
     """
-    minecraft_directory = os.path.abspath(minecraft_directory)
-    path = os.path.abspath(path)
+    minecraft_directory = abspath(minecraft_directory)
+    path = abspath(path)
 
     if modpack_directory is None:
         modpack_directory = minecraft_directory
     else:
-        modpack_directory = os.path.abspath(modpack_directory)
+        modpack_directory = abspath(modpack_directory)
 
     if callback is None:
         callback = {}
@@ -112,35 +139,36 @@ def install_mrpack(
 
         # Download the files
         callback.get("setStatus", empty)("Download mrpack files")
-        file_list = _filter_mrpack_files(index["files"], mrpack_install_options)
+        file_list = FilterMrpackFiles(index["files"], mrpack_install_options, "both")
         callback.get("setMax", empty)(len(file_list))
         for count, file in enumerate(file_list):
+            full_path = abspath(join(modpack_directory, file["path"]))
 
-            already_exists, existing_file_name = VerifyFileExists(file, modpack_directory)
-            if already_exists:
+            if exists(full_path): # File already exist with the same path
+                try:
+                    existing_sha1 = FileSha1(full_path)
+                except (OSError, PermissionError):
+                    existing_sha1 = None
 
-                if existing_file_name == file["path"]:
-                    # The file already exists with the same name, so we can skip it
+                expected_sha1 = file.get("hashes", {}).get("sha1")
+                if expected_sha1 and existing_sha1 == expected_sha1:
                     callback.get("setProgress", empty)(count + 1)
                     continue
-                if not update_files:
-                    callback.get("setProgress", empty)(count + 1)
-                    continue
-                else: 
-                    callback.get("setStatus", empty)(f"Updating {file['path']}")
-                    # Remove the existing file
-                    existing_file_path = abspath(join(modpack_directory, os.path.dirname(file["path"]), existing_file_name))
-                    try:
-                        os.remove(existing_file_path)
-                    except OSError:
-                        pass
-
-            full_path = os.path.abspath(os.path.join(modpack_directory, file["path"]))
+            else:
+                exist, existing_file = VerifyFileExists(file, modpack_directory) 
+                if exist: # File of the same mod already exist, but with a different name
+                    if not update_files:
+                        callback.get("setProgress", empty)(count + 1)
+                        continue
+                    else: 
+                        callback.get("setStatus", empty)(f"Updating {file['path']}")
+                        try:
+                            remove(abspath(join(modpack_directory, dirname(file["path"]), existing_file)))
+                        except OSError:
+                            pass
 
             check_path_inside_minecraft_directory(modpack_directory, full_path)
-
             download_file(file["downloads"][0], full_path, sha1=file["hashes"]["sha1"], callback=callback)
-
             callback.get("setProgress", empty)(count + 1)
 
         # Extract the overrides
@@ -160,14 +188,14 @@ def install_mrpack(
                 file_name = zip_name[len("overrides/"):]
 
             # Constructs the full Path
-            full_path = os.path.abspath(os.path.join(modpack_directory, file_name))
+            full_path = abspath(join(modpack_directory, file_name))
 
             check_path_inside_minecraft_directory(modpack_directory, full_path)
 
             callback.get("setStatus", empty)(f"Extract {zip_name}]")
 
             try:
-                os.makedirs(os.path.dirname(full_path))
+                makedirs(dirname(full_path))
             except FileExistsError:
                 pass
 
@@ -229,34 +257,36 @@ def install_mrpack_clientside(
 
         # Download the files
         callback.get("setStatus", empty)("Download mrpack files")
-        file_list = _filter_mrpack_files(index["files"], mrpack_install_options)
+        file_list = FilterMrpackFiles(index["files"], mrpack_install_options, "client")
         callback.get("setMax", empty)(len(file_list))
         for count, file in enumerate(file_list):
-
-            already_exists, existing_file_name = VerifyFileExists(file, modpack_directory)
-            if already_exists:
-                if existing_file_name == file["path"]:
-                    # The file already exists with the same name, so we can skip it
-                    callback.get("setProgress", empty)(count + 1)
-                    continue
-                if not update_files:
-                    callback.get("setProgress", empty)(count + 1)
-                    continue
-                else: 
-                    callback.get("setStatus", empty)(f"Updating {file['path']}")
-                    # Remove the existing file
-                    existing_file_path = abspath(join(modpack_directory, os.path.dirname(file["path"]), existing_file_name))
-                    try:
-                        os.remove(existing_file_path)
-                    except OSError:
-                        pass
-
             full_path = abspath(join(modpack_directory, file["path"]))
 
+            if exists(full_path): # File already exist with the same path
+                try:
+                    existing_sha1 = FileSha1(full_path)
+                except (OSError, PermissionError):
+                    existing_sha1 = None
+
+                expected_sha1 = file.get("hashes", {}).get("sha1")
+                if expected_sha1 and existing_sha1 == expected_sha1:
+                    callback.get("setProgress", empty)(count + 1)
+                    continue
+            else:
+                exist, existing_file = VerifyFileExists(file, modpack_directory) 
+                if exist: # File of the same mod already exist, but with a different name
+                    if not update_files:
+                        callback.get("setProgress", empty)(count + 1)
+                        continue
+                    else: 
+                        callback.get("setStatus", empty)(f"Updating {file['path']}")
+                        try:
+                            remove(abspath(join(modpack_directory, dirname(file["path"]), existing_file)))
+                        except OSError:
+                            pass
+
             check_path_inside_minecraft_directory(modpack_directory, full_path)
-
             download_file(file["downloads"][0], full_path, sha1=file["hashes"]["sha1"], callback=callback)
-
             callback.get("setProgress", empty)(count + 1)
 
         # Extract the overrides
@@ -343,34 +373,36 @@ def install_mrpack_serverside(
 
         # Download the files
         callback.get("setStatus", empty)("Download mrpack files")
-        file_list = _filter_mrpack_files(index["files"], mrpack_install_options)
+        file_list = FilterMrpackFiles(index["files"], mrpack_install_options, "server")
         callback.get("setMax", empty)(len(file_list))
         for count, file in enumerate(file_list):
-
-            already_exists, existing_file_name = VerifyFileExists(file, modpack_directory)
-            if already_exists:
-                if existing_file_name == file["path"]:
-                    # The file already exists with the same name, so we can skip it
-                    callback.get("setProgress", empty)(count + 1)
-                    continue
-                if not update_files:
-                    callback.get("setProgress", empty)(count + 1)
-                    continue
-                else: 
-                    callback.get("setStatus", empty)(f"Updating {file['path']}")
-                    # Remove the existing file
-                    existing_file_path = abspath(join(modpack_directory, os.path.dirname(file["path"]), existing_file_name))
-                    try:
-                        os.remove(existing_file_path)
-                    except OSError:
-                        pass
-
             full_path = abspath(join(modpack_directory, file["path"]))
 
+            if exists(full_path): # File already exist with the same path
+                try:
+                    existing_sha1 = FileSha1(full_path)
+                except (OSError, PermissionError):
+                    existing_sha1 = None
+
+                expected_sha1 = file.get("hashes", {}).get("sha1")
+                if expected_sha1 and existing_sha1 == expected_sha1:
+                    callback.get("setProgress", empty)(count + 1)
+                    continue
+            else:
+                exist, existing_file = VerifyFileExists(file, modpack_directory) 
+                if exist: # File of the same mod already exist, but with a different name
+                    if not update_files:
+                        callback.get("setProgress", empty)(count + 1)
+                        continue
+                    else: 
+                        callback.get("setStatus", empty)(f"Updating {file['path']}")
+                        try:
+                            remove(abspath(join(modpack_directory, dirname(file["path"]), existing_file)))
+                        except OSError:
+                            pass
+
             check_path_inside_minecraft_directory(modpack_directory, full_path)
-
             download_file(file["downloads"][0], full_path, sha1=file["hashes"]["sha1"], callback=callback)
-
             callback.get("setProgress", empty)(count + 1)
 
         # Extract the overrides
