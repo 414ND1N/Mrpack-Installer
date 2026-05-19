@@ -2,7 +2,8 @@ from typing import Any
 from pydantic import BaseModel
 
 from fastapi import HTTPException, Query, APIRouter
-import services.modrinth as Mr
+import services.modrinth.api as ModrinthApi
+import services.modrinth.collections as ModrinthCollections
 import asyncio
 import os
 
@@ -31,7 +32,7 @@ async def DownloadModrinthCollection(payload: CollectionDownloadRequest) -> Any:
 
         # Run blocking download in a thread pool
         result = await asyncio.to_thread(
-            Mr.DownloadCollectionMods,
+            ModrinthCollections.DownloadCollectionMods,
             collection_id,
             version,
             loaders,
@@ -47,7 +48,7 @@ async def DownloadModrinthCollection(payload: CollectionDownloadRequest) -> Any:
 @modrinth_router.get("/collection/info/", summary="Get Modrinth collection info")
 async def GetModrinthCollectionInfo(collection_id: str = Query(..., description="Modrinth collection ID")) -> Any:
     try:
-        return Mr.GetCollectionInfo(collection_id)
+        return ModrinthCollections.GetCollectionInfo(collection_id)
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"Error fetching from Modrinth: {e}")
 
@@ -59,7 +60,7 @@ async def GetModrinthCollectionMods(
 ) -> Any:
     try:
         loaders_list = [l.strip() for l in loaders.split(",") if l.strip()] if loaders else []
-        return Mr.VerifyModsInCollection(collection_id, version, loaders_list)
+        return ModrinthCollections.VerifyModsInCollection(collection_id, version, loaders_list)
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"Error fetching from Modrinth: {e}")
     
@@ -69,7 +70,7 @@ async def GetRandomModrinthProjects(count: int = Query(10, ge=1, le=100)) -> Any
         count: number of projects to request (1-100)
     """
     try:
-        return Mr.GetRandomProjects(count=count)
+        return ModrinthApi.GetRandomProjects(count=count)
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"Error fetching from Modrinth: {e}")
 
@@ -87,6 +88,6 @@ async def SearchModrinthProjects(
         type: optional project type filter (passed as "type" in query params)
     """
     try:
-        return Mr.searchProjects(limit=limit, query=query, offset=offset, type=type)
+        return ModrinthApi.searchProjects(limit=limit, query=query, offset=offset, type=type)
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"Error fetching from Modrinth: {e}")

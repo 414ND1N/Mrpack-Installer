@@ -1,5 +1,6 @@
 from fastapi import HTTPException, Query, APIRouter
-import services.minecraft as Mc
+import services.vanilla.utils as MinecrafdtUtils
+import services.vanilla.launcher as MinecraftLauncher
 
 minecraft_router = APIRouter()
 
@@ -22,7 +23,7 @@ async def AddVanillaLauncher(
             # El servicio espera strings; convertir los valores enteros a strings
             jargs = [str(java_min), str(java_max)]
 
-        await Mc.AddLauncherProfile(
+        await MinecraftLauncher.AddLauncherProfile(
             mrpack_directory=mrpack_directory,
             profile_directory=profile_directory,
             minecraft_directory=minecraft_directory,
@@ -35,6 +36,6 @@ async def AddVanillaLauncher(
 @minecraft_router.get("/minecraft_directory/", summary="Get Minecraft directory")
 async def GetMinecraftDirectory() -> str:
     try:
-        return await Mc.GetMinecraftDirectory()
+        return await MinecrafdtUtils.GetMinecraftDirectory()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error getting Minecraft directory: {e}")

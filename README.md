@@ -48,7 +48,7 @@ Este proyecto utiliza una arquitectura híbrida:
 ## Requisitos previos:
 
 * Node.js (v18+ recomendado)
-* Python (v3.10+ recomendado)
+* Python (v3.12.X recomendado)
 * npm o pnpm
 
 ## Pasos:
@@ -64,7 +64,9 @@ cd Mrpack-Installer
 
 * Ve a la carpeta del backend (ej. backend/).
 * Crea un entorno virtual: python -m venv venv
-* Actívalo (Windows): .\venv\Scripts\activate
+* Actívalo 
+    - (Windows): .\venv\Scripts\activate
+    - (Linux/Mac): source venv/bin/activate
 * Instala las dependencias: pip install -r requirements.txt
 
 3. Preparar el Frontend (Electron/React):
@@ -99,10 +101,10 @@ python -m venv venv
 * Ve a la carpeta del backend y ejecuta:
 
 ```bash
-pyinstaller --onefile --name api mrpack-installer.py
+pyinstaller --onefile --name mrpack-installer api.py
 ```
 
-* Mueve el backend.exe resultante (de la carpeta dist/) a la carpeta api/ en la carpeta **frontend/api**.
+* Mueve el archivo `mrpack-installer.exe` resultante (de la carpeta dist/) a la carpeta api/ en la carpeta **frontend/api**.
 
 2.  Compilar y Empaquetar Electron:
 
@@ -112,7 +114,7 @@ Desde la raíz del proyecto, corre:
 npx run build
 ```
 
-Esto generará el instalador en la carpeta dist/.
+Esto generará el instalador en la carpeta dist/ y el ejecutable en dist/win-unpacked/.
 
 # Bibliotecas/Herramientas Utilizadas
 
