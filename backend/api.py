@@ -6,12 +6,12 @@ from routers.modrinth import modrinth_router
 from routers.mrpack import mrpack_router
 from routers.utils import utils_router
 
-app = FastAPI(title="Mrpack Installer API", version="1.0.0")
+app = FastAPI(title="Mrpack Installer API", version="3.0.1")
 
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "*"
+    "http://localhost",
 ]
 app.add_middleware(
     CORSMiddleware,
