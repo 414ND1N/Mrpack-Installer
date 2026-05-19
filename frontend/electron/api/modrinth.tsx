@@ -26,30 +26,52 @@ const StartMrpackInstallation = async (
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
         const { install_id } = await resp.json()
 
-        const es = new EventSource(`http://127.0.0.1:8002/mrpack/install/stream/${install_id}`);
-        es.onmessage = (ev) => {
-            const data = JSON.parse(ev.data);
-            if (data.type === 'status' && cbStatus) {
-                cbStatus(data.message)
-            } else if (data.type === 'max' && cbMax) {
-                cbMax(data.message)
-            } else if (data.type === 'progress' && cbProgress) {
-                cbProgress(data.message)
-            } else if (data.type === 'error' && cbError) {
-                es.close();
-                cbError(data.message)
-            } else if (data.type === 'done') {
-                es.close();
-                if (cbFinish) cbFinish(data.message)
-                else if (cbStatus) cbStatus('Installation completed!')
+        await new Promise<void>((resolve, reject) => {
+            const es = new EventSource(`http://127.0.0.1:8002/mrpack/install/stream/${install_id}`)
+            let settled = false
+
+            const finishResolve = () => {
+                if (settled) return
+                settled = true
+                es.close()
+                resolve()
             }
-            // console.log('SSE', data);
-        };
-        es.onerror = (err) => {
-            console.error('SSE error', err);
-            if (cbError) cbError(err.toString())
-            else if (cbStatus) cbStatus(err.toString())
-        };
+
+            const finishReject = (message: string) => {
+                if (settled) return
+                settled = true
+                es.close()
+                reject(new Error(message))
+            }
+
+            es.onmessage = (ev) => {
+                const data = JSON.parse(ev.data)
+
+                if (data.type === 'status' && cbStatus) {
+                    cbStatus(data.message)
+                } else if (data.type === 'max' && cbMax) {
+                    cbMax(data.message)
+                } else if (data.type === 'progress' && cbProgress) {
+                    cbProgress(data.message)
+                } else if (data.type === 'error') {
+                    const errorMessage = String(data.message || 'Installation failed')
+                    if (cbError) cbError(errorMessage)
+                    finishReject(errorMessage)
+                } else if (data.type === 'done') {
+                    if (cbFinish) cbFinish(data.message)
+                    else if (cbStatus) cbStatus('Installation completed!')
+                    finishResolve()
+                }
+            }
+
+            es.onerror = () => {
+                const errorMessage = 'Connection error during installation stream'
+                console.error('SSE error')
+                if (cbError) cbError(errorMessage)
+                else if (cbStatus) cbStatus(errorMessage)
+                finishReject(errorMessage)
+            }
+        })
 
     } catch (error) {
         console.error('Error fetching random projects:', error)

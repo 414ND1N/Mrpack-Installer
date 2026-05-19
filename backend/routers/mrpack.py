@@ -1,8 +1,6 @@
 from typing import Any
-
 from fastapi import HTTPException, Query, APIRouter
-import services.modrinth as Mr
-import services.minecraft as Mc
+import services.modrinth.mrpack as ModrinthMrpack
 from services.progress_manager import ProgressManager
 from fastapi.responses import StreamingResponse
 import asyncio
@@ -44,15 +42,6 @@ async def StartBackgroundInstallation(install_id: str, installation_type, profil
     Ejecuta la instalación en un thread.
     Los callbacks empujan mensajes a la cola del progress_manager.
     """
-    # # callbacks que ponen en la cola
-    # async def push_status(text: str):
-    #     await progress_manager.push(install_id, {"type": "status", "text": text})
-
-    # async def push_setmax(value: int):
-    #     await progress_manager.push(install_id, {"type": "max", "value": value})
-
-    # async def push_progress(value: int):
-    #     await progress_manager.push(install_id, {"type": "progress", "value": value})
 
     # Get the running event loop so callbacks in other threads can schedule coroutines here
     loop = asyncio.get_running_loop()
@@ -69,7 +58,7 @@ async def StartBackgroundInstallation(install_id: str, installation_type, profil
     try:
         # Ejecutar la instalación en thread para no bloquear el loop
         await asyncio.to_thread(
-            Mc.InstallMrpack,
+            ModrinthMrpack.InstallMrpack,
             profile_directory,
             mrpack_directory,
             installation_type,
@@ -104,13 +93,13 @@ async def StartInstallation( payload: dict ):
 @mrpack_router.get("/metadata/", summary="Get Mrpack metadata from file")
 async def GetMrpackData(file_path: str = Query(..., description="Path to the .mrpack file")) -> Any:
     try:
-        return await Mr.GetMrpackMetadata(file_path=file_path)
+        return await ModrinthMrpack.GetMrpackMetadata(file_path=file_path)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching mrpack metadata: {e}")
 
 @mrpack_router.get("/info/", summary="Get Mrpack info from file")
 async def GerMarpackInformation(file_path: str = Query(..., description="Path to the .mrpack file")) -> Any:
     try:
-        return await Mr.GetMrpackInfo(file_path=file_path)
+        return await ModrinthMrpack.GetMrpackInfo(file_path=file_path)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching mrpack info: {e}")
