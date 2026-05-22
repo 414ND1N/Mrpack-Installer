@@ -1,15 +1,16 @@
 export interface MrpackInfo {
     metadata:           MrpackMetadata;
     // Dependen de otros valores
-    optionalFiles?:     string[];   // List of optional file paths
-    minecraftVersion:   string;     // e.g., "1.20.2"
+    optionalFiles?:     string[];       // List of optional file paths
+    optionalServerFiles?: string[];     // List of optional server file paths
+    minecraftVersion:   string;         // e.g., "1.20.2"
     loader?: {
-        type: string;               // e.g., "forge", "fabric"
-        version: string;            // e.g., "40.1.0"
+        type: string;                   // e.g., "forge", "fabric"
+        version: string;                // e.g., "40.1.0"
     }
-    overrides?: boolean;            // If true, overrides will be applied
-    client_overrides?: boolean;     // If true, client files will override server files
-    server_overrides?: boolean;     // If true, server files will override client files
+    overrides?: boolean;                // If true, overrides will be applied
+    client_overrides?: boolean;         // If true, client files will override server files
+    server_overrides?: boolean;         // If true, server files will override client files
 }
 
 export interface MrpackMetadata {
@@ -20,6 +21,7 @@ export interface MrpackMetadata {
     summary?:           string;
     files:              MrpackFile[];
     dependencies:       MrpackDependency[];
+    optionalFiles?:     MrpackFile[];       // List of optional file paths
 }
 
 export interface MrpackInformation { // minecraft launcher lib format

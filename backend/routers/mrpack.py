@@ -37,7 +37,14 @@ async def InstallStream(install_id: str):
             yield SseEvent(item)
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
-async def StartBackgroundInstallation(install_id: str, installation_type, profile_directory, mrpack_directory, minecraft_directory):
+async def StartBackgroundInstallation(
+    install_id: str,
+    installation_type: str,
+    profile_directory: str,
+    mrpack_directory: str,
+    minecraft_directory: str,
+    optional_files: list[str] = []
+):
     """
     Ejecuta la instalación en un thread.
     Los callbacks empujan mensajes a la cola del progress_manager.
@@ -64,6 +71,7 @@ async def StartBackgroundInstallation(install_id: str, installation_type, profil
             installation_type,
             minecraft_directory,
             {"setStatus": setStatus_thread, "setMax": setMax_thread, "setProgress": setProgress_thread},
+            optional_files
         )
         # al terminar
         await progress_manager.push(install_id, {"type":"done", "ok": True})
@@ -81,13 +89,14 @@ async def StartInstallation( payload: dict ):
     profile_directory = payload.get("profile_directory")
     mrpack_directory = payload.get("mrpack_directory")
     minecraft_directory = payload.get("minecraft_directory", "")
+    optional_files = payload.get("optional_files", [])
 
     if not mrpack_directory or not os.path.isfile(mrpack_directory):
         raise HTTPException(status_code=400, detail="mrpack not found")
 
     install_id = await progress_manager.create()
 
-    asyncio.create_task(StartBackgroundInstallation(install_id, installation_type, profile_directory, mrpack_directory, minecraft_directory))
+    asyncio.create_task(StartBackgroundInstallation(install_id, installation_type, profile_directory, mrpack_directory, minecraft_directory, optional_files))
     return {"install_id": install_id}
 
 @mrpack_router.get("/metadata/", summary="Get Mrpack metadata from file")

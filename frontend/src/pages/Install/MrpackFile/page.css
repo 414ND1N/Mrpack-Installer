@@ -201,3 +201,30 @@ a.information-toggle:hover {
 .install-container .sections-minecraft .section-from-file .content .installation-configuration .inputs .install {
   min-width: 100%;
 }
+
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .optional-files-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .optional-files-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .optional-files-list li .mc-checkbox {
+  /* flex: 0 0 auto; */
+  margin: 0;
+  width: 1.2em;
+  height: auto;
+}
+
+.install-container .sections-minecraft .section-from-file .content .installation-configuration .optional-files-list li label {
+  margin: 0;
+  cursor: pointer;
+  line-height: 1.2;
+}

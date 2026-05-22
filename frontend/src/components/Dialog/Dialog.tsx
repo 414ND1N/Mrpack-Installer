@@ -101,8 +101,8 @@ function DialogClose({ children, className }: { children?: ReactNode; className?
   return null
 }
 
-function DialogHeader({ children, className }: { children?: ReactNode; className?: string }) {
-  return <div className={clsx("dialog-header", className)}>{children}</div>
+function DialogHeader({ children, className, sticky }: { children?: ReactNode; className?: string, sticky?: boolean}) {
+  return <div className={clsx("dialog-header", className, sticky ? "sticky" :"")}>{children}</div>
 }
 
 function DialogFooter({ children, className }: { children?: ReactNode; className?: string }) {

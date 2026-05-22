@@ -41,7 +41,23 @@
                     }
                 },
                 "install": {
-                    "button": "Instalar"
+                    "button": "Instalar",
+                    "previous_installation": {
+                        "title": "Instalación previa detectada",
+                        "description": "El directorio seleccionado ya contiene una instalación previa. ¿Qué deseas hacer?",
+                        "change_directory": "Cambiar directorio de instalación",
+                        "delete_previous": "Eliminar instalación previa y continuar",
+                        "no_delete": "Continuar sin eliminar instalación previa"
+                    }
+                },
+                "optional_files": {
+                    "title": "Archivos opcionales",
+                    "description": "Selecciona los archivos opcionales que deseas incluir en la instalación"
+                },
+                "vanilla_launcher": {
+                    "ask": "¿ Deseas agregar el perfil al lanzador vanilla de Minecraft ?",
+                    "description": "Esto agregará un nuevo perfil al lanzador vanilla de Minecraft con la configuración necesaria para ejecutar el paquete de mods instalado.",
+                    "selected_icon": "Icono seleccionado"
                 },
                 "advanced": {
                     "activate": "Habilitar configuración avanzada",

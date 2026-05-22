@@ -32,10 +32,17 @@ interface Window {
     getVersion: () => Promise<string>;
   },
   backend?: {
+    // Utils related
+    GetVersion: () => Promise<string>;
+    PathJoin: (...paths: string[]) => Promise<string>;
+    PathExists: (path: string) => Promise<{exists: boolean,is_file: boolean }>;
+    PathDelete: (path: string) => Promise<{ success: boolean, is_file: boolean, error?: string }>;
+    IsModdedMinecraftDirectory: (directory: string) => Promise<boolean>;
+
+    // Modrinth related
     FetchRandomProjects: (count: number) => Promise<unknown>;
     SearchProjects: (count: number, type?: string, querry?: string, offset?: number) => Promise<unknown>;
     GetMrpackMedatadaInfo: (filePath: string) => Promise<unknown>;
-    PathJoin: (...paths: string[]) => Promise<string>;
     ShowOpenDialog: (options: Electron.OpenDialogOptions) => Promise<Electron.OpenDialogReturnValue>;
     GetMinecraftDirectory: () => Promise<string>;
     AddVanillaLauncher: (props: any) => Promise<string>;
@@ -43,6 +50,7 @@ interface Window {
       installationType: string,
       mrpackDirectory: string,
       profileDirectory: string,
+      optionalFiles?: string[],
       cbStatus?: (status: string) => void,
       cbMax?: (max: number) => void,
       cbProgress?: (progress: number) => void,

@@ -41,7 +41,23 @@
                     }
                 },
                 "install": {
-                    "button": "Install"
+                    "button": "Install",
+                    "previous_installation": {
+                        "title": "Previous installation detected",
+                        "description": "The selected directory already contains a previous installation. What do you want to do?",
+                        "change_directory": "Change installation directory",
+                        "delete_previous": "Delete previous installation and continue",
+                        "no_delete": "Continue without deleting previous installation"
+                    }
+                },
+                "optional_files": {
+                    "title": "Optional files",
+                    "description": "Select the optional files you want to include in the installation"
+                },
+                "vanilla_launcher": {
+                    "ask": "Do you want to add the profile to the vanilla Minecraft launcher?",
+                    "description": "This will add a new profile to the vanilla Minecraft launcher with the necessary settings to run the installed modpack.",
+                    "selected_icon": "Selected icon"
                 },
                 "advanced": {
                     "title": "Advanced configuration",

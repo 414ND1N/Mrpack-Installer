@@ -39,3 +39,12 @@ async def GetMinecraftDirectory() -> str:
         return await MinecrafdtUtils.GetMinecraftDirectory()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error getting Minecraft directory: {e}")
+
+@minecraft_router.get("/directory/is_modded", summary="Verify if a directory is likely a modded Minecraft directory")
+async def IsModdedMinecraftDirectory(
+    directory: str = Query(..., description="Path to the directory to check")
+) -> bool:
+    try:
+        return await MinecrafdtUtils.IsModdedMinecraftDirectory(directory)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error checking modded Minecraft directory: {e}")

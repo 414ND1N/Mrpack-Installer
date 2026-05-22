@@ -75,6 +75,13 @@
 	border-bottom: 2px var(--prymary-border-color, rgba(0, 0, 0, 0.08));
 }
 
+.dialog-header.sticky {
+	position: sticky;
+	top: 0;
+	background: var(--primary-background-color);
+	z-index: 1;
+}
+
 .dialog-footer {
 	display: flex;
 	gap: 8px;

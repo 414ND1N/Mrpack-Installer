@@ -2,7 +2,7 @@ import { ipcRenderer, contextBridge } from 'electron'
 
 import {
   GetMrpackMedatadaInfo,
-  GetMrpackInfo,
+  // GetMrpackInfo,
   StartMrpackInstallation,
   DownloadCollection,
   GetCollectionInfo,
@@ -10,14 +10,17 @@ import {
   FetchRandomProjects,
   SearchProjects
 } from './api/modrinth'
-
 import {
-  PathJoin
+  PathJoin,
+  GetVersion,
+  PathExists,
+  PathDelete
 } from './api/utils'
 
 import {
   GetMinecraftDirectory,
-  AddVanillaLauncher
+  AddVanillaLauncher,
+  IsModdedMinecraftDirectory
 } from './api/minecraft'
 
 // --------- Expose some API to the Renderer process ---------
@@ -46,9 +49,16 @@ contextBridge.exposeInMainWorld('winConfig', {
 })
 
 contextBridge.exposeInMainWorld('backend', {
+  // Utils related
+  PathJoin: (...paths: string[]) => PathJoin(...paths),
+  PathExists: (path: string) => PathExists(path),
+  PathDelete: (path: string) => PathDelete(path),
+  GetVersion: () => GetVersion(),
+  IsModdedMinecraftDirectory: (directory: string) => IsModdedMinecraftDirectory(directory),
+
+  // Modrinth related
   FetchRandomProjects: (count: number) => FetchRandomProjects(count),
   SearchProjects: (count: number, type?: string, querry?: string, offset?: number) => SearchProjects(count, type, querry, offset),
-  PathJoin: (...paths: string[]) => PathJoin(...paths),
   AddVanillaLauncher: (props: any) => AddVanillaLauncher(props),
   
   // Modrinth related
@@ -57,17 +67,18 @@ contextBridge.exposeInMainWorld('backend', {
     installationType: string,
     mrpackDirectory: string,
     profileDirectory: string,
+    optionalFiles?: string[],
     cbStatus?: (status: string) => void,
     cbMax?: (max: number) => void,
     cbProgress?: (progress: number) => void,
     cbFinish?: (status: string) => void,
     cbError?: (error: string) => void
-  ) => StartMrpackInstallation(installationType, mrpackDirectory, profileDirectory, cbStatus, cbMax, cbProgress, cbFinish, cbError),
+  ) => StartMrpackInstallation(installationType, mrpackDirectory, profileDirectory, optionalFiles, cbStatus, cbMax, cbProgress, cbFinish, cbError),
   DownloadCollection: (collectionId: string, version: string, loaders: string[], directory: string, updateExisting: boolean, log: boolean = true) => DownloadCollection(collectionId, version, loaders, directory, updateExisting, log),
   GetCollectionInfo: (collectionId: string) => GetCollectionInfo(collectionId),
   GetModsInCollectionInfo: (collectionId: string, version: string, loaders: string) => GetModsInCollectionInfo(collectionId, version, loaders),
   GetMrpackMedatadaInfo: (filePath: string) => GetMrpackMedatadaInfo(filePath),
-  GetMrpackInfo: (filePath: string) => GetMrpackInfo(filePath),
+  // GetMrpackInfo: (filePath: string) => GetMrpackInfo(filePath),
 })
 
 console.log("Preload script loaded successfully.")

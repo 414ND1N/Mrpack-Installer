@@ -6,7 +6,7 @@ from routers.modrinth import modrinth_router
 from routers.mrpack import mrpack_router
 from routers.utils import utils_router
 
-app = FastAPI(title="Mrpack Installer API", version="3.0.1")
+app = FastAPI(title="Mrpack Installer API", version="3.1.0")
 
 origins = [
     "http://localhost:5173",
