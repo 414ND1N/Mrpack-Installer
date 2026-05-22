@@ -8,25 +8,36 @@ import "./page.css"
 // Sidebar ahora se monta globalmente desde el layout
 import SectionsMinecraftComponent from "@/components/SectionsMinecraft/SectionsMinecraft"
 import FileSelector from "@/components/FileSelector/FileSelector"
-import { MrpackMetadata } from "@/interfaces/modrinth/MrPack"
+import { MrpackMetadata, MrpackFile } from "@/interfaces/modrinth/MrPack"
 // Hooks
 import { MinecraftVersionFromDependencies } from "@/hooks/modrinth/mrpack"
 import { InstallationModpackProps } from "@/interfaces/MrpackInstaller"
 import { ProfileIcons } from '@/interfaces/minecraft/MinecraftLauncherIcons'
 import { useGlobalMessage } from "@/context/GlobalMessageContext"
 
-import { Dialog, DialogTrigger, DialogContent, DialogClose, DialogFooter, DialogHeader, DialogDescription } from "@/components/Dialog/Dialog"
-import { MCButton, MCInput, MCSelect, MCSlider, MCAskButton } from "@/components/MC/MC"
+import { Dialog, DialogTitle, DialogTrigger, DialogContent, DialogClose, DialogFooter, DialogHeader, DialogDescription } from "@/components/Dialog/Dialog"
+import { MCButton, MCInput, MCSelect, MCSlider, MCAskButton, MCCheckbox } from "@/components/MC/MC"
 import { Separator } from "@/components/Separator/separator"
 
 function Install() {
 
+    const normalizeWindowsPath = (path: string) => path.replace(/^"(.*)"$/, "$1").replace(/[\\/]+/g, "\\")
+
     const { showMessage } = useGlobalMessage()
     const { t } = useTranslation(["installation", "commons"])
-    const [minecraft_dir, setMinecraftDir] = useState<string>("")
-    const [mrpackInfo, setMrpackInfo] = useState<MrpackMetadata | null>(null)
-    const [personalizedConfig, setPersonalizedConfig] = useState<boolean>(false)
+
     const [openDialogConfig, setOpenDialogConfig] = useState<boolean>(false)
+    const [openDialogOptionalFiles, setOpenDialogOptionalFiles] = useState<boolean>(false)
+    const [openDialogInstallation, setOpenDialogInstallation] = useState<boolean>(false)
+    const [openDialogVanillaLauncher, setOpenDialogVanillaLauncher] = useState<boolean>(false)
+    const [openDialogExistingFiles, setOpenDialogExistingFiles] = useState<boolean>(false)
+
+    const [advancedConfig, SetAdvancedConfig] = useState<boolean>(false)
+    const [existingModpackFiles, setExistingModpackFiles] = useState<boolean>(false)
+    const [minecraft_dir, setMinecraftDir] = useState<string>("")
+    const [mrpackMetadataInfo, setMrpackMetadataInfo] = useState<MrpackMetadata | null>(null)
+    const [optionalFilesSelected, setOptionalFilesSelected] = useState<MrpackFile[]>([])
+    const [selectedProfileIcon, setSelectedProfileIcon] = useState<string>(ProfileIcons.Furnace)
     const [installationConfig, setInstallationConfig] = useState<InstallationModpackProps>({
         type: "singleplayer", // Por defecto, tipo cliente
         installation_directory: "instances",
@@ -51,7 +62,7 @@ function Install() {
 
     useEffect(() => {
         // Resetear la configuración de instalación cuando no hay un archivo seleccionado
-        if (!mrpackInfo) {
+        if (!mrpackMetadataInfo) {
             setInstallationConfig({
                 type: "singleplayer", // Por defecto, tipo cliente
                 installation_directory: "instances",
@@ -64,23 +75,30 @@ function Install() {
                 profile_icon: ProfileIcons.Furnace // Icono del perfil, inicialmente vacío
             })
         }
-    }, [mrpackInfo])
+    }, [mrpackMetadataInfo])
+
+    const getVisibleOptionalFiles = (files: MrpackFile[]) => {
+        if (installationConfig.type === "singleplayer") {
+            return files
+        }
+
+        const side = installationConfig.type === "clientside" ? "client" : "server"
+
+        return files.filter((file) => {
+            if (!file.env) return true
+            return file.env[side] === "optional"
+        })
+    }
 
     // Funcion archivo
     const handleFile = async (file: File) => {
-        // Aquí puedes manejar el archivo seleccionado
-        console.log("Archivo seleccionado:", file)
-
         // Verificar si el archivo es un modpack válido
         if (!file?.name.endsWith(".mrpack")) {
-            alert(t('sections.mrpack_file.messages.error.invalid_mrpack_file'))
+            showMessage(t('sections.mrpack_file.messages.error.invalid_mrpack_file'), { showClose: true })
         }
 
         try {
-
-            // const _data = await GetMrpackMedatadaInfo(file.path)
             const _data = await (window as any).backend.GetMrpackMedatadaInfo(file.path)
-            console.log("Metadatos del modpack obtenidos:", _data)
 
             const _minecfraft_dir = minecraft_dir || await (window as any).backend.GetMinecraftDirectory()
 
@@ -88,15 +106,20 @@ function Install() {
             const _modpack_directory = await (window as any).backend.PathJoin(_minecfraft_dir, "instances", _modpack_dir_name)
             const _minecraft_version = MinecraftVersionFromDependencies(_data.dependencies)
 
-            setMrpackInfo(_data)
+            setMrpackMetadataInfo(_data)
+            const _installation_directory = normalizeWindowsPath(_modpack_directory) // Normalizar la ruta para evitar problemas con barras repetidas en Windows
+
             setInstallationConfig((prevInfo) => ({
                 ...prevInfo,
                 minecraft_version: _minecraft_version, // versión obtenida buscando una dependencia con id "minecraft"
                 mrpack_path: file.path,
-                installation_directory: typeof _modpack_directory === "string"
-                    ? _modpack_directory.replace(/^"(.*)"$/, "$1") // quitar comillas dobles alrededor si existen
-                    : _modpack_directory
+                installation_directory: _installation_directory
             }))
+
+            setExistingModpackFiles(
+                await (window as any).backend.IsModdedMinecraftDirectory(_installation_directory) 
+                === true
+            )
 
         } catch (error) {
             console.error("Error al obtener los metadatos del modpack:", error)
@@ -106,7 +129,23 @@ function Install() {
                 installation_directory: "instances", // Reiniciar la ruta de instalación del modpack
                 mrpack_path: ""
             }))
-            setMrpackInfo(null)
+            setMrpackMetadataInfo(null)
+        }
+    }
+
+    const DeleteExistingPath = async () => {
+        try {
+            showMessage(t('sections.mrpack_file.messages.installation.existing_path_deleting'), { showClose: false })
+            const result = await (window as any).backend.PathDelete(installationConfig.installation_directory)
+            if (!result.success) {
+                showMessage(t('sections.mrpack_file.messages.error.could_not_delete_existing_path') + `: ${result.error || "unknown error"}`, { showClose: true })
+                throw new Error(result.error || "unknown error")
+            }
+
+            showMessage(t('sections.mrpack_file.messages.existing_path_deleted'), { showClose: false })
+        } catch (error) {
+            showMessage((error as Error).message, { showClose: true })
+            throw error
         }
     }
 
@@ -123,20 +162,56 @@ function Install() {
             if (!result || result.canceled) return
             const selected = result.filePaths && result.filePaths[0]
             if (selected) {
+
+                if (selected === minecraft_dir) {
+                    showMessage(t('sections.mrpack_file.messages.error.path_cannot_be_minecraft_directory'), { showClose: true })
+                    return
+                }
                 setInstallationConfig(prev => ({ ...prev, installation_directory: selected }))
+                setExistingModpackFiles(
+                    await (window as any).backend.IsModdedMinecraftDirectory(selected) 
+                    === true
+                )
             }
         } catch (error) {
             console.error("Error opening folder:", error)
         }
     }
 
-    const StartInstallation = async () => {
-        if (!mrpackInfo) {
+    const StartVanillaLauncherCreation = async () => {
+        try {
+            showMessage(t('sections.mrpack_file.messages.installation.vanilla_launcher.adding'), { showClose: false })
+            await (window as any).backend.AddVanillaLauncher(installationConfig)
+            showMessage(t('sections.mrpack_file.messages.installation.finish'), { showClose: true })
+        } catch (error) {
+            showMessage(
+                t('sections.mrpack_file.messages.installation.error') +
+                `: ${(error as Error).message}`,
+                { showClose: true }
+            )
+        }
+    }
+
+    const AskForClosedLauncher = async (deletePreviousInstallation: boolean = false) => {
+        if (installationConfig.type === "serverside") {
+            StartInstallation(deletePreviousInstallation)
+        } else {
+            setOpenDialogInstallation(true)
+        }
+    }
+
+    const StartInstallation = async (deletePreviousInstallation: boolean = false) => {
+        if (!mrpackMetadataInfo) {
             showMessage(t('sections.mrpack_file.messages.error.no_file_selected'), { showClose: true })
             return
         }
 
         try {
+
+            if (deletePreviousInstallation) {
+                await DeleteExistingPath()
+            }
+
             // Mostrar mensaje inicial y ocultar botón de cerrar durante la instalación
             showMessage(t('sections.mrpack_file.messages.installation.starting'), { showClose: false })
 
@@ -147,6 +222,7 @@ function Install() {
                 installationConfig.type,
                 installationConfig.mrpack_path,
                 installationConfig.installation_directory,
+                optionalFilesSelected.map(file => file.path),
                 (status: string) => { showMessage(status, { showClose: false }) },
                 undefined,  // cbMax               
                 undefined,  // cbProgress
@@ -156,12 +232,11 @@ function Install() {
 
             // Añadir el lanzador si es necesario
             if (installationConfig.type !== "serverside") {
-                showMessage(t('sections.mrpack_file.messages.installation.vanilla_launcher.adding'), { showClose: false })
-                await (window as any).backend.AddVanillaLauncher(installationConfig)
-                showMessage(t('sections.mrpack_file.messages.installation.vanilla_launcher.finish'), { showClose: true })
+                setOpenDialogVanillaLauncher(true)
+            } else {
+                showMessage(t('sections.mrpack_file.messages.installation.finish'), { showClose: true })
             }
 
-            showMessage(t('sections.mrpack_file.messages.installation.finish'), { showClose: true })
         } catch (error) {
             showMessage(
                 t('sections.mrpack_file.messages.installation.error') +
@@ -182,13 +257,50 @@ function Install() {
 
                 <FileSelector AcceptExtensions={[".mrpack"]} FileCallback={handleFile} className="mc-style" />
 
+                <Dialog open={openDialogExistingFiles} onOpenChange={(open) => setOpenDialogExistingFiles(open)}>
+                    <DialogContent>
+                        <DialogHeader>
+                            {t('sections.mrpack_file.configuration.install.previous_installation.title')}
+                        </DialogHeader>
+                        <DialogDescription>
+                            {t('sections.mrpack_file.configuration.install.previous_installation.description')}
+                        </DialogDescription>
+                        <DialogFooter>
+                            <MCButton onClick={() => {
+                                SetAdvancedConfig(true)
+                                OpenFolder()
+                                setOpenDialogExistingFiles(false)
+                            }}>
+                                {t('sections.mrpack_file.configuration.install.previous_installation.change_directory')}
+                            </MCButton>
+                            <MCButton onClick={() => {
+                                AskForClosedLauncher(true)
+                                setOpenDialogExistingFiles(false)
+                            }}>
+                                {t('sections.mrpack_file.configuration.install.previous_installation.delete_previous')}
+                            </MCButton>
+                            <MCButton onClick={() => {
+                                AskForClosedLauncher()
+                                setOpenDialogExistingFiles(false)
+                            }}>
+                                {t('sections.mrpack_file.configuration.install.previous_installation.no_delete')}
+                            </MCButton>
+                            <MCButton onClick={() => {
+                                setOpenDialogExistingFiles(false)
+                            }}>
+                                {t('actions.cancel', { ns: 'commons' })}
+                            </MCButton>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
                 <section className={`installation-configuration ${installationConfig.mrpack_path != "" ? "active" : ""}`}>
 
                     <section className="mrpack-summary">
 
                         <div className="information">
-                            {mrpackInfo ? <p>{t('sections.mrpack_file.information.summary.name')}: {mrpackInfo?.name || "NA"} </p> : null}
-                            {mrpackInfo?.summary ? <p>{t('sections.mrpack_file.information.summary.description')}: {mrpackInfo?.summary || "NA"} </p> : null}
+                            {mrpackMetadataInfo ? <p>{t('sections.mrpack_file.information.summary.name')}: {mrpackMetadataInfo?.name || "NA"} </p> : null}
+                            {mrpackMetadataInfo?.summary ? <p>{t('sections.mrpack_file.information.summary.description')}: {mrpackMetadataInfo?.summary || "NA"} </p> : null}
                             {installationConfig.minecraft_version ? <p>{t('sections.mrpack_file.information.summary.version')}: {installationConfig.minecraft_version || "NA"}</p> : null}
                         </div>
                         <div className="actions">
@@ -199,16 +311,23 @@ function Install() {
                                     </MCButton>
                                 </DialogTrigger>
                                 <DialogContent>
-                                    <DialogHeader>
-                                        {t('sections.mrpack_file.information.list.label')}
+                                    <DialogHeader sticky={true}>
+                                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                            {t('sections.mrpack_file.information.list.label')}
+                                            <DialogClose>
+                                                <MCButton>
+                                                    X
+                                                </MCButton>
+                                            </DialogClose>
+                                        </div>
                                     </DialogHeader>
                                     <DialogDescription>
                                         {t('sections.mrpack_file.information.list.description')}
                                     </DialogDescription>
                                     <Separator />
-                                    {mrpackInfo?.files && mrpackInfo.files.length > 0 ? (
+                                    {mrpackMetadataInfo?.files && mrpackMetadataInfo.files.length > 0 ? (
                                         <ul>
-                                            {mrpackInfo.files
+                                            {mrpackMetadataInfo.files
                                                 ?.sort((a, b) => a.path.localeCompare(b.path)) // Order
                                                 .map((file) => {
                                                     if (file.path) {
@@ -219,14 +338,6 @@ function Install() {
                                     ) : (
                                         <h2>{t('sections.mrpack_file.information.list.empty')}</h2>
                                     )}
-                                    <DialogFooter>
-                                        <DialogClose>
-                                            <MCButton>
-                                                {t('actions.close', { ns: 'commons' })}
-                                            </MCButton>
-                                        </DialogClose>
-                                    </DialogFooter>
-
                                 </DialogContent>
                             </Dialog>
                         </div>
@@ -237,11 +348,11 @@ function Install() {
 
                             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                                 <MCSlider
-                                    checked={personalizedConfig}
+                                    checked={advancedConfig}
                                     onChange={(e) => {
                                         const checked = e.target.checked
                                         setOpenDialogConfig(checked)
-                                        setPersonalizedConfig(checked)
+                                        SetAdvancedConfig(checked)
                                     }}
                                 />
                                 <p>{t('sections.mrpack_file.configuration.advanced.activate')}</p>
@@ -250,8 +361,15 @@ function Install() {
                                         <MCAskButton />
                                     </DialogTrigger>
                                     <DialogContent>
-                                        <DialogHeader>
-                                            {t('sections.mrpack_file.configuration.information.title')}
+                                        <DialogHeader sticky={true}>
+                                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                                {t('sections.mrpack_file.configuration.information.title')}
+                                                <DialogClose>
+                                                    <MCButton>
+                                                        X
+                                                    </MCButton>
+                                                </DialogClose>
+                                            </div>
                                         </DialogHeader>
                                         <DialogDescription>
                                             {t('sections.mrpack_file.configuration.information.description')}
@@ -261,8 +379,8 @@ function Install() {
                                         <DialogDescription>
                                             {t('sections.mrpack_file.configuration.advanced.path.description')}
                                         </DialogDescription>
-                                        <Separator borderless={true}/>
-                                        
+                                        <Separator borderless={true} />
+
                                         {t('sections.mrpack_file.configuration.advanced.memory.label')}
                                         <DialogDescription>
                                             {t('sections.mrpack_file.configuration.advanced.memory.description')}
@@ -270,13 +388,13 @@ function Install() {
                                         <DialogDescription>
                                             {t('sections.mrpack_file.configuration.advanced.memory.recommendation')}
                                         </DialogDescription>
-                                        <Separator borderless={true}/>
+                                        <Separator borderless={true} />
 
                                         {t('sections.mrpack_file.configuration.profile.label')}
                                         <DialogDescription>
                                             {t('sections.mrpack_file.configuration.profile.description')}
                                         </DialogDescription>
-                                        <Separator borderless={true}/>
+                                        <Separator borderless={true} />
 
 
                                         {t('sections.mrpack_file.configuration.type.label')}
@@ -288,15 +406,6 @@ function Install() {
                                                 <li><strong>{t('sections.mrpack_file.configuration.type.list.server')}:</strong> {t('sections.mrpack_file.configuration.type.list.server_description')}</li>
                                             </ul>
                                         </DialogDescription>
-
-                                        <DialogFooter>
-                                            <DialogClose>
-                                                <MCButton>
-                                                    {t('actions.close', { ns: 'commons' })}
-                                                </MCButton>
-                                            </DialogClose>
-                                        </DialogFooter>
-
                                     </DialogContent>
                                 </Dialog>
                             </div>
@@ -311,16 +420,16 @@ function Install() {
 
                                     <DialogFooter>
                                         <MCButton onClick={() => {
-                                            setPersonalizedConfig(true)
+                                            SetAdvancedConfig(true)
                                             setOpenDialogConfig(false)
                                         }}>
                                             {t('actions.accept', { ns: 'commons' })}
                                         </MCButton>
                                         <MCButton onClick={() => {
-                                            setPersonalizedConfig(false)
+                                            SetAdvancedConfig(false)
                                             setOpenDialogConfig(false)
                                         }}>
-                                            {t('actions.close', { ns: 'commons' })}
+                                            {t('actions.cancel', { ns: 'commons' })}
                                         </MCButton>
                                     </DialogFooter>
                                 </DialogContent>
@@ -328,7 +437,7 @@ function Install() {
 
                         </div>
 
-                        <div className={`advanced-configuration ${personalizedConfig ? "active" : ""}`}>
+                        <div className={`advanced-configuration ${advancedConfig ? "active" : ""}`}>
 
                             <div className="path">
                                 <h2 className="information-toggle">{t('sections.mrpack_file.configuration.advanced.path.label')}</h2>
@@ -337,17 +446,19 @@ function Install() {
                                     className="path_input"
                                     placeholder={t('sections.mrpack_file.configuration.advanced.path.placeholder')}
                                     value={installationConfig.installation_directory} // Ruta de instalación del modpack
-                                    onChange={(event) => {
-                                        const newPath = event.target.value.trim()
-                                        if (!newPath || newPath.length === 0) {
-                                            alert(t('sections.mrpack_file.messages.error.invalid_path'))
-                                            return
-                                        }
-                                        setInstallationConfig((prevInfo) => ({
-                                            ...prevInfo,
-                                            installation_directory: newPath
-                                        }))
-                                    }}
+                                    readOnly
+                                    // onChange={(event) => {
+                                    //     const newPath = event.target.value.trim()
+                                    //     if (!newPath || newPath.length === 0) {
+                                    //         alert(t('sections.mrpack_file.messages.error.invalid_path'))
+                                    //         return
+                                    //     }
+
+                                    //     setInstallationConfig((prevInfo) => ({
+                                    //         ...prevInfo,
+                                    //         installation_directory: newPath
+                                    //     }))
+                                    // }}
                                 />
                                 <MCButton
                                     variant="ghost"
@@ -400,12 +511,13 @@ function Install() {
                             <h2>{t('sections.mrpack_file.configuration.profile.label')}</h2>
                             <MCSelect
                                 value={installationConfig.profile_icon}
-                                onChange={(event) =>
+                                onChange={(event) => {
                                     setInstallationConfig((prevInfo) => ({
                                         ...prevInfo,
                                         profile_icon: event.target.value as ProfileIcons
                                     }))
-                                }
+                                    setSelectedProfileIcon(event.target.value)
+                                }}
                             >
                                 {Object.entries(ProfileIcons)
                                     .map(([key, value]) => ({
@@ -438,39 +550,161 @@ function Install() {
                             </MCSelect>
                         </div>
                         <div className="installation-button">
-                            <Dialog>
-                                <DialogTrigger>
-                                    <MCButton disabled={installationConfig.mrpack_path == ""} className="install">
-                                        {t('sections.mrpack_file.configuration.install.button')}
-                                    </MCButton>
-                                </DialogTrigger>
-                                <DialogContent>
-                                    <DialogHeader>
-                                        <h2>{t('sections.mrpack_file.messages.installation.need_launcher_closed')}</h2>
-                                    </DialogHeader>
-                                    <Separator />
-                                    <p>{t('sections.mrpack_file.messages.installation.need_launcher_closed_desc')}</p>
-
-                                    <DialogFooter>
-                                        <DialogClose>
-                                            <MCButton
-                                                onClick={() => StartInstallation()}
-                                            >
-                                                {t('actions.accept', { ns: 'commons' })}
-                                            </MCButton>
-                                        </DialogClose>
-                                        <DialogClose>
-                                            <MCButton>
-                                                {t('actions.close', { ns: 'commons' })}
-                                            </MCButton>
-                                        </DialogClose>
-                                    </DialogFooter>
-
-                                </DialogContent>
-                            </Dialog>
+                            <MCButton
+                                disabled={installationConfig.mrpack_path == ""}
+                                className="install"
+                                onClick={() => {
+                                    if (mrpackMetadataInfo?.optionalFiles && getVisibleOptionalFiles(mrpackMetadataInfo.optionalFiles).length > 0) {
+                                        setOpenDialogOptionalFiles(true)
+                                    } else {
+                                        if (existingModpackFiles){
+                                          setOpenDialogExistingFiles(true)
+                                        } else {
+                                          AskForClosedLauncher()
+                                        }
+                                    }
+                                }}
+                            >
+                                {t('sections.mrpack_file.configuration.install.button')}
+                            </MCButton>
                         </div>
-
                     </section>
+                    <Dialog open={openDialogOptionalFiles} onOpenChange={(open) => setOpenDialogOptionalFiles(open)}>
+                        <DialogContent>
+                            <DialogTitle>
+                                {t('sections.mrpack_file.configuration.optional_files.title')}
+                            </DialogTitle>
+                            <Separator />
+                            <p>
+                                {t('sections.mrpack_file.configuration.optional_files.description')}
+                            </p>
+                            <Separator borderless={true} />
+                            {
+                                mrpackMetadataInfo?.optionalFiles && getVisibleOptionalFiles(mrpackMetadataInfo.optionalFiles).length > 0 ? (
+                                    <ul className="optional-files-list">
+                                        {getVisibleOptionalFiles(
+                                            mrpackMetadataInfo.optionalFiles
+                                                ?.sort((a, b) => a.path.localeCompare(b.path)) ?? []
+                                        ).map((file) => {
+                                            if (!file.path) return null
+                                            if (file.path) {
+                                                const isSelected = optionalFilesSelected.some(selectedFile => selectedFile.path === file.path)
+                                                return (
+                                                    <li key={file.path}>
+                                                        <MCCheckbox
+                                                            checked={isSelected}
+                                                            onChange={() => {
+                                                                setOptionalFilesSelected(prevSelected => {
+                                                                    if (isSelected) {
+                                                                        return prevSelected.filter(selectedFile => selectedFile.path !== file.path)
+                                                                    }
+                                                                    return [...prevSelected, file]
+                                                                })
+                                                            }}
+                                                        />
+                                                        <label>{file.path.split(".")[0].replace("/", " > ") || "unknown"}</label>
+                                                    </li>
+                                                )
+                                            }
+                                        })}
+                                    </ul>
+                                ) : (
+                                    <h2>{t('sections.mrpack_file.information.list.empty')}</h2>
+                                )
+                            }
+                            <DialogFooter>
+                                <DialogClose>
+                                    <MCButton
+                                        className="install"
+                                        onClick={() => {
+                                            setOpenDialogOptionalFiles(false)
+                                            if (existingModpackFiles){
+                                                setOpenDialogExistingFiles(true)
+                                            } else{
+                                                AskForClosedLauncher()
+                                            }
+                                        }}
+                                    >
+                                        {t('actions.accept', { ns: 'commons' })}
+                                    </MCButton>
+                                </DialogClose>
+                                <DialogClose>
+                                    <MCButton
+                                        onClick={() => {
+                                            setOptionalFilesSelected([])
+                                            setOpenDialogOptionalFiles(false)
+                                        }}
+                                    >
+                                        {t('actions.cancel', { ns: 'commons' })}
+                                    </MCButton>
+                                </DialogClose>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                    <Dialog open={openDialogInstallation} onOpenChange={(open) => setOpenDialogInstallation(open)}>
+                        <DialogContent>
+                            <DialogHeader>
+                                <h2>{t('sections.mrpack_file.messages.installation.need_launcher_closed')}</h2>
+                            </DialogHeader>
+                            <Separator />
+                            <p>{t('sections.mrpack_file.messages.installation.need_launcher_closed_desc')}</p>
+
+                            <DialogFooter>
+                                <DialogClose>
+                                    <MCButton
+                                        onClick={() => {
+                                            setOpenDialogInstallation(false)
+                                            StartInstallation()
+                                        }}
+                                    >
+                                        {t('actions.accept', { ns: 'commons' })}
+                                    </MCButton>
+                                </DialogClose>
+                                <DialogClose>
+                                    <MCButton
+                                        onClick={() => {
+                                            setOpenDialogOptionalFiles(false)
+                                            setOpenDialogInstallation(false)
+                                        }}
+                                    >
+                                        {t('actions.cancel', { ns: 'commons' })}
+                                    </MCButton>
+                                </DialogClose>
+                            </DialogFooter>
+
+                        </DialogContent>
+                    </Dialog>
+                    <Dialog open={openDialogVanillaLauncher} onOpenChange={(open) => setOpenDialogVanillaLauncher(open)}>
+                        <DialogContent>
+                            <DialogHeader>
+                                <h2>{t('sections.mrpack_file.configuration.vanilla_launcher.ask')}</h2>
+
+                            </DialogHeader>
+                            <Separator />
+                            <p>{t('sections.mrpack_file.configuration.vanilla_launcher.description')}</p>
+                            <br></br>
+                            <p>{t('sections.mrpack_file.configuration.vanilla_launcher.selected_icon')}: {t(`minecraft.launcher.profile.icons.${selectedProfileIcon}`, { ns: "commons" })}</p>
+
+                            <DialogFooter>
+                                <MCButton
+                                    onClick={() => {
+                                        setOpenDialogVanillaLauncher(false)
+                                        StartVanillaLauncherCreation()
+                                    }}
+                                >
+                                    {t('texts.yes', { ns: 'commons' })}
+                                </MCButton>
+                                <MCButton
+                                    onClick={() => {
+                                        setOpenDialogVanillaLauncher(false)
+                                    }}
+                                >
+                                    {t('texts.no', { ns: 'commons' })}
+                                </MCButton>
+                            </DialogFooter>
+
+                        </DialogContent>
+                    </Dialog>
 
                 </section>
             </section>

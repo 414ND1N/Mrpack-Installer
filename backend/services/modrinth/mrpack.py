@@ -6,7 +6,7 @@ import io
 from pydantic import BaseModel
 import shutil
 from os.path import abspath, expanduser, normpath, isfile
-from services.minecraft_lib import install_mrpack, install_mrpack_clientside, install_mrpack_serverside
+from services.minecraft_lib import install_mrpack, install_mrpack_clientside, install_mrpack_serverside, get_mrpack_information
 import minecraft_launcher_lib as McLib
 import traceback
 
@@ -36,6 +36,17 @@ async def GetMrpackMetadata(file_path: str) -> Any:
         else:
             dependencies = []
 
+        optional_files = []
+        for fl in index.get("files", []):
+            if not isinstance(fl, dict):
+                continue
+            env = fl.get("env")
+            if isinstance(env, dict):
+                if isinstance(env.get("client"), str) and env.get("client").lower() == "optional":
+                    optional_files.append(fl)
+                if isinstance(env.get("server"), str) and env.get("server").lower() == "optional":
+                    optional_files.append(fl)
+
         return {
             "game": index.get("game"),
             "formatVersion": index.get("formatVersion"),
@@ -44,106 +55,112 @@ async def GetMrpackMetadata(file_path: str) -> Any:
             "summary": index.get("summary", ""),
             "files": index.get("files", []),
             "dependencies": dependencies,
+            "optionalFiles": optional_files,
         }
     except Exception as e:
         raise e
     
-def GetMrpackInfo(file_path: str) -> Any:
-    try:
-        file_path_obj = Path(file_path)
+# def GetMrpackInfo(file_path: str) -> Any:
+#     try:
+#         file_path_obj = Path(file_path)
 
-        if not file_path_obj.exists() or not file_path_obj.is_file():
-            raise Exception(f"File not found: {file_path}")
+#         if not file_path_obj.exists() or not file_path_obj.is_file():
+#             raise Exception(f"File not found: {file_path}")
 
-        file_bytes = file_path_obj.read_bytes()
+#         file_bytes = file_path_obj.read_bytes()
 
-        with zipfile.ZipFile(io.BytesIO(file_bytes)) as z:
-            names = z.namelist()
-            if "modrinth.index.json" not in names:
-                raise Exception("modrinth.index.json not found in the mrpack file")
+#         with zipfile.ZipFile(io.BytesIO(file_bytes)) as z:
+#             names = z.namelist()
+#             if "modrinth.index.json" not in names:
+#                 raise Exception("modrinth.index.json not found in the mrpack file")
 
-            with z.open("modrinth.index.json") as f:
-                index_content = f.read().decode("utf-8")
+#             with z.open("modrinth.index.json") as f:
+#                 index_content = f.read().decode("utf-8")
 
-            index = json.loads(index_content)
+#             index = json.loads(index_content)
 
-            # Normalize dependencies
-            raw_deps = index.get("dependencies", [])
-            if isinstance(raw_deps, dict):
-                dependencies = [{"id": k, "version": v} for k, v in raw_deps.items()]
-            elif isinstance(raw_deps, list):
-                dependencies = raw_deps
-            else:
-                dependencies = []
+#             # Normalize dependencies
+#             raw_deps = index.get("dependencies", [])
+#             if isinstance(raw_deps, dict):
+#                 dependencies = [{"id": k, "version": v} for k, v in raw_deps.items()]
+#             elif isinstance(raw_deps, list):
+#                 dependencies = raw_deps
+#             else:
+#                 dependencies = []
 
-            # Build metadata
-            metadata = {
-                "game": index.get("game"),
-                "formatVersion": index.get("formatVersion"),
-                "versionId": index.get("versionId"),
-                "name": index.get("name"),
-                "summary": index.get("summary", ""),
-                "files": index.get("files", []),
-                "dependencies": dependencies,
-            }
+#             # Build metadata
+#             metadata = {
+#                 "game": index.get("game"),
+#                 "formatVersion": index.get("formatVersion"),
+#                 "versionId": index.get("versionId"),
+#                 "name": index.get("name"),
+#                 "summary": index.get("summary", ""),
+#                 "files": index.get("files", []),
+#                 "dependencies": dependencies,
+#             }
 
-            # Optional client files (paths)
-            optional_files = []
-            for fl in metadata.get("files", []):
-                if not isinstance(fl, dict):
-                    continue
-                env = fl.get("env")
-                if isinstance(env, dict):
-                    client_env = env.get("client")
-                    if isinstance(client_env, str) and client_env.lower() == "optional":
-                        path = fl.get("path") or fl.get("filename") or fl.get("name")
-                        if path:
-                            optional_files.append(path)
+#             # Optional client files (paths)
+#             optional_files = []
+#             optional_server_files = []
+#             for fl in metadata.get("files", []):
+#                 if not isinstance(fl, dict):
+#                     continue
+#                 env = fl.get("env")
+#                 if isinstance(env, dict):
+#                     if isinstance(env.get("client"), str) and env.get("client").lower() == "optional":
+#                         path = fl.get("path") or fl.get("filename") or fl.get("name")
+#                         if path:
+#                             optional_files.append(path)
+#                     if isinstance(env.get("server"), str) and env.get("server").lower() == "optional":
+#                         path = fl.get("path") or fl.get("filename") or fl.get("name")
+#                         if path:
+#                             optional_server_files.append(path)
 
-            # Minecraft version from dependencies (if present)
-            minecraft_version = ""
-            for dep in dependencies:
-                if not isinstance(dep, dict):
-                    continue
-                dep_id = dep.get("id") or dep.get("project_id")
-                if dep_id == "minecraft":
-                    minecraft_version = dep.get("version") or ""
-                    break
+#             # Minecraft version from dependencies (if present)
+#             minecraft_version = ""
+#             for dep in dependencies:
+#                 if not isinstance(dep, dict):
+#                     continue
+#                 dep_id = dep.get("id") or dep.get("project_id")
+#                 if dep_id == "minecraft":
+#                     minecraft_version = dep.get("version") or ""
+#                     break
 
-            # Overrides presence (check for directory or file entries)
-            def has_entry(prefix: str) -> bool:
-                return any(n == prefix or n.startswith(prefix + "/") for n in names)
+#             # Overrides presence (check for directory or file entries)
+#             def has_entry(prefix: str) -> bool:
+#                 return any(n == prefix or n.startswith(prefix + "/") for n in names)
 
-            has_overrides = has_entry("overrides")
-            has_server_overrides = has_entry("server-overrides")
-            has_client_overrides = has_entry("client-overrides")
+#             has_overrides = has_entry("overrides")
+#             has_server_overrides = has_entry("server-overrides")
+#             has_client_overrides = has_entry("client-overrides")
 
-            # Loader detection: first dependency that is not minecraft
-            loader = None
-            for dep in dependencies:
-                if not isinstance(dep, dict):
-                    continue
-                dep_id = dep.get("id") or dep.get("project_id")
-                if dep_id and dep_id != "minecraft":
-                    loader = {"type": dep_id, "version": dep.get("version")}
-                    break
+#             # Loader detection: first dependency that is not minecraft
+#             loader = None
+#             for dep in dependencies:
+#                 if not isinstance(dep, dict):
+#                     continue
+#                 dep_id = dep.get("id") or dep.get("project_id")
+#                 if dep_id and dep_id != "minecraft":
+#                     loader = {"type": dep_id, "version": dep.get("version")}
+#                     break
 
-            mrpack_data = {
-                "metadata": metadata,
-                "optionalFiles": optional_files,
-                "minecraftVersion": minecraft_version,
-                "overrides": has_overrides,
-                "server_overrides": has_server_overrides,
-                "client_overrides": has_client_overrides,
-            }
+#             mrpack_data = {
+#                 "metadata": metadata,
+#                 "optionalFiles": optional_files,
+#                 "optionalServerFiles": optional_server_files,
+#                 "minecraftVersion": minecraft_version,
+#                 "overrides": has_overrides,
+#                 "server_overrides": has_server_overrides,
+#                 "client_overrides": has_client_overrides,
+#             }
 
-            if loader:
-                mrpack_data["loader"] = loader
+#             if loader:
+#                 mrpack_data["loader"] = loader
 
-            return mrpack_data
+#             return mrpack_data
 
-    except Exception as e:
-        raise e
+#     except Exception as e:
+#         raise e
 
 class InstallMrpackRequest(BaseModel):
     profile_directory: str
@@ -159,7 +176,8 @@ def InstallMrpack(
     installation_type: str = "singleplayer",
     minecraft_directory: str = "",
     callbacks: dict | None = None,
-    install_optfional_files: bool = True,
+    optional_files: list[str] = [],
+    install_optfional_files: bool = True
 ):
     try:
         err = ""
@@ -176,7 +194,7 @@ def InstallMrpack(
             raise FileNotFoundError(err)
 
         # Verificar que el archivo .mrpack sea válido
-        _mrpack_information = McLib.mrpack.get_mrpack_information(mrpack_directory)
+        _mrpack_information = get_mrpack_information(mrpack_directory)
         if not _mrpack_information:
             err = f"{mrpack_directory} is not a valid .mrpack File"
             print(err)
@@ -196,8 +214,9 @@ def InstallMrpack(
         # Adds the Optional Files
         if install_optfional_files:
             _mrpack_install_options: McLib.types.MrpackInstallOptions = {"optionalFiles": []}
-            for i in _mrpack_information["optionalFiles"]:
-                _mrpack_install_options["optionalFiles"].append(i)
+            for opt_file in optional_files:
+                if opt_file in _mrpack_information.get("optionalFiles", []):
+                    _mrpack_install_options["optionalFiles"].append(opt_file)
 
         # Normalize modpack directory
         _modpack_directory = abspath(expanduser(normpath(profile_directory)))

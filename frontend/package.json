@@ -1,9 +1,9 @@
 {
   "name": "mrpack-installer",
   "private": true,
-  "description": "Instalador de modpacks (modrinth) para Minecraft",
+  "description": "Manejo de modpacks de la plataforma Modrinth",
   "author": "ALANDLN",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "type": "module",
   "scripts": {
     "predev": "taskkill /F /IM mrpack-installer.exe || echo 'No backend process to kill'",

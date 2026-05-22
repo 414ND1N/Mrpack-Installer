@@ -40,8 +40,27 @@ const AddVanillaLauncher = async (
     }
 }
 
+const IsModdedMinecraftDirectory = async (directory: string): Promise<boolean> => {
+    try {
+        const url = new URL('http://127.0.0.1:8002/minecraft/directory/is_modded')
+
+        url.searchParams.append('directory', directory)
+
+        const res = await fetch(url.toString(), { method: 'GET' })
+        if (!res.ok) {
+            throw new Error(`Request failed (${res.status})`)
+        }
+
+        const result = await res.json()
+        return result
+    } catch (error) {
+        console.error('Error checking if directory is modded:', error)
+        throw error
+    }
+}
 
 export {
     GetMinecraftDirectory,
-    AddVanillaLauncher
+    AddVanillaLauncher,
+    IsModdedMinecraftDirectory,
 }

@@ -2,6 +2,7 @@
 from minecraft_launcher_lib._helper import download_file, empty, check_path_inside_minecraft_directory
 from minecraft_launcher_lib.types import MrpackInstallOptions, CallbackDict, VanillaLauncherProfile
 from minecraft_launcher_lib._internal_types.mrpack_types import MrpackIndex, MrpackFile
+from minecraft_launcher_lib.types import MrpackInformation
 from minecraft_launcher_lib.install import install_minecraft_version
 from minecraft_launcher_lib.mod_loader import get_mod_loader
 
@@ -17,16 +18,56 @@ from os.path import abspath, join, dirname, exists, basename
 from os import PathLike, makedirs, listdir, remove
 from services.utils import NormalizedModName, FileSha1
 
-def FilterMrpackFiles(
+def get_mrpack_information(path: str | PathLike) -> MrpackInformation:
+    """
+    Gets some Information from a .mrpack file
+
+    Example:
+
+    .. code:: python
+
+        path = "/path/to/mrpack"
+        information = minecraft_launcher_lib.mrpack.get_mrpack_information(path)
+        print("Name: " + information["name"])
+        print("Summary: " + information["summary"])
+
+    :param path: The Path the the .mrpack file
+    :type path: Union[str, os.PathLike]
+    :return: The Information about the given Mrpack
+    """
+    with zipfile.ZipFile(path, "r") as zf:
+        with zf.open("modrinth.index.json", "r") as f:
+            index: MrpackIndex = json.load(f)
+
+            information: MrpackInformation = {}  # type: ignore
+            information["name"] = index["name"]
+            information["summary"] = index.get("summary", "")
+            information["versionId"] = index["versionId"]
+            information["formatVersion"] = index["formatVersion"]
+            information["minecraftVersion"] = index["dependencies"]["minecraft"]
+
+            information["optionalFiles"] = []
+            for file in index["files"]:
+                if "env" not in file:
+                    continue
+
+                if file["env"]["client"] == "optional":
+                    information["optionalFiles"].append(file["path"])
+                elif file["env"]["server"] == "optional":
+                    information["optionalFiles"].append(file["path"])
+
+            return information
+
+def _filter_mrpack_files(
     file_list: list[MrpackFile],
     mrpack_install_options: MrpackInstallOptions,
-    installation_side: str = "both"
+    installation_side: str = "singleplayer"
 ) -> list[MrpackFile]:
     """
     Gets all Mrpack Files that should be installed
     """
     filtered_list: list[MrpackFile] = []
-    if installation_side not in ["client", "server", "both"]:
+    if installation_side not in ["client", "server", "singleplayer"]:
         raise ValueError("installation_side must be either 'client' or 'server'")
     
     for file in file_list:
@@ -34,7 +75,7 @@ def FilterMrpackFiles(
             filtered_list.append(file)
             continue
 
-        if installation_side == "both":
+        if installation_side == "singleplayer":
             if file["env"]["client"] == "required" or file["env"]["server"] == "required":
                 filtered_list.append(file)
             elif (file["env"]["client"] == "optional" or file["env"]["server"] == "optional") and file["path"] in mrpack_install_options.get("optionalFiles", []):
@@ -45,6 +86,7 @@ def FilterMrpackFiles(
             filtered_list.append(file)
 
     return filtered_list
+
 
 
 def VerifyFileExists(file: dict, modpack_directory: str | PathLike) -> tuple[bool, str]:
@@ -139,7 +181,7 @@ def install_mrpack(
 
         # Download the files
         callback.get("setStatus", empty)("Download mrpack files")
-        file_list = FilterMrpackFiles(index["files"], mrpack_install_options, "both")
+        file_list = _filter_mrpack_files(index["files"], mrpack_install_options, "singleplayer")
         callback.get("setMax", empty)(len(file_list))
         for count, file in enumerate(file_list):
             full_path = abspath(join(modpack_directory, file["path"]))
@@ -257,7 +299,7 @@ def install_mrpack_clientside(
 
         # Download the files
         callback.get("setStatus", empty)("Download mrpack files")
-        file_list = FilterMrpackFiles(index["files"], mrpack_install_options, "client")
+        file_list = _filter_mrpack_files(index["files"], mrpack_install_options, "client")
         callback.get("setMax", empty)(len(file_list))
         for count, file in enumerate(file_list):
             full_path = abspath(join(modpack_directory, file["path"]))
@@ -373,7 +415,7 @@ def install_mrpack_serverside(
 
         # Download the files
         callback.get("setStatus", empty)("Download mrpack files")
-        file_list = FilterMrpackFiles(index["files"], mrpack_install_options, "server")
+        file_list = _filter_mrpack_files(index["files"], mrpack_install_options, "server")
         callback.get("setMax", empty)(len(file_list))
         for count, file in enumerate(file_list):
             full_path = abspath(join(modpack_directory, file["path"]))

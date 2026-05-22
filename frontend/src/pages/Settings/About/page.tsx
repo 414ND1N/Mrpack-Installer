@@ -1,8 +1,22 @@
 import { useTranslation } from 'react-i18next'
 import { Separator } from "@/components/Separator/separator"
+import { useState, useEffect } from "react"
+
 
 function AboutSettings() {
     const { t } = useTranslation(['settings', 'commons'])
+    const [version, setVersion] = useState<string>('')
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const _version = await (window as any).backend?.GetVersion()
+                setVersion(_version || 'unknown')
+            } catch (error) {
+                console.error('Error al obtener la versión:', error)
+            }
+        })()
+    }, [])
 
     return (
         <>
@@ -36,6 +50,10 @@ function AboutSettings() {
                             @ALANDLN
                         </a>.
                     </p>
+                    <p>
+                        {t('sections.about.side_info.backend_version')}: <strong>{version}</strong>.
+                    </p>
+
                 </div>
             </section>
         </>

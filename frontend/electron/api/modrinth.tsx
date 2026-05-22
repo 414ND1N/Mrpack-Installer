@@ -1,9 +1,12 @@
-import { MrpackInfo, MrpackMetadata } from '@/interfaces/modrinth/MrPack'
+// import { MrpackInfo, MrpackMetadata } from '@/interfaces/modrinth/MrPack'
+import { MrpackMetadata } from '@/interfaces/modrinth/MrPack'
 import { CollectionInfo, CollectionDownloadInfo, ModsInCollectionInfo } from '@/interfaces/modrinth/Collection'
+
 const StartMrpackInstallation = async (
     installationType: string,
     mrpackDirectory: string,
     profileDirectory: string,
+    optionalFiles?: string[],
     cbStatus?: (status: string) => void,
     cbMax?: (max: number) => void,
     cbProgress?: (progress: number) => void,
@@ -21,6 +24,7 @@ const StartMrpackInstallation = async (
                 installation_type: installationType,
                 mrpack_directory: mrpackDirectory,
                 profile_directory: profileDirectory,
+                optional_files: optionalFiles || []
             }),
         })
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
@@ -92,17 +96,17 @@ const GetMrpackMedatadaInfo = async (filePath: string): Promise<MrpackMetadata> 
     }
 }
 
-const GetMrpackInfo = async (filePath: string): Promise<MrpackInfo> => {
-    try {
-        const resp = await fetch(`http://127.0.0.1:8002/mrpack/info/?file_path=${encodeURIComponent(filePath)}`, { method: 'GET', cache: 'no-store' })
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
-        const data = await resp.json()
-        return data as MrpackInfo
-    } catch (error) {
-        console.error('Error fetching Mrpack metadata:', error)
-        throw error
-    }
-}
+// const GetMrpackInfo = async (filePath: string): Promise<MrpackInfo> => {
+//     try {
+//         const resp = await fetch(`http://127.0.0.1:8002/mrpack/info/?file_path=${encodeURIComponent(filePath)}`, { method: 'GET', cache: 'no-store' })
+//         if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
+//         const data = await resp.json()
+//         return data as MrpackInfo
+//     } catch (error) {
+//         console.error('Error fetching Mrpack metadata:', error)
+//         throw error
+//     }
+// }
 
 const DownloadCollection = async (
     collectionId: string,
@@ -143,7 +147,11 @@ const GetCollectionInfo = async (collectionId: string): Promise<CollectionInfo> 
         const url = new URL('http://127.0.0.1:8002/modrinth/collection/info/')
         url.searchParams.set('collection_id', collectionId)
         const res = await fetch(url, { method: 'GET', cache: 'no-store' })
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        if (!res.ok) {
+            const errorData = await res.json().catch(() => ({}))
+            const detail = (errorData as any).detail || `HTTP ${res.status}`
+            throw new Error(detail)
+        }
         const data = await res.json()
         return data as CollectionInfo
     } catch (error) {
@@ -160,7 +168,11 @@ const GetModsInCollectionInfo = async (collectionId: string, version: string, lo
         url.searchParams.set('loaders', loaders)
         const res = await fetch(url, { method: 'GET', cache: 'no-store' })
 
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        if (!res.ok) {
+            const errorData = await res.json().catch(() => ({}))
+            const detail = (errorData as any).detail || `HTTP ${res.status}`
+            throw new Error(detail)
+        }
         const data = await res.json()
         return data as ModsInCollectionInfo
 
@@ -219,7 +231,7 @@ export {
     // FetchRandomProjects,
     // SearchProjects,
     GetMrpackMedatadaInfo,
-    GetMrpackInfo,
+    // GetMrpackInfo,
     DownloadCollection,
     StartMrpackInstallation,
     GetCollectionInfo,
