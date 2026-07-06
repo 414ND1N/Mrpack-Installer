@@ -11,10 +11,13 @@ const gotTheLock = app.requestSingleInstanceLock()
 let backendProcess: ChildProcess | null = null
 
 const getBackendPath = (): string => {
+  const isWindows = process.platform === 'win32'
+  const exeName = isWindows ? 'mrpack-installer.exe' : 'mrpack-installer'
+  
   if (app.isPackaged) {
-    return path.join(process.resourcesPath, 'api', 'mrpack-installer.exe')
+    return path.join(process.resourcesPath, 'api', exeName)
   }
-  return path.join(__dirname, '..', 'api', 'mrpack-installer.exe')
+  return path.join(__dirname, '..', 'api', exeName)
 }
 
 function startBackend() {

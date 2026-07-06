@@ -9,7 +9,11 @@
     "predev": "taskkill /F /IM mrpack-installer.exe || echo 'No backend process to kill'",
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
+    "build:linux": "tsc && vite build && electron-builder --linux",
+    "build:win": "tsc && vite build && electron-builder --win",
     "build_notsc": "vite build && electron-builder",
+    "build:linux:notsc": "vite build && electron-builder --linux",
+    "build:win:notsc": "vite build && electron-builder --win",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -39,9 +43,7 @@
       "icon": "src/icons/app-icon.png",
       "target": [
         "AppImage",
-        "deb",
-        "snap",
-        "tar.gz"
+        "deb"
       ]
     },
     "extraResources": [
