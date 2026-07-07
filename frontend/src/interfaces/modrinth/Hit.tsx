@@ -5,7 +5,6 @@ export interface SearchHit {
     total_hits: number;
 }
 
-
 export interface Hit {
     project_id:             string;
     project_type:           ProjectType;
@@ -64,6 +63,17 @@ export enum ProjectIndex {
 }
 
 export enum Category {
+    Bungeecord = "bungeecord",
+    Bukkit = "bukkit",
+    Fabric = "fabric",
+    Forge = "forge",
+    Quilt = "quilt",
+    NeoForge = "neoforge",
+    Paper = "paper",
+    Spigot = "spigot",
+    Velocity = "velocity",
+    Waterfall = "waterfall",
+
     Adventure = "adventure",
     Cursed = "cursed",
     Decoration = "decoration",
@@ -82,18 +92,8 @@ export enum Category {
     Transportation = "transportation",
     Utility = "utility",
     WorldGeneration = "world-generation",
-
-    Fabric = "fabric",
-    Forge = "forge",
-    NeoForge = "neoforge",
-    Quilt = "quilt",
-    Velocity = "velocity",
-    Bungeecord = "bungeecord",
-    Waterfall = "waterfall",
-    Bukkit = "bukkit",
-    Paper = "paper",
-    Spigot = "spigot",
 }
+
 
 export enum HitSide {
     ClientSide = "client-side",

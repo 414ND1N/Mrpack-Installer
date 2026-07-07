@@ -1,10 +1,4 @@
 {
-    "projects": {
-        "modpack": "Modpack",
-        "resourcepack": "Paquete de recursos",
-        "shaderpack": "Shaderpack",
-        "world": "Mundo"
-    },
     "texts": {
         "loading": "Cargando...",
         "no_data": "No hay datos disponibles",
@@ -25,7 +19,8 @@
         "watch": "Ver",
         "save": "Guardar",
         "apply": "Aplicar",
-        "add": "Agregar"
+        "add": "Agregar",
+        "clear": "Limpiar"
     },
     "errors": {
         "header": "Ha ocurrido un error",
@@ -123,6 +118,60 @@
                     "Water": "Agua",
                     "Wool": "Lana"
                 }
+            }
+        }
+    },
+    "modrinth": {
+        "project": {
+            "type":{
+                "mod": "Mod",
+                "modpack": "Paquete de mods",
+                "resourcepack": "Paquete de recursos",
+                "shaderpack": "Shaders",
+                "world": "Mundo",
+                "plugin": "Plugin"
+            },
+            "category": {
+                "bungeecord": "BungeeCord",
+                "bukkit": "Bukkit",
+                "fabric": "Fabric",
+                "forge": "Forge",
+                "quilt": "Quilt",
+                "neoforge": "NeoForge",
+                "paper": "Paper",
+                "spigot": "Spigot",
+                "velocity": "Velocity",
+                "waterfall": "Waterfall",
+
+                "adventure": "Aventura",
+                "cursed": "Maldito",
+                "decoration": "Decoración",
+                "economy": "Economía",
+                "equipement": "Equipo",
+                "food": "Comida",
+                "game-mechanics": "Mecánicas del juego",
+                "magic": "Magia",
+                "management": "Administración",
+                "minigame": "Minijuego",
+                "mobs": "Criaturas",
+                "optimization": "Optimización",
+                "social": "Social",
+                "storage": "Almacenamiento",
+                "technology": "Tecnología",
+                "transportation": "Transporte",
+                "utility": "Utilidad",
+                "world-generation": "Generación de mundos"
+            },
+            "side": {
+                "client-side": "Lado del cliente",
+                "server-side": "Lado del servidor"
+            },
+            "index": {
+                "relevance": "Relevancia",
+                "downloads": "Descargas",
+                "follows": "Seguidores",
+                "updated": "Actualizado",
+                "newest": "Más reciente"
             }
         }
     }

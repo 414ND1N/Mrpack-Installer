@@ -1,11 +1,20 @@
 {
     "search_field_placeholder": "Name of proyect",
     "search_button": "Search",
-    "filters_list": {
-        "all": "All",
-        "mod": "Mods",
-        "modpack": "Modpacks",
-        "resourcepack": "Resourcepacks",
-        "shader": "Shaders"
+    "filter": {
+        "button": "Filters",
+        "title": "Filter projects",
+        "description": "Select one or more filters to narrow down the search results.",
+        "list": {
+            "sort": "Sort by",
+            "type": "Types",
+            "category": "Categories",
+            "side": "Sides",
+            "version": "Minecraft versions"
+        }
+    },
+    "card": {
+        "downloads": "downloads",
+        "follows": "follows"
     }
 }
