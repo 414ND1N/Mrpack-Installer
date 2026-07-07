@@ -2,8 +2,8 @@
   "name": "mrpack-installer",
   "private": true,
   "description": "Manejo de modpacks de la plataforma Modrinth",
-  "author": "ALANDLN",
-  "version": "2.3.2",
+  "author": "ALANDLN <414nd1n@gmail.com>",
+  "version": "2.4.0",
   "type": "module",
   "scripts": {
     "predev": "taskkill /F /IM mrpack-installer.exe || echo 'No backend process to kill'",

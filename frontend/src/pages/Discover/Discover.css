@@ -33,6 +33,44 @@
   margin: 0;
   justify-self: start;
 }
+
+.discover-container .filter-grid {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.discover-container .filter-row {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.discover-container .filter-label {
+  margin: 0;
+  font-weight: 700;
+}
+
+.discover-container .filter-button-group {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+}
+
+.discover-container .filter-button-group-wrap {
+  max-height: 10rem;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.discover-container .filter-button-group .btn {
+  min-height: 2.25rem;
+}
+
+.discover-container .dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
 .discover-container section .pagination {
   grid-area: pagination;
   display: grid;

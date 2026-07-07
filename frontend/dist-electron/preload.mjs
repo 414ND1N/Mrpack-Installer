@@ -1,1 +1,329 @@
-"use strict";const c=require("electron"),T=async(e,t,r,a,o,n,i,s,h)=>{try{const p=await fetch("http://127.0.0.1:8002/mrpack/install/start/",{method:"POST",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify({installation_type:e,mrpack_directory:t,profile_directory:r,optional_files:a||[]})});if(!p.ok)throw new Error(`HTTP ${p.status}`);const{install_id:y}=await p.json();await new Promise((k,E)=>{const f=new EventSource(`http://127.0.0.1:8002/mrpack/install/stream/${y}`);let w=!1;const P=()=>{w||(w=!0,f.close(),k())},u=d=>{w||(w=!0,f.close(),E(new Error(d)))};f.onmessage=d=>{const l=JSON.parse(d.data);if(l.type==="status"&&o)o(l.message);else if(l.type==="max"&&n)n(l.message);else if(l.type==="progress"&&i)i(l.message);else if(l.type==="error"){const g=String(l.message||"Installation failed");h&&h(g),u(g)}else l.type==="done"&&(s?s(l.message):o&&o("Installation completed!"),P())},f.onerror=()=>{const d="Connection error during installation stream";console.error("SSE error"),h?h(d):o&&o(d),u(d)}})}catch(m){throw console.error("Error fetching random projects:",m),m}},j=async e=>{try{const t=await fetch(`http://127.0.0.1:8002/mrpack/metadata/?file_path=${encodeURIComponent(e)}`,{method:"GET",cache:"no-store"});if(!t.ok)throw new Error(`HTTP ${t.status}`);return await t.json()}catch(t){throw console.error("Error fetching Mrpack metadata:",t),t}},R=async(e,t,r,a,o,n=!0)=>{try{const i={collection_id:e.trim(),version:t,loaders:r,directory:a,update:o,log:n},s=await fetch("http://127.0.0.1:8002/modrinth/collection/download",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(i)});if(!s.ok){const m=await s.text().catch(()=>s.statusText);throw new Error(`Request failed (${s.status}): ${m}`)}return await s.json()}catch(i){throw console.error("downloadCollection error",i),i}},v=async e=>{try{const t=new URL("http://127.0.0.1:8002/modrinth/collection/info/");t.searchParams.set("collection_id",e);const r=await fetch(t,{method:"GET",cache:"no-store"});if(!r.ok){const n=(await r.json().catch(()=>({}))).detail||`HTTP ${r.status}`;throw new Error(n)}return await r.json()}catch(t){throw console.error("Error fetching collection info:",t),t}},S=async(e,t,r)=>{try{const a=new URL("http://127.0.0.1:8002/modrinth/collection/mods/verify");a.searchParams.set("collection_id",e),a.searchParams.set("version",t),a.searchParams.set("loaders",r);const o=await fetch(a,{method:"GET",cache:"no-store"});if(!o.ok){const s=(await o.json().catch(()=>({}))).detail||`HTTP ${o.status}`;throw new Error(s)}return await o.json()}catch(a){throw console.error("Error fetching mods in collection info:",a),a}},_=async(e=10)=>{const t=new URL("https://api.modrinth.com/v2/projects_random");t.searchParams.set("count",e.toString());const r=new AbortController,a=setTimeout(()=>r.abort(),1e4);try{const o=await fetch(t.toString(),{method:"GET",cache:"no-store",signal:r.signal});if(!o.ok)throw new Error(`HTTP ${o.status}`);return await o.json()}catch(o){throw console.error("Error fetching random projects:",o),o}finally{clearTimeout(a)}},D=async(e=10,t,r,a)=>{const o=new URL("https://api.modrinth.com/v2/search");o.searchParams.set("limit",e.toString()),r&&o.searchParams.set("query",r),a!=null&&o.searchParams.set("offset",a.toString()),t&&o.searchParams.set("facets",JSON.stringify([[`project_type:${t}`]]));const n=new AbortController,i=setTimeout(()=>n.abort(),1e4);try{const s=await fetch(o.toString(),{method:"GET",cache:"no-store",signal:n.signal});if(!s.ok)throw new Error(`HTTP ${s.status}`);return await s.json()}catch(s){throw console.error("Error fetching search projects:",s),s}finally{clearTimeout(i)}},G=async(...e)=>{try{const t=new URL("http://127.0.0.1:8002/utils/path/join");e.forEach(o=>t.searchParams.append("paths",o));const r=await fetch(t.toString(),{method:"GET"});if(!r.ok){const n=(await r.json().catch(()=>({}))).detail||`Request failed (${r.status})`;throw new Error(n)}return await r.text()}catch(t){throw console.error("Error joining paths:",t),t}},I=async e=>{try{const t=new URL("http://127.0.0.1:8002/utils/path/exists");t.searchParams.append("path",e);const r=await fetch(t.toString(),{method:"GET"});if(!r.ok){const n=(await r.json().catch(()=>({}))).detail||`Request failed (${r.status})`;throw new Error(n)}return await r.json()}catch(t){throw console.error("Error checking file existence:",t),t}},M=async e=>{try{const t=new URL("http://127.0.0.1:8002/utils/path/delete");t.searchParams.append("path",e);const r=await fetch(t.toString(),{method:"DELETE"});if(!r.ok){const n=(await r.json().catch(()=>({}))).detail||`Request failed (${r.status})`;throw new Error(n)}return await r.json()}catch(t){throw console.error("Error deleting path:",t),t}},L=async()=>{try{const e=new URL("http://127.0.0.1:8002/"),t=await fetch(e.toString(),{method:"GET"});if(!t.ok){const o=(await t.json().catch(()=>({}))).detail||`Connection failed (${t.status})`;throw new Error(o)}return(await t.json()).version||"unknown"}catch(e){throw console.error("Error fetching version:",e),e}},$=async()=>{try{const e=new URL("http://127.0.0.1:8002/minecraft/minecraft_directory/"),t=await fetch(e.toString(),{method:"GET",cache:"no-store"});if(!t.ok)throw new Error(`HTTP ${t.status}`);return await t.json()}catch(e){throw console.error("Error fetching random projects:",e),e}},x=async e=>{try{const t=new URL("http://127.0.0.1:8002/minecraft/add_vanilla_launcher/");t.searchParams.set("mrpack_directory",e.mrpack_path),t.searchParams.set("profile_directory",e.installation_directory),e.memory?.min&&e.memory?.max&&(t.searchParams.set("java_min",e.memory?.min!=""?String(e.memory.min):"2"),t.searchParams.set("java_max",e.memory?.max!=""?String(e.memory.max):"4")),e.profile_icon&&t.searchParams.set("icon",e.profile_icon??"Furnace");const r=await fetch(t.toString(),{method:"POST",cache:"no-store"});if(!r.ok)throw new Error(`HTTP ${r.status}`);return await r.json()}catch(t){throw console.error("Error fetching random projects:",t),t}},C=async e=>{try{const t=new URL("http://127.0.0.1:8002/minecraft/directory/is_modded");t.searchParams.append("directory",e);const r=await fetch(t.toString(),{method:"GET"});if(!r.ok)throw new Error(`Request failed (${r.status})`);return await r.json()}catch(t){throw console.error("Error checking if directory is modded:",t),t}};c.contextBridge.exposeInMainWorld("electronAPI",{invoke:(e,...t)=>c.ipcRenderer.invoke(e,...t),send:(e,...t)=>c.ipcRenderer.send(e,...t),on:(e,t)=>c.ipcRenderer.on(e,(r,...a)=>t(...a)),off:(e,t)=>c.ipcRenderer.removeListener(e,t)});c.contextBridge.exposeInMainWorld("winConfig",{getTheme:()=>c.ipcRenderer.invoke("get-theme"),getFullscreen:()=>c.ipcRenderer.invoke("get-fullscreen"),getLanguage:()=>c.ipcRenderer.invoke("get-language"),setTheme:e=>c.ipcRenderer.invoke("set-theme",e),getSystemTheme:()=>c.ipcRenderer.invoke("get-system-theme"),setFullscreen:e=>c.ipcRenderer.invoke("set-fullscreen",e),setLanguage:e=>c.ipcRenderer.invoke("set-language",e),getSystemLanguage:()=>c.ipcRenderer.invoke("get-system-language"),updateApp:()=>c.ipcRenderer.invoke("update-app"),checkUpdate:()=>c.ipcRenderer.invoke("check-update"),getVersion:()=>c.ipcRenderer.invoke("get-version"),ShowOpenDialog:e=>c.ipcRenderer.invoke("dialog:showOpenDialog",e)});c.contextBridge.exposeInMainWorld("backend",{PathJoin:(...e)=>G(...e),PathExists:e=>I(e),PathDelete:e=>M(e),GetVersion:()=>L(),IsModdedMinecraftDirectory:e=>C(e),FetchRandomProjects:e=>_(e),SearchProjects:(e,t,r,a)=>D(e,t,r,a),AddVanillaLauncher:e=>x(e),GetMinecraftDirectory:()=>$(),StartMrpackInstallation:(e,t,r,a,o,n,i,s,h)=>T(e,t,r,a,o,n,i,s,h),DownloadCollection:(e,t,r,a,o,n=!0)=>R(e,t,r,a,o,n),GetCollectionInfo:e=>v(e),GetModsInCollectionInfo:(e,t,r)=>S(e,t,r),GetMrpackMedatadaInfo:e=>j(e)});console.log("Preload script loaded successfully.");
+"use strict";
+const electron = require("electron");
+const StartMrpackInstallation = async (installationType, mrpackDirectory, profileDirectory, optionalFiles, cbStatus, cbMax, cbProgress, cbFinish, cbError) => {
+  try {
+    const url = "http://127.0.0.1:8002/mrpack/install/start/";
+    const resp = await fetch(url, {
+      method: "POST",
+      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        installation_type: installationType,
+        mrpack_directory: mrpackDirectory,
+        profile_directory: profileDirectory,
+        optional_files: optionalFiles || []
+      })
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const { install_id } = await resp.json();
+    await new Promise((resolve, reject) => {
+      const es = new EventSource(`http://127.0.0.1:8002/mrpack/install/stream/${install_id}`);
+      let settled = false;
+      const finishResolve = () => {
+        if (settled) return;
+        settled = true;
+        es.close();
+        resolve();
+      };
+      const finishReject = (message) => {
+        if (settled) return;
+        settled = true;
+        es.close();
+        reject(new Error(message));
+      };
+      es.onmessage = (ev) => {
+        const data = JSON.parse(ev.data);
+        if (data.type === "status" && cbStatus) {
+          cbStatus(data.message);
+        } else if (data.type === "max" && cbMax) {
+          cbMax(data.message);
+        } else if (data.type === "progress" && cbProgress) {
+          cbProgress(data.message);
+        } else if (data.type === "error") {
+          const errorMessage = String(data.message || "Installation failed");
+          if (cbError) cbError(errorMessage);
+          finishReject(errorMessage);
+        } else if (data.type === "done") {
+          if (cbFinish) cbFinish(data.message);
+          else if (cbStatus) cbStatus("Installation completed!");
+          finishResolve();
+        }
+      };
+      es.onerror = () => {
+        const errorMessage = "Connection error during installation stream";
+        console.error("SSE error");
+        if (cbError) cbError(errorMessage);
+        else if (cbStatus) cbStatus(errorMessage);
+        finishReject(errorMessage);
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching random projects:", error);
+    throw error;
+  }
+};
+const GetMrpackMedatadaInfo = async (filePath) => {
+  try {
+    const resp = await fetch(`http://127.0.0.1:8002/mrpack/metadata/?file_path=${encodeURIComponent(filePath)}`, { method: "GET", cache: "no-store" });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching Mrpack metadata:", error);
+    throw error;
+  }
+};
+const DownloadCollection = async (collectionId, version, loaders, directory, updateExisting, log = true) => {
+  try {
+    const payload = {
+      collection_id: collectionId.trim(),
+      version,
+      loaders,
+      directory,
+      update: updateExisting,
+      log
+    };
+    const res = await fetch("http://127.0.0.1:8002/modrinth/collection/download", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => res.statusText);
+      throw new Error(`Request failed (${res.status}): ${body}`);
+    }
+    const result = await res.json();
+    return result;
+  } catch (error) {
+    console.error("downloadCollection error", error);
+    throw error;
+  }
+};
+const GetCollectionInfo = async (collectionId) => {
+  try {
+    const url = new URL("http://127.0.0.1:8002/modrinth/collection/info/");
+    url.searchParams.set("collection_id", collectionId);
+    const res = await fetch(url, { method: "GET", cache: "no-store" });
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      const detail = errorData.detail || `HTTP ${res.status}`;
+      throw new Error(detail);
+    }
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching collection info:", error);
+    throw error;
+  }
+};
+const GetModsInCollectionInfo = async (collectionId, version, loaders) => {
+  try {
+    const url = new URL("http://127.0.0.1:8002/modrinth/collection/mods/verify");
+    url.searchParams.set("collection_id", collectionId);
+    url.searchParams.set("version", version);
+    url.searchParams.set("loaders", loaders);
+    const res = await fetch(url, { method: "GET", cache: "no-store" });
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      const detail = errorData.detail || `HTTP ${res.status}`;
+      throw new Error(detail);
+    }
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching mods in collection info:", error);
+    throw error;
+  }
+};
+const FetchRandomProjects = async (count = 10) => {
+  const url = new URL("https://api.modrinth.com/v2/projects_random");
+  url.searchParams.set("count", count.toString());
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 1e4);
+  try {
+    const resp = await fetch(url.toString(), { method: "GET", cache: "no-store", signal: controller.signal });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching random projects:", error);
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+};
+const SearchProjects = async (query, facets, index, offset, limit = 10) => {
+  const url = new URL("https://api.modrinth.com/v2/search");
+  url.searchParams.set("limit", limit.toString());
+  if (query) url.searchParams.set("query", query);
+  if (facets) url.searchParams.set("facets", JSON.stringify(facets));
+  if (index != null) url.searchParams.set("index", index.toString());
+  if (offset != null) url.searchParams.set("offset", offset.toString());
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 1e4);
+  try {
+    const resp = await fetch(url.toString(), { method: "GET", cache: "no-store", signal: controller.signal });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching search projects:", error);
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+};
+const PathJoin = async (...paths) => {
+  try {
+    const url = new URL("http://127.0.0.1:8002/utils/path/join");
+    paths.forEach((p) => url.searchParams.append("paths", p));
+    const res = await fetch(url.toString(), { method: "GET" });
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      const detail = errorData.detail || `Request failed (${res.status})`;
+      throw new Error(detail);
+    }
+    const result = await res.text();
+    return result;
+  } catch (error) {
+    console.error("Error joining paths:", error);
+    throw error;
+  }
+};
+const PathExists = async (path) => {
+  try {
+    const url = new URL("http://127.0.0.1:8002/utils/path/exists");
+    url.searchParams.append("path", path);
+    const res = await fetch(url.toString(), { method: "GET" });
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      const detail = errorData.detail || `Request failed (${res.status})`;
+      throw new Error(detail);
+    }
+    const result = await res.json();
+    return result;
+  } catch (error) {
+    console.error("Error checking file existence:", error);
+    throw error;
+  }
+};
+const PathDelete = async (path) => {
+  try {
+    const url = new URL("http://127.0.0.1:8002/utils/path/delete");
+    url.searchParams.append("path", path);
+    const res = await fetch(url.toString(), { method: "DELETE" });
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      const detail = errorData.detail || `Request failed (${res.status})`;
+      throw new Error(detail);
+    }
+    const result = await res.json();
+    return result;
+  } catch (error) {
+    console.error("Error deleting path:", error);
+    throw error;
+  }
+};
+const GetVersion = async () => {
+  try {
+    const url = new URL("http://127.0.0.1:8002/");
+    const res = await fetch(url.toString(), { method: "GET" });
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      const detail = errorData.detail || `Connection failed (${res.status})`;
+      throw new Error(detail);
+    }
+    const data = await res.json();
+    return data.version || "unknown";
+  } catch (error) {
+    console.error("Error fetching version:", error);
+    throw error;
+  }
+};
+const GetMinecraftDirectory = async () => {
+  try {
+    const url = new URL("http://127.0.0.1:8002/minecraft/minecraft_directory/");
+    const resp = await fetch(url.toString(), { method: "GET", cache: "no-store" });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching random projects:", error);
+    throw error;
+  }
+};
+const AddVanillaLauncher = async (props) => {
+  try {
+    const url = new URL("http://127.0.0.1:8002/minecraft/add_vanilla_launcher/");
+    url.searchParams.set("mrpack_directory", props.mrpack_path);
+    url.searchParams.set("profile_directory", props.installation_directory);
+    if (props.memory?.min && props.memory?.max) {
+      url.searchParams.set("java_min", props.memory?.min != "" ? String(props.memory.min) : "2");
+      url.searchParams.set("java_max", props.memory?.max != "" ? String(props.memory.max) : "4");
+    }
+    if (props.profile_icon) url.searchParams.set("icon", props.profile_icon ?? "Furnace");
+    const resp = await fetch(url.toString(), { method: "POST", cache: "no-store" });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching random projects:", error);
+    throw error;
+  }
+};
+const IsModdedMinecraftDirectory = async (directory) => {
+  try {
+    const url = new URL("http://127.0.0.1:8002/minecraft/directory/is_modded");
+    url.searchParams.append("directory", directory);
+    const res = await fetch(url.toString(), { method: "GET" });
+    if (!res.ok) {
+      throw new Error(`Request failed (${res.status})`);
+    }
+    const result = await res.json();
+    return result;
+  } catch (error) {
+    console.error("Error checking if directory is modded:", error);
+    throw error;
+  }
+};
+electron.contextBridge.exposeInMainWorld("electronAPI", {
+  invoke: (channel, ...args) => electron.ipcRenderer.invoke(channel, ...args),
+  send: (channel, ...args) => electron.ipcRenderer.send(channel, ...args),
+  on: (channel, listener) => electron.ipcRenderer.on(channel, (_event, ...args) => listener(...args)),
+  off: (channel, listener) => electron.ipcRenderer.removeListener(channel, listener)
+});
+electron.contextBridge.exposeInMainWorld("winConfig", {
+  getTheme: () => electron.ipcRenderer.invoke("get-theme"),
+  getFullscreen: () => electron.ipcRenderer.invoke("get-fullscreen"),
+  getLanguage: () => electron.ipcRenderer.invoke("get-language"),
+  setTheme: (theme) => electron.ipcRenderer.invoke("set-theme", theme),
+  getSystemTheme: () => electron.ipcRenderer.invoke("get-system-theme"),
+  setFullscreen: (fullscreen) => electron.ipcRenderer.invoke("set-fullscreen", fullscreen),
+  setLanguage: (lang) => electron.ipcRenderer.invoke("set-language", lang),
+  getSystemLanguage: () => electron.ipcRenderer.invoke("get-system-language"),
+  updateApp: () => electron.ipcRenderer.invoke("update-app"),
+  checkUpdate: () => electron.ipcRenderer.invoke("check-update"),
+  getVersion: () => electron.ipcRenderer.invoke("get-version"),
+  ShowOpenDialog: (options) => electron.ipcRenderer.invoke("dialog:showOpenDialog", options)
+});
+electron.contextBridge.exposeInMainWorld("backend", {
+  // Utils related
+  PathJoin: (...paths) => PathJoin(...paths),
+  PathExists: (path) => PathExists(path),
+  PathDelete: (path) => PathDelete(path),
+  GetVersion: () => GetVersion(),
+  IsModdedMinecraftDirectory: (directory) => IsModdedMinecraftDirectory(directory),
+  // Modrinth related
+  FetchRandomProjects: (count) => FetchRandomProjects(count),
+  SearchProjects: (query, facets, index, offset, limit = 10) => SearchProjects(query, facets, index, offset, limit),
+  AddVanillaLauncher: (props) => AddVanillaLauncher(props),
+  // Modrinth related
+  GetMinecraftDirectory: () => GetMinecraftDirectory(),
+  StartMrpackInstallation: (installationType, mrpackDirectory, profileDirectory, optionalFiles, cbStatus, cbMax, cbProgress, cbFinish, cbError) => StartMrpackInstallation(installationType, mrpackDirectory, profileDirectory, optionalFiles, cbStatus, cbMax, cbProgress, cbFinish, cbError),
+  DownloadCollection: (collectionId, version, loaders, directory, updateExisting, log = true) => DownloadCollection(collectionId, version, loaders, directory, updateExisting, log),
+  GetCollectionInfo: (collectionId) => GetCollectionInfo(collectionId),
+  GetModsInCollectionInfo: (collectionId, version, loaders) => GetModsInCollectionInfo(collectionId, version, loaders),
+  GetMrpackMedatadaInfo: (filePath) => GetMrpackMedatadaInfo(filePath)
+  // GetMrpackInfo: (filePath: string) => GetMrpackInfo(filePath),
+});
+console.log("Preload script loaded successfully.");

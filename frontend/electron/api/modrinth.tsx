@@ -205,12 +205,13 @@ const FetchRandomProjects = async (count: number = 10): Promise<Project[]> => {
     }
 }
 
-const SearchProjects = async (count: number = 10, type?: string, query?: string, offset?: number): Promise<SearchHit> => {
+const SearchProjects = async (query?: string, facets?: string[][], index?: number, offset?: number, limit: number = 10): Promise<SearchHit> => {
     const url = new URL('https://api.modrinth.com/v2/search')
-    url.searchParams.set('limit', count.toString())
+    url.searchParams.set('limit', limit.toString())
     if (query) url.searchParams.set('query', query)
+    if (facets) url.searchParams.set('facets', JSON.stringify(facets))
+    if (index != null) url.searchParams.set('index', index.toString())
     if (offset != null) url.searchParams.set('offset', offset.toString())
-    if (type) url.searchParams.set('facets', JSON.stringify([[`project_type:${type}`]]))
 
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 10000)

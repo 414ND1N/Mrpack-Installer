@@ -58,7 +58,7 @@ contextBridge.exposeInMainWorld('backend', {
 
   // Modrinth related
   FetchRandomProjects: (count: number) => FetchRandomProjects(count),
-  SearchProjects: (count: number, type?: string, querry?: string, offset?: number) => SearchProjects(count, type, querry, offset),
+  SearchProjects: (query?: string, facets?: string[][], index?: number, offset?: number, limit: number = 10) => SearchProjects(query, facets, index, offset, limit),
   AddVanillaLauncher: (props: any) => AddVanillaLauncher(props),
   
   // Modrinth related

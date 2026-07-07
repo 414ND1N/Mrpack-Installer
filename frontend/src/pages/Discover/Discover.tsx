@@ -2,12 +2,14 @@
 // Sidebar ahora se monta globalmente desde el layout
 import { useState, useEffect } from "react"
 import { useTranslation } from 'react-i18next'
-import { MCButton, MCInput, MCSelect } from "@/components/MC/MC"
+import { MCButton, MCInput } from "@/components/MC/MC"
+import { Dialog, DialogTitle, DialogTrigger, DialogContent, DialogClose, DialogFooter, DialogHeader, DialogDescription } from "@/components/Dialog/Dialog"
+import { Separator } from "@/components/Separator/separator"
 // Css
 import "./Discover.css"
 
 // Interfaces
-import { Hit } from "@/interfaces/modrinth/Hit"
+import { Hit, ProjectIndex, Category, ProjectType, HitSide } from "@/interfaces/modrinth/Hit"
 
 
 function Discover() {
@@ -17,14 +19,75 @@ function Discover() {
     const [page, setPage] = useState(0)
     const [totalProjects, setTotalProjects] = useState(0)
     const [searchQuery, setSearchQuery] = useState<string>("")
-    const [projectType, setProjectType] = useState<string>("")
+    const [projectCategories, setProjectCategories] = useState<Category[]>([])
+    const [projectSides, setProjectSides] = useState<HitSide[]>([])
+    const [projectType, setProjectType] = useState<ProjectType>(ProjectType.Mod)
+    const [projectIndex, setProjectIndex] = useState<ProjectIndex | null>(ProjectIndex.Relevance)
+    const [versionParts, setVersionParts] = useState({
+        major: 0,
+        minor: 0,
+        patch: 0,
+    })
     const { t } = useTranslation(['discover', 'commons'])
     const searchNumber = 32 // Número de proyectos por página
 
+    const toggleCategory = (category: Category) => {
+        setProjectCategories((current) => current.includes(category)
+            ? current.filter((item) => item !== category)
+            : [...current, category])
+    }
+
+    const toggleSide = (side: HitSide) => {
+        setProjectSides((current) => current.includes(side)
+            ? current.filter((item) => item !== side)
+            : [...current, side])
+    }
+
+    const updateVersionPart = (part: keyof typeof versionParts, value: string) => {
+        setVersionParts(prev => ({ ...prev, [part]: value }))
+    }
+
+    const clearFilters = () => {
+        setProjectType(ProjectType.Mod)
+        setProjectIndex(ProjectIndex.Relevance)
+        setProjectCategories([])
+        setProjectSides([])
+        setVersionParts({ major: 0, minor: 0, patch: 0 })
+    }
+
     const loadProjects = async () => {
         try {
-            const projects = await (window as any).backend.SearchProjects(searchNumber, projectType ?? undefined, searchQuery ?? undefined, page * searchNumber)
-            
+            const facets: string[][] = []
+
+            if (projectType) {
+                facets.push([`project_type:${projectType}`])
+            }
+
+            if (projectCategories.length > 0) {
+                facets.push(projectCategories.map((category) => `categories:${category}`))
+            }
+
+            const sideFacets: string[] = []
+            if (projectSides.includes(HitSide.ClientSide)) sideFacets.push(`client_side:required`)
+            if (projectSides.includes(HitSide.ServerSide)) sideFacets.push(`server_side:required`)
+            if (sideFacets.length > 0) {
+                facets.push(sideFacets)
+            }
+
+            if (
+                versionParts.major > 0 && versionParts.minor >= 0 && versionParts.patch >= 0
+            ) {
+                facets.push([`versions:${versionParts.major}.${versionParts.minor}.${versionParts.patch}`])
+            }
+
+            const projects = await (window as any).backend.SearchProjects(
+                searchQuery ?? undefined,
+                facets.length > 0 ? facets : undefined,
+                projectIndex ?? undefined,
+                page * searchNumber,
+                searchNumber
+            )
+
             setProjects(projects.hits)
             setTotalProjects(projects.total_hits)
         } catch (error) {
@@ -55,17 +118,135 @@ function Discover() {
                 >
                     {t('search_button')}
                 </MCButton>
-                <MCSelect
-                    onChange={(e) => {
-                        setProjectType(e.target.value)
-                    }}
-                >
-                    <option value="">{t('filters_list.all')}</option>
-                    <option value="modpack">{t('filters_list.modpack')}</option>
-                    <option value="mod">{t('filters_list.mod')}</option>
-                    <option value="resourcepack">{t('filters_list.resourcepack')}</option>
-                    <option value="shader">{t('filters_list.shader')}</option>
-                </MCSelect>
+                <Dialog>
+                    <DialogTrigger>
+                        <MCButton>
+                            Filtrar
+                        </MCButton>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader sticky={true}>
+                            <DialogTitle>Filtrar proyectos</DialogTitle>
+                            <DialogDescription>
+                                Elige uno o varios filtros para refinar los resultados.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <Separator />
+                        <div className="filter-row">
+                            <p className="filter-label">Sort by</p>
+                            <div className="filter-button-group">
+                                {Object.values(ProjectIndex).map((option) => (
+                                    <MCButton
+                                        key={option}
+                                        variant={projectIndex === option ? "solid" : "ghost"}
+                                        onClick={() => setProjectIndex(option)}
+                                    >
+                                        {option}
+                                    </MCButton>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="filter-grid">
+                            <div className="filter-row">
+                                <p className="filter-label">Types</p>
+                                <div className="filter-button-group">
+                                    {Object.values(ProjectType).map((option) => (
+                                        <MCButton
+                                            key={option}
+                                            variant={projectType === option ? "solid" : "ghost"}
+                                            onClick={() => setProjectType(option)}
+                                        >
+                                            {option}
+                                        </MCButton>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="filter-row">
+                                <p className="filter-label">Categories</p>
+                                <div className="filter-button-group filter-button-group-wrap">
+                                    {Object.values(Category).map((option) => {
+                                        const active = projectCategories.includes(option)
+                                        return (
+                                            <MCButton
+                                                key={option}
+                                                variant={active ? "solid" : "ghost"}
+                                                onClick={() => toggleCategory(option)}
+                                            >
+                                                {option}
+                                            </MCButton>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+
+                            <div className="filter-row">
+                                <p className="filter-label">Sides</p>
+                                <div className="filter-button-group">
+                                    {Object.values(HitSide).map((option) => {
+                                        const active = projectSides.includes(option)
+                                        return (
+                                            <MCButton
+                                                key={option}
+                                                variant={active ? "solid" : "ghost"}
+                                                onClick={() => toggleSide(option)}
+                                            >
+                                                {option}
+                                            </MCButton>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+
+                            <div className="version-row">
+                                <p className="filter-label">Version</p>
+                                <div className="filter-button-group">
+                                    <MCInput
+                                        type="number"
+                                        variant={versionParts.major !== 0 ? "solid" : "ghost"}
+                                        min={1}
+                                        step={1}
+                                        className="version-number-input"
+                                        value={versionParts.major}
+                                        onChange={(e) => updateVersionPart('major', e.target.value)}
+                                    />
+                                    <span className="version-separator">.</span>
+                                    <MCInput
+                                        type="number"
+                                        variant={versionParts.minor !== 0 ? "solid" : "ghost"}
+                                        min={0}
+                                        step={1}
+                                        className="version-number-input"
+                                        value={versionParts.minor}
+                                        onChange={(e) => updateVersionPart('minor', e.target.value)}
+                                    />
+                                    <span className="version-separator">.</span>
+                                    <MCInput
+                                        type="number"
+                                        variant={versionParts.patch !== 0 ? "solid" : "ghost"}
+                                        min={0}
+                                        step={1}
+                                        className="version-number-input"
+                                        value={versionParts.patch}
+                                        onChange={(e) => updateVersionPart('patch', e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <MCButton variant="ghost" onClick={clearFilters}>
+                                Limpiar
+                            </MCButton>
+                            <DialogClose>
+                                <MCButton
+                                >
+                                    {t('actions.close', { ns: 'commons' })}
+                                </MCButton>
+                            </DialogClose>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
 
                 <div className="pagination">
                     <MCButton

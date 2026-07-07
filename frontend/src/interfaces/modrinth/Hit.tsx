@@ -13,9 +13,9 @@ export interface Hit {
     author:                 string;
     title:                  string;
     description?:           string;
-    categories?:            string[];
-    client_side?:           Side;
-    server_side?:           Side;
+    categories?:            Category[];
+    client_side?:           SideSupport;
+    server_side?:           SideSupport;
     downloads:              number;
     icon_url?:              string;
     color?:                 number;
@@ -35,7 +35,7 @@ export interface Hit {
     total_hits?:            number;
 }
 
-export enum Side {
+export enum SideSupport {
     Required = "required",
     Unsupported = "unsupported",
 }
@@ -53,4 +53,49 @@ export enum ProjectType {
     Shaderpack = "shaderpack",
     World = "world",
     Plugin = "plugin",
+}
+
+export enum ProjectIndex {
+    Relevance = "relevance",
+    Downloads = "downloads",
+    Follows = "follows",
+    Newest = "newest",
+    Updated = "updated",
+}
+
+export enum Category {
+    Adventure = "adventure",
+    Cursed = "cursed",
+    Decoration = "decoration",
+    Economy = "economy",
+    Equipement = "equipement",
+    Food = "food",
+    GameMechanics = "game-mechanics",
+    Magic = "magic",
+    Management = "management",
+    Minigame = "minigame",
+    Mobs = "mobs",
+    Optimization = "optimization",
+    Social = "social",
+    Storage = "storage",
+    Technology = "technology",
+    Transportation = "transportation",
+    Utility = "utility",
+    WorldGeneration = "world-generation",
+
+    Fabric = "fabric",
+    Forge = "forge",
+    NeoForge = "neoforge",
+    Quilt = "quilt",
+    Velocity = "velocity",
+    Bungeecord = "bungeecord",
+    Waterfall = "waterfall",
+    Bukkit = "bukkit",
+    Paper = "paper",
+    Spigot = "spigot",
+}
+
+export enum HitSide {
+    ClientSide = "client-side",
+    ServerSide = "server-side",
 }

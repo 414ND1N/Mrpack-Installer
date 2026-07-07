@@ -2,6 +2,7 @@
 
 import { ipcRenderer, contextBridge } from 'electron'
 import { CollectionInfo, CollectionDownloadInfo, ModsInCollectionInfo } from '@/interfaces/modrinth/Collection'
+import { SearchHit } from '@/interfaces/modrinth/Hit'
 
 declare namespace NodeJS {
   interface ProcessEnv {
@@ -41,7 +42,7 @@ interface Window {
 
     // Modrinth related
     FetchRandomProjects: (count: number) => Promise<unknown>;
-    SearchProjects: (count: number, type?: string, querry?: string, offset?: number) => Promise<unknown>;
+    SearchProjects: (query?: string, facets?: string[][], index?: number, offset?: number, limit: number = 10) => Promise<SearchHit>;
     GetMrpackMedatadaInfo: (filePath: string) => Promise<unknown>;
     ShowOpenDialog: (options: Electron.OpenDialogOptions) => Promise<Electron.OpenDialogReturnValue>;
     GetMinecraftDirectory: () => Promise<string>;

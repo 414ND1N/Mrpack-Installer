@@ -143,7 +143,7 @@ function DownloadCollectionView() {
                             <div className="version-selectors" aria-label={t('sections.collection.fields.version')}>
                                 <MCInput
                                     type="number"
-                                    variant="solid"
+                                    variant="ghost"
                                     min={1}
                                     step={1}
                                     className="version-number-input"
@@ -153,7 +153,7 @@ function DownloadCollectionView() {
                                 <span className="version-separator">.</span>
                                 <MCInput
                                     type="number"
-                                    variant="solid"
+                                    variant="ghost"
                                     min={0}
                                     step={1}
                                     className="version-number-input"
@@ -163,7 +163,7 @@ function DownloadCollectionView() {
                                 <span className="version-separator">.</span>
                                 <MCInput
                                     type="number"
-                                    variant="solid"
+                                    variant="ghost"
                                     min={0}
                                     step={1}
                                     className="version-number-input"
