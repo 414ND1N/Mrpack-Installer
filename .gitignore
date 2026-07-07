@@ -38,3 +38,5 @@ env/
 backend/dist/
 backend/build/
 *.exe
+
+/frontend/api/*

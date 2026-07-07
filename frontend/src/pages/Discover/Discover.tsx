@@ -121,19 +121,19 @@ function Discover() {
                 <Dialog>
                     <DialogTrigger>
                         <MCButton>
-                            Filtrar
+                            {t('filter.button', { ns: 'discover' })}
                         </MCButton>
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader sticky={true}>
-                            <DialogTitle>Filtrar proyectos</DialogTitle>
+                            <DialogTitle>{t('filter.title', { ns: 'discover' })}</DialogTitle>
                             <DialogDescription>
-                                Elige uno o varios filtros para refinar los resultados.
+                                {t('filter.description', { ns: 'discover' })}
                             </DialogDescription>
                         </DialogHeader>
                         <Separator />
                         <div className="filter-row">
-                            <p className="filter-label">Sort by</p>
+                            <p className="filter-label">{t('filter.list.sort', { ns: 'discover' })}</p>
                             <div className="filter-button-group">
                                 {Object.values(ProjectIndex).map((option) => (
                                     <MCButton
@@ -141,7 +141,7 @@ function Discover() {
                                         variant={projectIndex === option ? "solid" : "ghost"}
                                         onClick={() => setProjectIndex(option)}
                                     >
-                                        {option}
+                                        {t(`modrinth.project.index.${option}`, { ns: 'commons' })}
                                     </MCButton>
                                 ))}
                             </div>
@@ -149,7 +149,7 @@ function Discover() {
 
                         <div className="filter-grid">
                             <div className="filter-row">
-                                <p className="filter-label">Types</p>
+                                <p className="filter-label">{t('filter.list.type', { ns: 'discover' })}</p>
                                 <div className="filter-button-group">
                                     {Object.values(ProjectType).map((option) => (
                                         <MCButton
@@ -157,14 +157,14 @@ function Discover() {
                                             variant={projectType === option ? "solid" : "ghost"}
                                             onClick={() => setProjectType(option)}
                                         >
-                                            {option}
+                                            {t(`modrinth.project.type.${option}`, { ns: 'commons' })}
                                         </MCButton>
                                     ))}
                                 </div>
                             </div>
 
                             <div className="filter-row">
-                                <p className="filter-label">Categories</p>
+                                <p className="filter-label">{t('filter.list.category', { ns: 'discover' })}</p>
                                 <div className="filter-button-group filter-button-group-wrap">
                                     {Object.values(Category).map((option) => {
                                         const active = projectCategories.includes(option)
@@ -174,7 +174,7 @@ function Discover() {
                                                 variant={active ? "solid" : "ghost"}
                                                 onClick={() => toggleCategory(option)}
                                             >
-                                                {option}
+                                                {t(`modrinth.project.category.${option}`, { ns: 'commons' })}
                                             </MCButton>
                                         )
                                     })}
@@ -182,7 +182,7 @@ function Discover() {
                             </div>
 
                             <div className="filter-row">
-                                <p className="filter-label">Sides</p>
+                                <p className="filter-label">{t('filter.list.side', { ns: 'discover' })}</p>
                                 <div className="filter-button-group">
                                     {Object.values(HitSide).map((option) => {
                                         const active = projectSides.includes(option)
@@ -192,7 +192,7 @@ function Discover() {
                                                 variant={active ? "solid" : "ghost"}
                                                 onClick={() => toggleSide(option)}
                                             >
-                                                {option}
+                                                {t(`modrinth.project.side.${option}`, { ns: 'commons' })}
                                             </MCButton>
                                         )
                                     })}
@@ -200,7 +200,7 @@ function Discover() {
                             </div>
 
                             <div className="version-row">
-                                <p className="filter-label">Version</p>
+                                <p className="filter-label">{t('filter.list.version', { ns: 'discover' })}</p>
                                 <div className="filter-button-group">
                                     <MCInput
                                         type="number"
@@ -236,7 +236,7 @@ function Discover() {
                         </div>
                         <DialogFooter>
                             <MCButton variant="ghost" onClick={clearFilters}>
-                                Limpiar
+                                {t('actions.clear', { ns: 'commons' })}
                             </MCButton>
                             <DialogClose>
                                 <MCButton
@@ -287,7 +287,7 @@ function Discover() {
                     <a
                         key={project.project_id}
                         className="project item"
-                        href={`https://modrinth.com/${project.project_type}/${project.slug || project.project_id}`}
+                        href={`https://modrinth.project.com/${project.project_type}/${project.slug || project.project_id}`}
                         target="_blank"
                         rel="noopener noreferrer"
                     >
@@ -325,7 +325,7 @@ function Discover() {
                                     <p><strong>{project.categories?.join(", ")}</strong> </p>
                                 </div>
                                 <div className="follows">
-                                    <p><strong> {`${project.downloads ?? '?'} descargas | ${project.follows ?? '?'} seguidores`} </strong></p>
+                                    <p><strong> {`${project.downloads ?? '?'} ${t('card.downloads', { ns: 'discover' })} | ${project.follows ?? '?'} ${t('card.follows', { ns: 'discover' })}`} </strong></p>
                                 </div>
                             </div>
                         </div>

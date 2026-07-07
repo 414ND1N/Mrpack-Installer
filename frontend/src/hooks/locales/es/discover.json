@@ -1,11 +1,20 @@
 {
     "search_field_placeholder": "Nombre del proyecto",
     "search_button": "Buscar",
-    "filters_list": {
-        "all": "Todas",
-        "mod": "Mods",
-        "modpack": "Paquetes de mods",
-        "resourcepack": "Paquetes de recursos",
-        "shader": "Shaders"
+    "filter": {
+        "button": "Filtros",
+        "title": "Filtrar proyectos",
+        "description": "Selecciona uno o más filtros para reducir los resultados de búsqueda.",
+        "list": {
+            "sort": "Ordenar por",
+            "type": "Tipos",
+            "category": "Categorias",
+            "side": "Lados",
+            "version": "Versiones de Minecraft"
+        }
+    },
+    "card": {
+        "downloads": "descargas",
+        "follows": "seguidores"
     }
 }

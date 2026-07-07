@@ -3,7 +3,7 @@
   "private": true,
   "description": "Manejo de modpacks de la plataforma Modrinth",
   "author": "ALANDLN <414nd1n@gmail.com>",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "type": "module",
   "scripts": {
     "predev": "taskkill /F /IM mrpack-installer.exe || echo 'No backend process to kill'",

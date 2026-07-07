@@ -1,10 +1,4 @@
 {
-    "projects": {
-        "modpack": "Modpack",
-        "resourcepack": "Resourcepack",
-        "shaderpack": "Shaderpack",
-        "world": "World"
-    },
     "texts": {
         "loading": "Loading...",
         "no_data": "No data available",
@@ -25,7 +19,8 @@
         "watch": "Watch",
         "save": "Save",
         "apply": "Apply",
-        "add": "Add"
+        "add": "Add",
+        "clear": "Clear"
     },
     "errors": {
         "header": "An error has occurred",
@@ -123,6 +118,60 @@
                     "Water": "Water",
                     "Wool": "Wool"
                 }
+            }
+        }
+    },
+    "modrinth": {
+        "project": {
+            "type":{
+                "mod": "Mod",
+                "modpack": "Modpack",
+                "resourcepack": "Resourcepack",
+                "shaderpack": "Shaderpack",
+                "world": "World",
+                "plugin": "Plugin"
+            },
+            "category": {
+                "bungeecord": "BungeeCord",
+                "bukkit": "Bukkit",
+                "fabric": "Fabric",
+                "forge": "Forge",
+                "quilt": "Quilt",
+                "neoforge": "NeoForge",
+                "paper": "Paper",
+                "spigot": "Spigot",
+                "velocity": "Velocity",
+                "waterfall": "Waterfall",
+
+                "adventure": "Adventure",
+                "cursed": "Cursed",
+                "decoration": "Decoration",
+                "economy": "Economy",
+                "equipement": "Equipment",
+                "food": "Food",
+                "game-mechanics": "Game Mechanics",
+                "magic": "Magic",
+                "management": "Management",
+                "minigame": "Minigame",
+                "mobs": "Mobs",
+                "optimization": "Optimization",
+                "social": "Social",
+                "storage": "Storage",
+                "technology": "Technology",
+                "transportation": "Transportation",
+                "utility": "Utility",
+                "world-generation": "World Generation"
+            },
+            "side": {
+                "client-side": "Client Side",
+                "server-side": "Server Side"
+            },
+            "index": {
+                "relevance": "Relevance",
+                "downloads": "Downloads",
+                "follows": "Follows",
+                "updated": "Updated",
+                "newest": "Newest"
             }
         }
     }
