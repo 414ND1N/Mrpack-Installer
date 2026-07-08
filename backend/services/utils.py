@@ -3,17 +3,23 @@ import re
 import shutil
 from hashlib import sha1
 
+def NormalizeSeparators(path: str) -> str:
+    return path.replace('\\', '/')
+
 async def PathJoin(*paths: str) -> str:
-    return os.path.normpath(os.path.join(*paths))
+    sanitized_paths = [NormalizeSeparators(p) for p in paths]
+    return os.path.normpath(os.path.join(*sanitized_paths))
 
 async def PathExists(path: str) -> tuple[bool, bool]:
-    exists = os.path.exists(path)
+    clean_path = os.path.normpath(NormalizeSeparators(path))
+    exists = os.path.exists(clean_path)
     is_file = os.path.isfile(path) if exists else False
     return exists, is_file
 
 async def PathDelete(path: str) -> tuple[str, bool, str | None]:
     try:
-        path = os.path.normpath(os.path.abspath(path.strip('"')))
+        clean_path = NormalizeSeparators(path.strip('"'))
+        path = os.path.normpath(os.path.abspath(clean_path))
 
         if os.path.isfile(path):
             os.remove(path)
@@ -42,8 +48,9 @@ def NormalizedModName(name: str) -> str:
     return normalized
 
 def FileSha1(path: str) -> str:
+    clean_path = os.path.normpath(NormalizeSeparators(path))
     h = sha1()
-    with open(path, "rb") as f:
+    with open(clean_path, "rb") as f:
         for chunk in iter(lambda: f.read(8192), b""):
             h.update(chunk)
     return h.hexdigest()
