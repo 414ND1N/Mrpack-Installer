@@ -21,7 +21,7 @@ import { Separator } from "@/components/Separator/separator"
 
 function Install() {
 
-    const normalizeWindowsPath = (path: string) => path.replace(/^"(.*)"$/, "$1").replace(/[\\/]+/g, "\\")
+    const normalizeWindowsPath = (path: string) => path.replace(/^"(.*)"$/, "$1").replace(/[\\/]+/g, "/")
 
     const { showMessage } = useGlobalMessage()
     const { t } = useTranslation(["installation", "commons"])
